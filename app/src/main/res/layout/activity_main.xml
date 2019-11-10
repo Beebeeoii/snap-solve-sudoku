@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer"
+    tools:context=".MainActivity"
+    app:marginFactor="0.6"
+
+    app:contentScaleClosed="1.0"
+    app:contentScaleOpen="0.6"
+
+    app:menuScaleClosed="0.6"
+    app:menuScaleOpen="1.0"
+
+    app:clickToCloseScale="1.0"
+
+    app:menuAlphaClosed="0.0"
+    app:menuAlphaOpen="1.0">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:tag="@string/drawer_menu">
+
+        <TextView
+            android:id="@+id/drawer_app_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:fontFamily="@font/segoe_ui_bold"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="42dp"
+            android:layout_marginLeft="32dp"
+            android:textSize="19sp" />
+
+        <TextView
+            android:id="@+id/drawer_by_beebeeoii_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="by Beebeeoii"
+            app:layout_constraintTop_toBottomOf="@+id/drawer_app_name_tv"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="32dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/drawer_by_beebeeoii_tv"
+            app:layout_constraintVertical_bias="0.35">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:onClick="go_home"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/menu_home" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/segoe_ui_bold"
+                    android:text="Home"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="50dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:onClick="go_history"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/menu_history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/segoe_ui_bold"
+                    android:text="History"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:onClick="go_settings"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/menu_settings" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/segoe_ui_bold"
+                    android:text="Settings"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/segoe_ui"
+            android:layout_marginLeft="32dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/app_version"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:tag="@string/drawer_content">
+
+        <include
+            layout="@layout/nav_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/view_pager" />
+
+    </LinearLayout>
+
+</nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout>

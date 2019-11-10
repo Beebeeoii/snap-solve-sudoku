@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        app:cardCornerRadius="15dp"
+        app:cardUseCompatPadding="true"
+        android:elevation="3dp"
+        android:id="@+id/historyCardView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/segoe_ui_bold"
+                android:id="@+id/card_date"
+                android:text="XXXXXX"
+                android:textStyle="bold"
+                android:textSize="30dp"
+                android:letterSpacing="0.05"
+                android:layout_gravity="center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:cardUseCompatPadding="true"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:src="@drawable/next_icon"
+                        android:id="@+id/card_image"
+                        android:adjustViewBounds="true"
+                        android:layout_gravity="center"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No. of Solutions:"
+                        android:fontFamily="@font/segoe_ui_bold"
+                        android:textSize="16dp"
+                        android:id="@+id/card_noSolsTitle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="80dp"
+                        android:text="X"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/segoe_ui"
+                        android:id="@+id/card_noSols" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="3dp"
+                        android:id="@+id/card_board"
+                        android:visibility="invisible"
+                        android:text="Board" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

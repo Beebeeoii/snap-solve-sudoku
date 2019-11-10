@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.beebeeoii.snapsolvesudoku">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGED" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/app_icon"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Debug"></activity>
+        <activity
+            android:name=".Donate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".About"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Help"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HistoryDetail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Settings"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".History"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
