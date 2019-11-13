@@ -2,7 +2,6 @@ package com.beebeeoii.snapsolvesudoku;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Log;
 
 import com.googlecode.tesseract.android.TessBaseAPI;

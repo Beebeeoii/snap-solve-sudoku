@@ -88,6 +88,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.5"
+                android:text="What's cooking?\nComing Soon. . ."
+                android:textStyle="bold"
+                android:fontFamily="@font/segoe_ui_bold"
+                android:layout_gravity="center"
+                android:gravity="center" />
+
         </LinearLayout>
 
     </LinearLayout>
