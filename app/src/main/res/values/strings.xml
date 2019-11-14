@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Snap Solve Sudoku</string>
-    <string name="app_version">Version 1.5</string>
+    <string name="app_version">Version 1.5.1</string>
 
     <string name="fragment_ocr">OCR</string>
     <string name="fragment_manual">Manual</string>
@@ -9,7 +9,7 @@
     <string name="drawer_content">content</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-    <string name="version_15_changelog">- [Feature] Ability to cancel board detection halfway\n- [Feature] Edit board even after solving\n- [Feature] Edit board for unsolvable boards\n- [Feature] Set minimum hints required for board to be deemed valid\n- [Feature] Set maximum number of possible solutions to be found\n\n- [User Interface] UI overhaul! Too many to list\n\n- [General] Pressing back on OCR page won\'t exit app, requires 2x press\n- [General] Pressing back on board input page will transit to OCR page\n- [General] Added a tutorial for first time launch\n- [General] Added help, changelog, donations, credits\n\n- Bug fixes and code optimisation</string>
+    <string name="changelog">- [UI] Layout Fixes\n\n- [Fixes] App will not crash when min hints/max solutions are left empty</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

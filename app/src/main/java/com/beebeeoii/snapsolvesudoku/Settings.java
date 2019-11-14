@@ -102,10 +102,16 @@ public class Settings extends AppCompatActivity {
             cancel.setOnClickListener((View v1) -> dialog.cancel());
             save.setOnClickListener((View v2) -> {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(KEY_MIN_HINTS, Integer.parseInt(input.getText().toString()));
-                editor.commit();
-                dialog.cancel();
-                Toast.makeText(this, "[Minimum Hints] - " + sharedPreferences.getInt(KEY_MIN_HINTS,MIN_HINTS), Toast.LENGTH_SHORT).show();
+
+                try {
+                    editor.putInt(KEY_MIN_HINTS, Integer.parseInt(input.getText().toString()));
+                    editor.commit();
+                    dialog.cancel();
+                    Toast.makeText(this, "[Minimum Hints] - " + sharedPreferences.getInt(KEY_MIN_HINTS,MIN_HINTS), Toast.LENGTH_SHORT).show();
+                } catch (NumberFormatException e) {
+                    input.setError("Field is empty");
+                }
+
             });
 
         });
@@ -143,10 +149,16 @@ public class Settings extends AppCompatActivity {
             cancel.setOnClickListener((View v1) -> dialog.cancel());
             save.setOnClickListener((View v2) -> {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(KEY_MAX_SOLS, Integer.parseInt(input.getText().toString()));
-                editor.commit();
-                dialog.cancel();
-                Toast.makeText(this, "[Maximum Solutions] - " + sharedPreferences.getInt(KEY_MAX_SOLS,MAX_SOLS), Toast.LENGTH_SHORT).show();
+
+                try {
+                    editor.putInt(KEY_MAX_SOLS, Integer.parseInt(input.getText().toString()));
+                    editor.commit();
+                    dialog.cancel();
+                    Toast.makeText(this, "[Maximum Solutions] - " + sharedPreferences.getInt(KEY_MAX_SOLS,MAX_SOLS), Toast.LENGTH_SHORT).show();
+                } catch (NumberFormatException e) {
+                    input.setError("Field is empty");
+                }
+
             });
         });
 

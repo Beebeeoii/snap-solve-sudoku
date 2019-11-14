@@ -254,13 +254,15 @@
             android:layout_height="wrap_content"
             android:text="Save board to history for future references?"
             android:textSize="18sp"
-            android:fontFamily="@font/segoe_ui_bold"/>
+            android:fontFamily="@font/segoe_ui_bold"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="10dp">
 
             <Button
                 android:layout_width="wrap_content"
