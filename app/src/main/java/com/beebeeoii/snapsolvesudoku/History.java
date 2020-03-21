@@ -57,6 +57,11 @@ public class History extends AppCompatActivity {
         historyNoHistoryLayout = (ConstraintLayout) findViewById(R.id.history_no_history_layout);
         historyData = new ArrayList<>();
 
+        toolbar = (Toolbar) findViewById(R.id.history_toolbar);
+        backButton = (Button) findViewById(R.id.history_back);
+        historyRecycler = (RecyclerView) findViewById(R.id.history_recycler);
+        historyNoHistoryLayout = (ConstraintLayout) findViewById(R.id.history_no_history_layout);
+        historyData = new ArrayList<>();
 
         Thread thread = new Thread(() -> {
             File[] list = boardDir.listFiles();
