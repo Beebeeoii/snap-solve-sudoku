@@ -1,0 +1,3 @@
+rootProject.name='SnapSolveSudoku'
+include ':app'
+include ':openCVLibrary3410'
