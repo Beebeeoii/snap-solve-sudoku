@@ -177,6 +177,8 @@ public class OCR extends Fragment {
                 dialog.show();
 
                 imageProcessingThread = new Thread(() -> {
+
+
                     original = viewFinder.getBitmap();
 
                     try {

@@ -125,7 +125,8 @@ public class ImageProcessor {
                     break;
             }
 
-        } while ((noErrors > 5 || noDigits <= 15) && noIterations < 6);
+        }
+        while ((noErrors > 5 || noDigits <= 15) && noIterations < 6);
 
         processedImage = matToBitmap(largestContourMat);
         progressUpdate("set", 80);
