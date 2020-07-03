@@ -182,8 +182,6 @@ class MainActivity : AppCompatActivity() {
                     var out : FileOutputStream = FileOutputStream(getExternalFilesDir(null).toString() + "/pic" + noFiles.toString() + ".png")
                     resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
 
-
-
                     text += if (avgPix < 250) {
                         number.toString()
                     } else {
