@@ -20,6 +20,7 @@ import android.util.Range
 import android.view.Gravity
 import android.view.Surface
 import android.view.TextureView
+import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var button : Button
     private lateinit var imageView : ImageView
     private lateinit var textViewOutput : TextView
+    private lateinit var sudokuBoard: SudokuBoard
 
     private lateinit var surfaceTextureListener : TextureView.SurfaceTextureListener
     private lateinit var backgroundThread : HandlerThread
@@ -82,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         button = findViewById(R.id.openCamera)
         imageView = findViewById(R.id.imageView)
         textViewOutput = findViewById(R.id.output)
+        sudokuBoard = findViewById(R.id.sudokuBoard)
 
         surfaceTextureListener = object : TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
@@ -162,11 +165,12 @@ class MainActivity : AppCompatActivity() {
 
                     val output = Array(1){FloatArray(10)}
 
-                    val tflite = Interpreter(File(getExternalFilesDir(null).toString() + "/tessdata/converted_model.tflite"))
+                    val tflite = Interpreter(File(getExternalFilesDir(null).toString() + "/model/model.tflite"))
                     tflite.run(convertBitmapToByteBuffer(resizedPic), output)
                     tflite.close()
 
                     val result = output[0]
+
                     for (x in result) {
                         print("$x ")
                     }
@@ -176,6 +180,9 @@ class MainActivity : AppCompatActivity() {
                     val number = maxConfidence?.let { it1 -> result.indexOf(it1) }
                     val resultString = "Prediction: $number, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${avgPix > 250}, PixVal: $avgPix"
                     println(resultString)
+                    if (number != null && avgPix < 250) {
+                        sudokuBoard.cells[i][j].value = number
+                    }
 
                     var dirFile = File(getExternalFilesDir(null).toString())
                     var noFiles = dirFile.listFiles().size
@@ -189,36 +196,24 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     text += " "
-//
-//                    var result = ocr.getDigits(cells[i][j])
-//                    if (result != "") {
-//                        print("$result ")
-//                        println(probBuffer.intArray[0])
-//
-//                    }
-
-//                    if (result != "") {
-//                        output += result
-//                        print(result)
-//                    } else {
-//                        output == "_"
-//                        print("_")
-//                    }
-//                    output += " "
-//                    print(" ")
-
                 }
                 text += "\n"
-//                output += "\n"
-//                println()
             }
             textViewOutput.text = text
 
             imageView.setImageBitmap(pic)
+            sudokuBoard.visibility = View.VISIBLE
         }
 
         textViewOutput.setOnClickListener {
-            imageView.setImageBitmap(null)
+//            imageView.setImageBitmap(null)
+            sudokuBoard.visibility = View.GONE
+            sudokuBoard.reset()
+        }
+
+        imageView.setOnClickListener {
+            sudokuBoard.visibility = View.GONE
+            sudokuBoard.reset()
         }
     }
 
@@ -306,21 +301,21 @@ class MainActivity : AppCompatActivity() {
 
                 cameraCharacteristics[CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP]?.let { streamConfigurationMap ->
                     streamConfigurationMap.getOutputSizes(ImageFormat.YUV_420_888)?.let { yuvSizes ->
-                        var previewSize = yuvSizes.last()
+                        var previewSize = yuvSizes.first()
                         val displayMetrics = DisplayMetrics()
                         windowManager.defaultDisplay.getMetrics(displayMetrics)
                         val width: Int = displayMetrics.widthPixels
                         println(width)
-                        for (size in yuvSizes) {
+//                        for (size in yuvSizes) {
+//                            Log.d(TAG, "Camera Size Available: " + size.width  + " " + size.height)
+//                            if (size.height == size.width && size.height <= width) {
+//                                previewSize = size
+//
+//                                break
+//                            }
+//                        }
 
-                            if (size.height == size.width && size.width <= width) {
-                                previewSize = size
-                                Log.d(TAG, "onOpened: " + size.width  + " " + size.height)
-                                break
-                            }
-                        }
-
-                        var fixedWidth = (width / previewSize.width)
+                        var fixedWidth = 1/*(width / previewSize.width)*/
 
                         // cont.
                         val displayRotation = windowManager.defaultDisplay.rotation
@@ -329,15 +324,17 @@ class MainActivity : AppCompatActivity() {
                         val rotatedPreviewWidth = if (swappedDimensions) previewSize.height else previewSize.width
                         val rotatedPreviewHeight = if (swappedDimensions) previewSize.width else previewSize.height
 
+                        Log.d(TAG, "Camera Dimensions Before adjustment: $rotatedPreviewWidth $rotatedPreviewHeight")
                         frameWidth = rotatedPreviewWidth * fixedWidth
                         frameHeight = rotatedPreviewHeight * fixedWidth
 
                         var surfaceTexture : SurfaceTexture = cameraView.surfaceTexture
                         surfaceTexture.setDefaultBufferSize(frameWidth, frameHeight)
-                        Log.d(TAG, "onOpened: $frameWidth $frameHeight")
+                        Log.d(TAG, "Camera Dimensions: $frameWidth $frameHeight")
                         var previewSurface : Surface = Surface(surfaceTexture)
+
                         cameraView.layoutParams = FrameLayout.LayoutParams(
-                            frameWidth, frameHeight, Gravity.CENTER
+                            width, width, Gravity.CENTER
                         )
 
                         val captureCallback = object : CameraCaptureSession.StateCallback()
@@ -388,15 +385,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun copyTessData() {
         try {
-            val dir : File = File(getExternalFilesDir(null).toString() + "/tessdata")
+            val dir : File = File(getExternalFilesDir(null).toString() + "/model")
 
             if (!dir.exists()) {
                 dir.mkdirs()
             }
 
-            val pathToDataFile = getExternalFilesDir(null).toString() + "/tessdata" + "/engbest.traineddata"
+            val pathToDataFile = getExternalFilesDir(null).toString() + "/model" + "/model.tflite"
             if (!File(pathToDataFile).exists()) {
-                val `in`: InputStream = assets.open("engbest.traineddata")
+                val `in`: InputStream = assets.open("converted_model.tflite")
                 val out: OutputStream = FileOutputStream(pathToDataFile)
                 val buffer = ByteArray(1024)
                 var read: Int = `in`.read(buffer)

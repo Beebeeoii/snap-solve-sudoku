@@ -1,6 +1,7 @@
 package com.example.snapsolvesudoku.image
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.Mat
@@ -22,6 +23,7 @@ class CellExtractor {
         for (x in 0 until xCount) {
             for (y in 0 until yCount) {
                 var tempBitmap = Bitmap.createBitmap(grid, x * width, y * height, width, height)
+                println("Cell $x $y info:")
                 indiCell[y][x] = digitExtract(tempBitmap)
             }
         }
@@ -82,6 +84,13 @@ class CellExtractor {
         }
 
         var bound = Imgproc.boundingRect(largestArea)
+        if (Imgproc.contourArea(largestArea) < 300) {
+            println("CELL NOISE")
+            var bitmap = Bitmap.createBitmap(digitFloodFill.width(), digitFloodFill.height(), Bitmap.Config.ARGB_8888)
+            bitmap.eraseColor(Color.WHITE)
+            return bitmap
+        }
+
         println("Length: ${bound.width}, Height: ${bound.height}")
         var temp = digitFloodFill.submat(bound)
 
