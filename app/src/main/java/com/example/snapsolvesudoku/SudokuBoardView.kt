@@ -72,6 +72,9 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val offsetWidth = (cellWidth - digitPaint.measureText("9")) / 2
         val offsetHeight = (cellHeight + digitPaint.textSize) / 2
 
+        val errorPaint = Paint()
+        errorPaint.color = Color.RED
+        errorPaint.alpha = 50
         for (x in 0..8) {
             for (y in 0..8) {
                 var cell = cells[x][y]
@@ -82,6 +85,13 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     canvas?.drawText(cell.value.toString(),
                         avgX,
                         avgY, digitPaint)
+                }
+
+                if (!cell.isValid) {
+                    canvas?.drawRect((cell.column * cellWidth).toFloat(),
+                        (cell.row * cellHeight).toFloat(),
+                        ((cell.column + 1) * cellWidth).toFloat(),
+                        ((cell.row + 1) * cellHeight).toFloat(), errorPaint)
                 }
             }
         }
@@ -143,10 +153,23 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return Cell()
     }
 
+    fun to2DIntArray(): Array<IntArray> {
+        var board2DArray = Array(9){IntArray(9){0}}
+
+        for (x in 0..8) {
+            for (y in 0..8) {
+                board2DArray[x][y] = cells[x][y].value
+            }
+        }
+
+        return board2DArray
+    }
+
     fun reset() {
         for (x in 0..8) {
             for (y in 0..8) {
                 cells[x][y].value = 0
+                cells[x][y].isValid = true
             }
         }
     }

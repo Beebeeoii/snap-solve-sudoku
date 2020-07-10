@@ -21,7 +21,7 @@ class ImageProcessor {
         var grayMat = Mat()
         Imgproc.cvtColor(originalMat, grayMat, Imgproc.COLOR_BGR2GRAY, 1)
 
-        Photo.fastNlMeansDenoising(grayMat, grayMat, 13F, 7, 23)
+        Photo.fastNlMeansDenoising(grayMat, grayMat, 13F, 13, 23)
 
         var blurMat = Mat()
         Imgproc.GaussianBlur(grayMat, blurMat, Size(15.0, 15.0), 0.0)

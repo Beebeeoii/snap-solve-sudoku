@@ -9,8 +9,8 @@ class BoardValidator (private val board : Array<IntArray>) {
     private val ROWS = 9
     private val COLS = 9
 
-    private fun getNoDigits() : Int{
-        var noDigits : Int = 0
+    fun getNoDigits() : Int{
+        var noDigits = 0
 
         for (row in board) {
             for (digit in row) {
@@ -23,7 +23,7 @@ class BoardValidator (private val board : Array<IntArray>) {
         return noDigits
     }
 
-    private fun isBoardSizeCorrect() : Boolean {
+    fun isBoardSizeCorrect() : Boolean {
         if (board == null) {
             return false
         }
@@ -48,6 +48,7 @@ class BoardValidator (private val board : Array<IntArray>) {
         }
 
         fun updateBoardErrors(errorCell1 : IntArray, errorCell2 : IntArray) {
+            println("${errorCell1[0]} ${errorCell1[1]} ${errorCell2[0]} ${errorCell2[1]}")
             boardErrors.add(errorCell1)
             boardErrors.add(errorCell2)
 
@@ -67,7 +68,7 @@ class BoardValidator (private val board : Array<IntArray>) {
                         var numberRepeatedIndex = board[i][j] - 1
 
                         val errorCell : IntArray = intArrayOf(i, j)
-                        val errorCell2 : IntArray = intArrayOf(n[numberRepeatedIndex][0].toInt(),  n[numberRepeatedIndex][1].toInt())
+                        val errorCell2 : IntArray = intArrayOf(Character.getNumericValue(n[numberRepeatedIndex][0]),  Character.getNumericValue(n[numberRepeatedIndex][1]))
 
                         updateBoardErrors(errorCell, errorCell2)
 
@@ -90,8 +91,7 @@ class BoardValidator (private val board : Array<IntArray>) {
                         var numberRepeatedIndex = board[i][j] - 1
 
                         val errorCell : IntArray = intArrayOf(i, j)
-                        val errorCell2 : IntArray = intArrayOf(n[numberRepeatedIndex][0].toInt(),  n[numberRepeatedIndex][1].toInt())
-
+                        val errorCell2 : IntArray = intArrayOf(Character.getNumericValue(n[numberRepeatedIndex][0]),  Character.getNumericValue(n[numberRepeatedIndex][1]))
                         updateBoardErrors(errorCell, errorCell2)
                     } else {
                         m[board[i][j] - 1] = true
@@ -113,8 +113,7 @@ class BoardValidator (private val board : Array<IntArray>) {
                             var numberRepeatedIndex = board[i][j] - 1
 
                             val errorCell : IntArray = intArrayOf(i, j)
-                            val errorCell2 : IntArray = intArrayOf(n[numberRepeatedIndex][0].toInt(),  n[numberRepeatedIndex][1].toInt())
-
+                            val errorCell2 : IntArray = intArrayOf(Character.getNumericValue(n[numberRepeatedIndex][0]),  Character.getNumericValue(n[numberRepeatedIndex][1]))
                             updateBoardErrors(errorCell, errorCell2)
                         } else {
                             m[board[i][j] - 1] = true

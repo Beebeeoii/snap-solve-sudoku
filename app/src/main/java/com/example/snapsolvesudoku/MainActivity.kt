@@ -28,6 +28,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.snapsolvesudoku.image.*
+import com.example.snapsolvesudoku.solver.BoardValidator
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -125,26 +126,7 @@ class MainActivity : AppCompatActivity() {
             Utils.matToBitmap(gridWOLines, pic)
 
             val cells = cellExtractor.splitBitmap(pic, 9, 9)
-            val rows = cellExtractor.splitIntoRows(pic, 9)
-            val cols = cellExtractor.splitIntoCols(pic, 9)
 
-            var ocr = DigitRecogniser(getExternalFilesDir(null).toString())
-            var output = ""
-//            var result = ocr.getDigits(pic)
-//            print(result)
-//            println("ROWS")
-//            for (i in 0..8) {
-//                output += ocr.getDigits((rows[i])) + "\n"
-////                var result = ocr.getDigits(rows[i])
-////                println(result)
-//            }
-//
-
-//            println("COLS")
-//            for (i in 0..8) {
-//                var result = ocr.getDigits(cols[i])
-//                println(result)
-//            }
             var text = ""
 
             for (i in 0..8) {
@@ -205,15 +187,33 @@ class MainActivity : AppCompatActivity() {
             sudokuBoard.visibility = View.VISIBLE
         }
 
+        button.setOnLongClickListener {
+            val boardValidator = BoardValidator(sudokuBoard.to2DIntArray())
+            boardValidator.validateBoard()
+            for (cell in boardValidator.boardErrors) {
+                println("${cell[0]} ${cell[1]}")
+                sudokuBoard.cells[cell[0]][cell[1]].isValid = false
+            }
+            sudokuBoard.invalidate()
+            return@setOnLongClickListener true
+        }
+
         textViewOutput.setOnClickListener {
 //            imageView.setImageBitmap(null)
-            sudokuBoard.visibility = View.GONE
-            sudokuBoard.reset()
+            textViewOutput.visibility = View.GONE
         }
 
         imageView.setOnClickListener {
             sudokuBoard.visibility = View.GONE
             sudokuBoard.reset()
+        }
+
+        cameraView.setOnClickListener {
+            if (textViewOutput.visibility == View.GONE) {
+                textViewOutput.visibility = View.VISIBLE
+            } else {
+                textViewOutput.visibility = View.GONE
+            }
         }
     }
 
@@ -301,21 +301,24 @@ class MainActivity : AppCompatActivity() {
 
                 cameraCharacteristics[CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP]?.let { streamConfigurationMap ->
                     streamConfigurationMap.getOutputSizes(ImageFormat.YUV_420_888)?.let { yuvSizes ->
-                        var previewSize = yuvSizes.first()
                         val displayMetrics = DisplayMetrics()
                         windowManager.defaultDisplay.getMetrics(displayMetrics)
                         val width: Int = displayMetrics.widthPixels
                         println(width)
-//                        for (size in yuvSizes) {
-//                            Log.d(TAG, "Camera Size Available: " + size.width  + " " + size.height)
-//                            if (size.height == size.width && size.height <= width) {
-//                                previewSize = size
-//
-//                                break
-//                            }
-//                        }
+                        yuvSizes.sortByDescending {
+                            it.width.toFloat() * it.height.toFloat()
+                        }
+                        yuvSizes.sortBy {
+                            it.width.toFloat() / it.height.toFloat()
+                        }
+                        var previewSize = yuvSizes.first()
+                        var sizesString = ""
 
-                        var fixedWidth = 1/*(width / previewSize.width)*/
+                        for (size in yuvSizes) {
+                            Log.d(TAG, "Camera Size Available: ${size.width} x ${size.height} - Ratio: ${size.width.toFloat() / size.height.toFloat()}")
+                            sizesString += "${size.width} x ${size.height} - Ratio: ${size.width.toFloat() / size.height.toFloat()}\n"
+                        }
+                        textViewOutput.text = sizesString
 
                         // cont.
                         val displayRotation = windowManager.defaultDisplay.rotation
@@ -324,9 +327,9 @@ class MainActivity : AppCompatActivity() {
                         val rotatedPreviewWidth = if (swappedDimensions) previewSize.height else previewSize.width
                         val rotatedPreviewHeight = if (swappedDimensions) previewSize.width else previewSize.height
 
-                        Log.d(TAG, "Camera Dimensions Before adjustment: $rotatedPreviewWidth $rotatedPreviewHeight")
-                        frameWidth = rotatedPreviewWidth * fixedWidth
-                        frameHeight = rotatedPreviewHeight * fixedWidth
+                        Log.d(TAG, "Camera Dimensions After adjustment: $rotatedPreviewWidth $rotatedPreviewHeight")
+                        frameWidth = rotatedPreviewWidth
+                        frameHeight = rotatedPreviewHeight
 
                         var surfaceTexture : SurfaceTexture = cameraView.surfaceTexture
                         surfaceTexture.setDefaultBufferSize(frameWidth, frameHeight)
