@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@color/white">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:text="Import Picture"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:alpha="0.7"
+        android:gravity="center"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use Camera"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="start|center_vertical"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        app:iconTint="@color/colorPrimaryDark"
+        app:icon="@drawable/ic_open_camera_24dp"
+        app:iconPadding="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open from Gallery"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="start|center_vertical"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        app:iconTint="@color/colorPrimaryDark"
+        app:icon="@drawable/ic_open_gallery_24dp"
+        app:iconPadding="16dp"/>
+
+
+</LinearLayout>

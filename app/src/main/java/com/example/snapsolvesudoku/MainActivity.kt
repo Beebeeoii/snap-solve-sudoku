@@ -27,8 +27,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.snapsolvesudoku.fragments.MainFragment
 import com.example.snapsolvesudoku.image.*
 import com.example.snapsolvesudoku.solver.BoardValidator
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -49,15 +52,6 @@ import java.nio.channels.FileChannel
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var cameraView :TextureView
-    private lateinit var button : Button
-    private lateinit var imageView : ImageView
-    private lateinit var textViewOutput : TextView
-    private lateinit var sudokuBoard: SudokuBoard
-
-    private lateinit var surfaceTextureListener : TextureView.SurfaceTextureListener
-    private lateinit var backgroundThread : HandlerThread
-    private lateinit var backgroundHandler : Handler
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
         override fun onManagerConnected(status: Int) {
@@ -81,181 +75,38 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
-        cameraView = findViewById(R.id.cameraView)
-        button = findViewById(R.id.openCamera)
-        imageView = findViewById(R.id.imageView)
-        textViewOutput = findViewById(R.id.output)
-        sudokuBoard = findViewById(R.id.sudokuBoard)
-
-        surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-                Log.wtf(TAG, "onSurfaceTextureSizeChanged: Size changed")
-            }
-
-            override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-                //TODO("Not yet implemented")
-            }
-
-            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
-                return false
-            }
-
-            override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
-
-            }
-        }
-
         copyTessData()
 
-        button.setOnClickListener {
-            val pic = cameraView.bitmap
-
-            val imgprocessor = ImageProcessor()
-            val processedMat = imgprocessor.processImage(pic)
-
-            val gridExtractor = GridExtractor()
-            val gridMat = gridExtractor.contourGridExtract(processedMat)
-
-            val gLineRemover = GridlinesRemover()
-            val lines = Mat()
-            Imgproc.HoughLinesP(gridMat, lines, 1.0, Math.PI / 180, 150, 200.0, 25.0)
-            val gridWOLines = gLineRemover.removeGridLines(gridMat, lines)
-
-            val cellExtractor = CellExtractor()
-            Core.bitwise_not(gridWOLines, gridWOLines)
-            Utils.matToBitmap(gridWOLines, pic)
-
-            val cells = cellExtractor.splitBitmap(pic, 9, 9)
-
-            var text = ""
-
-            for (i in 0..8) {
-                for (j in 0..8) {
-                    var pic = cells[i][j]
-                    var tempMat = Mat()
-                    Utils.bitmapToMat(pic, tempMat)
-
-                    var avgPix = Core.mean(tempMat).`val`[0]
-
-                    val resizedPic = Bitmap.createScaledBitmap(pic, 28, 28, true)
-                    var byteBuffer = ByteBuffer.allocateDirect(4* 28*28*1)
-                    resizedPic.copyPixelsToBuffer(byteBuffer)
-
-                    var tImage = TensorImage(DataType.FLOAT32)
-
-                    tImage.load(resizedPic)
-
-                    val output = Array(1){FloatArray(10)}
-
-                    val tflite = Interpreter(File(getExternalFilesDir(null).toString() + "/model/model.tflite"))
-                    tflite.run(convertBitmapToByteBuffer(resizedPic), output)
-                    tflite.close()
-
-                    val result = output[0]
-
-                    for (x in result) {
-                        print("$x ")
-                    }
-                    println()
-
-                    val maxConfidence = result.max()
-                    val number = maxConfidence?.let { it1 -> result.indexOf(it1) }
-                    val resultString = "Prediction: $number, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${avgPix > 250}, PixVal: $avgPix"
-                    println(resultString)
-                    if (number != null && avgPix < 250) {
-                        sudokuBoard.cells[i][j].value = number
-                    }
-
-                    var dirFile = File(getExternalFilesDir(null).toString())
-                    var noFiles = dirFile.listFiles().size
-                    var out : FileOutputStream = FileOutputStream(getExternalFilesDir(null).toString() + "/pic" + noFiles.toString() + ".png")
-                    resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-                    text += if (avgPix < 250) {
-                        number.toString()
-                    } else {
-                        "_"
-                    }
-
-                    text += " "
-                }
-                text += "\n"
-            }
-            textViewOutput.text = text
-
-            imageView.setImageBitmap(pic)
-            sudokuBoard.visibility = View.VISIBLE
-        }
-
-        button.setOnLongClickListener {
-            val boardValidator = BoardValidator(sudokuBoard.to2DIntArray())
-            boardValidator.validateBoard()
-            for (cell in boardValidator.boardErrors) {
-                println("${cell[0]} ${cell[1]}")
-                sudokuBoard.cells[cell[0]][cell[1]].isValid = false
-            }
-            sudokuBoard.invalidate()
-            return@setOnLongClickListener true
-        }
-
-        textViewOutput.setOnClickListener {
-//            imageView.setImageBitmap(null)
-            textViewOutput.visibility = View.GONE
-        }
-
-        imageView.setOnClickListener {
-            sudokuBoard.visibility = View.GONE
-            sudokuBoard.reset()
-        }
-
-        cameraView.setOnClickListener {
-            if (textViewOutput.visibility == View.GONE) {
-                textViewOutput.visibility = View.VISIBLE
-            } else {
-                textViewOutput.visibility = View.GONE
-            }
-        }
+//        button.setOnLongClickListener {
+//            val boardValidator = BoardValidator(sudokuBoard.to2DIntArray())
+//            boardValidator.validateBoard()
+//            for (cell in boardValidator.boardErrors) {
+//                println("${cell[0]} ${cell[1]}")
+//                sudokuBoard.cells[cell[0]][cell[1]].isValid = false
+//            }
+//            sudokuBoard.invalidate()
+//            return@setOnLongClickListener true
+//        }
+//
+//        textViewOutput.setOnClickListener {
+////            imageView.setImageBitmap(null)
+//            textViewOutput.visibility = View.GONE
+//        }
+//
+//        imageView.setOnClickListener {
+//            sudokuBoard.visibility = View.GONE
+//            sudokuBoard.reset()
+//        }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
-            var photo : Bitmap = data?.extras?.get("data") as Bitmap
-            imageView.setImageBitmap(photo)
-        }
-    }
-
-    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer? {
-        val byteBuffer =
-            ByteBuffer.allocateDirect(4 * 28 * 28 )
-        byteBuffer.order(ByteOrder.nativeOrder())
-        val intValues = IntArray(28*28)
-        bitmap.getPixels(
-            intValues,
-            0,
-            bitmap.width,
-            0,
-            0,
-            bitmap.width,
-            bitmap.height
-        )
-        var pixel = 0
-        for (i in 0 until 28) {
-            for (j in 0 until 28) {
-                var `val` = intValues[pixel++]
-                var red = Color.red(`val`)
-                var green = Color.green(`val`)
-                var blue = Color.blue(`val`)
-
-                var grayValue = ((red + green + blue) / (3 * 255.0)).toFloat()
-
-                byteBuffer.putFloat(grayValue)
-            }
-        }
-        return byteBuffer
-    }
-
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+//            var photo : Bitmap = data?.extras?.get("data") as Bitmap
+//            imageView.setImageBitmap(photo)
+//        }
+//    }
 
     private fun loadModelFile (activity : Activity) : MappedByteBuffer {
         val fileDescriptor: AssetFileDescriptor = activity.assets.openFd("converted_model.tflite")
@@ -264,126 +115,6 @@ class MainActivity : AppCompatActivity() {
         val startOffset: Long = fileDescriptor.startOffset
         val declaredLength: Long = fileDescriptor.declaredLength
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
-    }
-
-    private fun startCameraSession() {
-        val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        if (cameraManager.cameraIdList.isEmpty()) {
-            // no cameras
-            return
-        }
-
-        val firstCamera = cameraManager.cameraIdList[0]
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-
-        cameraManager.openCamera(firstCamera, object: CameraDevice.StateCallback() {
-            var frameWidth = 0
-            var frameHeight = 0
-            override fun onDisconnected(p0: CameraDevice) { }
-            override fun onError(p0: CameraDevice, p1: Int) { }
-
-            override fun onOpened(cameraDevice: CameraDevice) {
-                // use the camera
-                val cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraDevice.id)
-
-                cameraCharacteristics[CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP]?.let { streamConfigurationMap ->
-                    streamConfigurationMap.getOutputSizes(ImageFormat.YUV_420_888)?.let { yuvSizes ->
-                        val displayMetrics = DisplayMetrics()
-                        windowManager.defaultDisplay.getMetrics(displayMetrics)
-                        val width: Int = displayMetrics.widthPixels
-                        println(width)
-                        yuvSizes.sortByDescending {
-                            it.width.toFloat() * it.height.toFloat()
-                        }
-                        yuvSizes.sortBy {
-                            it.width.toFloat() / it.height.toFloat()
-                        }
-                        var previewSize = yuvSizes.first()
-                        var sizesString = ""
-
-                        for (size in yuvSizes) {
-                            Log.d(TAG, "Camera Size Available: ${size.width} x ${size.height} - Ratio: ${size.width.toFloat() / size.height.toFloat()}")
-                            sizesString += "${size.width} x ${size.height} - Ratio: ${size.width.toFloat() / size.height.toFloat()}\n"
-                        }
-                        textViewOutput.text = sizesString
-
-                        // cont.
-                        val displayRotation = windowManager.defaultDisplay.rotation
-                        val swappedDimensions = areDimensionsSwapped(displayRotation, cameraCharacteristics)
-                        // swap width and height if needed
-                        val rotatedPreviewWidth = if (swappedDimensions) previewSize.height else previewSize.width
-                        val rotatedPreviewHeight = if (swappedDimensions) previewSize.width else previewSize.height
-
-                        Log.d(TAG, "Camera Dimensions After adjustment: $rotatedPreviewWidth $rotatedPreviewHeight")
-                        frameWidth = rotatedPreviewWidth
-                        frameHeight = rotatedPreviewHeight
-
-                        var surfaceTexture : SurfaceTexture = cameraView.surfaceTexture
-                        surfaceTexture.setDefaultBufferSize(frameWidth, frameHeight)
-                        Log.d(TAG, "Camera Dimensions: $frameWidth $frameHeight")
-                        var previewSurface : Surface = Surface(surfaceTexture)
-
-                        cameraView.layoutParams = FrameLayout.LayoutParams(
-                            width, width, Gravity.CENTER
-                        )
-
-                        val captureCallback = object : CameraCaptureSession.StateCallback()
-                        {
-                            override fun onConfigureFailed(session: CameraCaptureSession) {}
-
-                            override fun onConfigured(session: CameraCaptureSession) {
-                                // session configured
-                                val previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
-                                    .apply {
-                                        addTarget(previewSurface)
-                                    }
-
-                                previewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, Range<Int>(15,15))
-                                session.setRepeatingRequest(
-                                    previewRequestBuilder.build(),
-                                    object: CameraCaptureSession.CaptureCallback() {},
-                                    Handler { true }
-                                )
-                            }
-                        }
-                        cameraDevice.createCaptureSession(mutableListOf(previewSurface), captureCallback, Handler { true })
-                    }
-                }
-            }
-        }, Handler { true })
-    }
-
-    private fun areDimensionsSwapped(displayRotation: Int, cameraCharacteristics: CameraCharacteristics): Boolean {
-        var swappedDimensions = false
-        when (displayRotation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 -> {
-                if (cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) == 90 || cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) == 270) {
-                    swappedDimensions = true
-                }
-            }
-            Surface.ROTATION_90, Surface.ROTATION_270 -> {
-                if (cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) == 0 || cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) == 180) {
-                    swappedDimensions = true
-                }
-            }
-            else -> {
-                // invalid display rotation
-            }
-        }
-        return swappedDimensions
     }
 
     private fun copyTessData() {
@@ -413,42 +144,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openBackgroundThread() {
-        backgroundThread = HandlerThread("cameraBackgroundThread")
-        backgroundThread.start()
-        backgroundHandler = Handler(backgroundThread.getLooper())
-    }
-
-    private fun closeBackgroundThread() {
-        if (backgroundHandler != null) {
-            backgroundThread.quitSafely();
-        }
-    }
-
-    private fun closeCamera() {
-
-    }
-
     override fun onResume() {
         super.onResume()
-        openBackgroundThread()
         if (!OpenCVLoader.initDebug()) {
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, mLoaderCallback);
         } else {
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-
-        if (cameraView.isAvailable) {
-            cameraView.surfaceTextureListener = surfaceTextureListener
-            startCameraSession()
-        } else {
-            cameraView.surfaceTextureListener = surfaceTextureListener
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        closeCamera()
-        closeBackgroundThread()
     }
 }

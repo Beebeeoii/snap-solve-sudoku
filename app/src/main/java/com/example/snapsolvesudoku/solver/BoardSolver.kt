@@ -24,6 +24,12 @@ class BoardSolver constructor(private var board : Array<IntArray>, private val m
             var yMutable = y
 
             if (boardSolutions.size == maxSol) {
+                for (i in 0..8) {
+                    for (j in 0..8) {
+                        print("${boardSolutions[0][i][j]}")
+                    }
+                    println()
+                }
                 return
             }
 

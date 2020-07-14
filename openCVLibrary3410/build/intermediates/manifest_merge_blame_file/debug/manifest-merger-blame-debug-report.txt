@@ -6,8 +6,8 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="26"
-8-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml
+8-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="29" />
-9-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml
+9-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml
 10
 11</manifest>
