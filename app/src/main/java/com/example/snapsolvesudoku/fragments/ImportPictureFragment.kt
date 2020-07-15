@@ -27,10 +27,8 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
         val openGalleryButton: MaterialButton = view.findViewById(R.id.openGallery)
 
         openCameraButton.setOnClickListener {
-            this.dismiss()
-            val navController = findNavController()
             val action = ImportPictureFragmentDirections.actionImportPictureFragmentToCameraFragment()
-            navController.navigate(action)
+            findNavController().navigate(action)
         }
 
         openGalleryButton.setOnClickListener {

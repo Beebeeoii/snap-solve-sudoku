@@ -77,16 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         copyTessData()
 
-//        button.setOnLongClickListener {
-//            val boardValidator = BoardValidator(sudokuBoard.to2DIntArray())
-//            boardValidator.validateBoard()
-//            for (cell in boardValidator.boardErrors) {
-//                println("${cell[0]} ${cell[1]}")
-//                sudokuBoard.cells[cell[0]][cell[1]].isValid = false
-//            }
-//            sudokuBoard.invalidate()
-//            return@setOnLongClickListener true
-//        }
+
 //
 //        textViewOutput.setOnClickListener {
 ////            imageView.setImageBitmap(null)

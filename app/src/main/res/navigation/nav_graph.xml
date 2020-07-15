@@ -17,7 +17,16 @@
         <argument android:name="board2DIntArray"
             app:argType="com.example.snapsolvesudoku.SudokuBoard2DIntArray" />
     </fragment>
-    <fragment
+    <dialog
+        android:id="@+id/importPictureFragment"
+        android:name="com.example.snapsolvesudoku.fragments.ImportPictureFragment"
+        android:label="ImportPictureFragment" >
+        <action
+            android:id="@+id/action_importPictureFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment"
+            app:popUpTo="@id/mainFragment" />
+    </dialog>
+    <dialog
         android:id="@+id/cameraFragment"
         android:name="com.example.snapsolvesudoku.fragments.CameraFragment"
         android:label="fragment_camera"
@@ -25,13 +34,5 @@
         <action
             android:id="@+id/action_cameraFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
-    </fragment>
-    <dialog
-        android:id="@+id/importPictureFragment"
-        android:name="com.example.snapsolvesudoku.fragments.ImportPictureFragment"
-        android:label="ImportPictureFragment" >
-        <action
-            android:id="@+id/action_importPictureFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
     </dialog>
 </navigation>

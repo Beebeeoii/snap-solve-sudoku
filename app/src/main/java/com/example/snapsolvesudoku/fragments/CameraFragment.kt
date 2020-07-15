@@ -1,8 +1,12 @@
 package com.example.snapsolvesudoku.fragments
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageFormat
@@ -11,13 +15,18 @@ import android.hardware.camera2.*
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.text.Layout
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Range
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import androidx.annotation.Nullable
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.snapsolvesudoku.R
 import com.example.snapsolvesudoku.SudokuBoard2DIntArray
@@ -25,7 +34,11 @@ import com.example.snapsolvesudoku.image.CellExtractor
 import com.example.snapsolvesudoku.image.GridExtractor
 import com.example.snapsolvesudoku.image.GridlinesRemover
 import com.example.snapsolvesudoku.image.ImageProcessor
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -41,17 +54,6 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CameraFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
 private const val TAG = "CameraFragment"
 
 private lateinit var cameraView : TextureView
@@ -62,25 +64,20 @@ private lateinit var backgroundThread : HandlerThread
 private lateinit var backgroundHandler : Handler
 
 private lateinit var captureButton: MaterialButton
+private lateinit var linearLayout: LinearLayout
+private lateinit var loadingProgressBar: ProgressBar
 
-class CameraFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class CameraFragment : BottomSheetDialogFragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    @Nullable
+    override fun onCreateView(inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_camera, container, false)
 
         cameraView = view.findViewById(R.id.cameraView)
         captureButton = view.findViewById(R.id.captureButton)
+        linearLayout = view.findViewById(R.id.cameraFragmentContainer)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 
         surfaceTextureListener = object : TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
@@ -101,7 +98,10 @@ class CameraFragment : Fragment() {
         }
 
         captureButton.setOnClickListener {
-            val pic = cameraView.bitmap
+            crossfade()
+            dialog?.setCancelable(false)
+
+            var pic = cameraView.bitmap
             val sudokuBoard2DIntArray = SudokuBoard2DIntArray()
 
             val processedImage = GlobalScope.async {
@@ -116,11 +116,11 @@ class CameraFragment : Fragment() {
                 Imgproc.HoughLinesP(gridMat, lines, 1.0, Math.PI / 180, 150, 200.0, 25.0)
                 val gridWOLines = gLineRemover.removeGridLines(gridMat, lines)
 
-                val cellExtractor = CellExtractor()
+
                 Core.bitwise_not(gridWOLines, gridWOLines)
                 Utils.matToBitmap(gridWOLines, pic)
 
-                cellExtractor.splitBitmap(pic, 9, 9)
+                pic
             }
 
             GlobalScope.launch {
@@ -133,18 +133,21 @@ class CameraFragment : Fragment() {
                 var dirFile = File(requireActivity().getExternalFilesDir(null).toString())
                 var noFiles = dirFile.listFiles().size
                 var out = FileOutputStream(requireActivity().getExternalFilesDir(null).toString() + "/pic" + noFiles.toString() + ".png")
-                pic.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+                val processedBoard = processedImage.await()
+                processedBoard.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+                val cells = CellExtractor().splitBitmap(processedBoard, 9, 9)
 
                 for (i in 0..8) {
                     for (j in 0..8) {
-                        val pic = processedImage.await()[i][j]
-
-                        Utils.bitmapToMat(pic, tempMat)
+                        val cell = cells[i][j]
+                        Utils.bitmapToMat(cell, tempMat)
 
                         val avgPix = Core.mean(tempMat).`val`[0]
                         var byteBuffer = ByteBuffer.allocateDirect(4* 28*28*1)
 
-                        val resizedPic = Bitmap.createScaledBitmap(pic, 28, 28, true)
+                        val resizedPic = Bitmap.createScaledBitmap(cell, 28, 28, true)
                         resizedPic.copyPixelsToBuffer(byteBuffer)
 //                        GlobalScope.launch {
 //                            resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
@@ -157,45 +160,62 @@ class CameraFragment : Fragment() {
 
                         val maxConfidence = result.max()
                         val prediction = maxConfidence?.let { it1 -> result.indexOf(it1) }
+                        val isCellEmpty = avgPix > 250
 
-                        if (prediction != null) {
+                        if (prediction != null && !isCellEmpty) {
                             sudokuBoard2DIntArray.board2DIntArray[i][j] = prediction
                         }
 
-                        println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${avgPix > 250}, PixVal: $avgPix")
+                        println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
                     }
                 }
 
                 tflite.close()
-
+                Log.w(TAG, "onCreateView: ${findNavController().currentDestination}")
                 val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(sudokuBoard2DIntArray)
+
                 findNavController().navigate(action)
             }
-
-
         }
 
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CameraFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CameraFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun crossfade() {
+        val shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
+        loadingProgressBar.apply {
+            // Set the content view to 0% opacity but visible, so that it is visible
+            // (but fully transparent) during the animation.
+            alpha = 0f
+            visibility = View.VISIBLE
+
+            // Animate the content view to 100% opacity, and clear any animation
+            // listener set on the view.
+            animate()
+                .alpha(1f)
+                .setDuration(shortAnimationDuration.toLong())
+                .setListener(null)
+        }
+        // Animate the loading view to 0% opacity. After the animation ends,
+        // set its visibility to GONE as an optimization step (it won't
+        // participate in layout passes, etc.)
+        captureButton.animate()
+            .alpha(0f)
+            .setDuration(shortAnimationDuration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    captureButton.visibility = View.GONE
                 }
-            }
+            })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dialog?.setOnShowListener {
+            val d = it as BottomSheetDialog
+            d.behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels
+        }
     }
 
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer? {

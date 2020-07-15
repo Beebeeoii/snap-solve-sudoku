@@ -11,6 +11,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import com.example.snapsolvesudoku.solver.BoardValidator
 
 class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -27,9 +28,10 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         arrayOf(Cell(row = 6, col = 0), Cell(row = 6, col = 1), Cell(row = 6, col = 2), Cell(row = 6, col = 3), Cell(row = 6, col = 4), Cell(row = 6, col = 5), Cell(row = 6, col = 6), Cell(row = 6, col = 7), Cell(row = 6, col = 8)),
         arrayOf(Cell(row = 7, col = 0), Cell(row = 7, col = 1), Cell(row = 7, col = 2), Cell(row = 7, col = 3), Cell(row = 7, col = 4), Cell(row = 7, col = 5), Cell(row = 7, col = 6), Cell(row = 7, col = 7), Cell(row = 7, col = 8)),
         arrayOf(Cell(row = 8, col = 0), Cell(row = 8, col = 1), Cell(row = 8, col = 2), Cell(row = 8, col = 3), Cell(row = 8, col = 4), Cell(row = 8, col = 5), Cell(row = 8, col = 6), Cell(row = 8, col = 7), Cell(row = 8, col = 8)))
-    var selectedCell: Cell = Cell()
+    var selectedCell: Cell = cells[0][0]
 
-    private var isEditable: Boolean = false
+    private var isEditable: Boolean = true
+    var isValid: Boolean = true
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -68,7 +70,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
         val digitPaint = Paint()
         digitPaint.textSize = 90F
-        digitPaint.color = Color.BLACK
+
         val offsetWidth = (cellWidth - digitPaint.measureText("9")) / 2
         val offsetHeight = (cellHeight + digitPaint.textSize) / 2
 
@@ -80,6 +82,12 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 var cell = cells[x][y]
 
                 if (cell.value != 0) {
+                    if (cell.isGiven) {
+                        digitPaint.color = Color.rgb(82,26,74)
+                    } else {
+                        digitPaint.color = Color.DKGRAY
+                        digitPaint.alpha = 80
+                    }
                     val avgY = (cell.row * cellHeight) + offsetHeight
                     val avgX = (cell.column * cellWidth) + offsetWidth
                     canvas?.drawText(cell.value.toString(),
@@ -170,7 +178,27 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
             for (y in 0..8) {
                 cells[x][y].value = 0
                 cells[x][y].isValid = true
+                cells[x][y].isGiven = false
             }
         }
+    }
+
+    override fun invalidate() {
+        val boardValidator = BoardValidator(this.to2DIntArray())
+        boardValidator.validateBoard()
+
+        this.isValid = boardValidator.boardErrors.size <= 0
+
+        for (i in 0..8) {
+            for (j in 0..8) {
+                this.cells[i][j].isValid = true
+            }
+        }
+
+        for (cell in boardValidator.boardErrors) {
+            this.cells[cell[0]][cell[1]].isValid = false
+        }
+
+        super.invalidate()
     }
 }

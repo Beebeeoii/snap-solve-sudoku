@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.example.snapsolvesudoku.R
 import com.example.snapsolvesudoku.SudokuBoard
@@ -73,9 +74,15 @@ class MainFragment : Fragment() {
 
             for (i in 0..8) {
                 for (j in 0..8) {
-                    sudokuBoardView.cells[i][j].value = sudokuBoard2DIntArray.board2DIntArray[i][j]
+                    val recognisedDigit = sudokuBoard2DIntArray.board2DIntArray[i][j]
+                    if (recognisedDigit != 0) {
+                        sudokuBoardView.cells[i][j].value = recognisedDigit
+                        sudokuBoardView.cells[i][j].isGiven = true
+                    }
+
                 }
             }
+            sudokuBoardView.invalidate()
 
         }
 
@@ -87,68 +94,87 @@ class MainFragment : Fragment() {
         }
 
         clear.setOnClickListener {
-            sudokuBoardView.reset()
+            sudokuBoardView.selectedCell.value = 0
+            sudokuBoardView.selectedCell.isValid = true
+            sudokuBoardView.selectedCell.isGiven = false
             sudokuBoardView.invalidate()
         }
 
-        solve.setOnClickListener {
-            var solver = BoardSolver(sudokuBoardView.to2DIntArray(),2)
-            solver.solveBoard()
-            Log.d(TAG, "onCreateView: ${solver.boardSolutions.size}")
-            var solution = solver.boardSolutions[1]
-            for (i in 0..8) {
-                for (j in 0..8) {
-                    println("$i $j ${solution[i][j]}")
-                    sudokuBoardView.cells[i][j].value = solution[i][j]
-                }
-            }
-
+        clear.setOnLongClickListener {
+            sudokuBoardView.reset()
             sudokuBoardView.invalidate()
+            true
+        }
 
+        solve.setOnClickListener {
+            if (sudokuBoardView.isValid) {
+                var solver = BoardSolver(sudokuBoardView.to2DIntArray(),2)
+                solver.solveBoard()
+
+                var solution = solver.boardSolutions[0]
+                for (i in 0..8) {
+                    for (j in 0..8) {
+                        sudokuBoardView.cells[i][j].value = solution[i][j]
+                    }
+                }
+
+                sudokuBoardView.invalidate()
+            } else {
+                Toast.makeText(requireActivity(), "Board is invalid!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         input_1_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 1
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_2_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 2
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_3_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 3
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_4_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 4
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_5_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 5
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_6_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 6
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_7_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 7
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_8_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 8
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 
         input_9_button.setOnClickListener {
             sudokuBoardView.selectedCell.value = 9
+            sudokuBoardView.selectedCell.isGiven = true
             sudokuBoardView.invalidate()
         }
 

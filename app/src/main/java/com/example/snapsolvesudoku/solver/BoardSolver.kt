@@ -1,13 +1,20 @@
 package com.example.snapsolvesudoku.solver
 
-class BoardSolver constructor(private var board : Array<IntArray>, private val maxSol : Int) {
+class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
+
+    private var board: Array<IntArray> = Array(9){IntArray(9)}
+    private var maxSol: Int = 0
     private val quad : Array<IntArray> = Array(9){IntArray(10)}
     private val rr : Array<IntArray> = Array(9){IntArray(10)}
     private val cr : Array<IntArray> = Array(9){ IntArray(10) }
-
     private val EMPTY : Int = 0
 
     var boardSolutions : ArrayList<Array<IntArray>> = ArrayList(0)
+
+    init {
+        this.board = board
+        this.maxSol = maxSol
+    }
 
     fun solveBoard() {
         fun quad(x : Int, y : Int) : Int {
@@ -24,12 +31,6 @@ class BoardSolver constructor(private var board : Array<IntArray>, private val m
             var yMutable = y
 
             if (boardSolutions.size == maxSol) {
-                for (i in 0..8) {
-                    for (j in 0..8) {
-                        print("${boardSolutions[0][i][j]}")
-                    }
-                    println()
-                }
                 return
             }
 
@@ -83,6 +84,12 @@ class BoardSolver constructor(private var board : Array<IntArray>, private val m
     }
 
     private fun updateSolutions() {
-        boardSolutions.add(board)
+        val solutionBoard = Array(9){IntArray(9)}
+        for (i in 0..8) {
+            for (j in 0..8) {
+                solutionBoard[i][j] = board[i][j]
+            }
+        }
+        boardSolutions.add(solutionBoard)
     }
 }
