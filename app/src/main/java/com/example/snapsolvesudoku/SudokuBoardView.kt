@@ -28,9 +28,9 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         arrayOf(Cell(row = 6, col = 0), Cell(row = 6, col = 1), Cell(row = 6, col = 2), Cell(row = 6, col = 3), Cell(row = 6, col = 4), Cell(row = 6, col = 5), Cell(row = 6, col = 6), Cell(row = 6, col = 7), Cell(row = 6, col = 8)),
         arrayOf(Cell(row = 7, col = 0), Cell(row = 7, col = 1), Cell(row = 7, col = 2), Cell(row = 7, col = 3), Cell(row = 7, col = 4), Cell(row = 7, col = 5), Cell(row = 7, col = 6), Cell(row = 7, col = 7), Cell(row = 7, col = 8)),
         arrayOf(Cell(row = 8, col = 0), Cell(row = 8, col = 1), Cell(row = 8, col = 2), Cell(row = 8, col = 3), Cell(row = 8, col = 4), Cell(row = 8, col = 5), Cell(row = 8, col = 6), Cell(row = 8, col = 7), Cell(row = 8, col = 8)))
-    var selectedCell: Cell = cells[0][0]
+    var selectedCell: Cell? = null
 
-    private var isEditable: Boolean = true
+    var isEditable: Boolean = true
     var isValid: Boolean = true
 
     override fun onDraw(canvas: Canvas?) {
@@ -57,16 +57,18 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         paintDivider.color = Color.LTGRAY
         paintDivider.alpha = 80
 
-        canvas?.drawRect((selectedCell.column * cellWidth).toFloat(),
-            0F,
-            ((selectedCell.column + 1) * cellWidth).toFloat(),
-            height.toFloat(),
-            paintDivider)
-        canvas?.drawRect(0F,
-            (selectedCell.row * cellHeight).toFloat(),
-            width.toFloat(),
-            ((selectedCell.row + 1) * cellHeight).toFloat(),
-            paintDivider)
+        if (selectedCell != null && isEditable) {
+            canvas?.drawRect((selectedCell!!.column * cellWidth).toFloat(),
+                0F,
+                ((selectedCell!!.column + 1) * cellWidth).toFloat(),
+                height.toFloat(),
+                paintDivider)
+            canvas?.drawRect(0F,
+                (selectedCell!!.row * cellHeight).toFloat(),
+                width.toFloat(),
+                ((selectedCell!!.row + 1) * cellHeight).toFloat(),
+                paintDivider)
+        }
 
         val digitPaint = Paint()
         digitPaint.textSize = 90F
@@ -77,6 +79,10 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val errorPaint = Paint()
         errorPaint.color = Color.RED
         errorPaint.alpha = 50
+
+        val sameDigitPaint = Paint()
+        sameDigitPaint.color = Color.rgb(82,26,74)
+        sameDigitPaint.alpha = 50
         for (x in 0..8) {
             for (y in 0..8) {
                 var cell = cells[x][y]
@@ -100,6 +106,13 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
                         (cell.row * cellHeight).toFloat(),
                         ((cell.column + 1) * cellWidth).toFloat(),
                         ((cell.row + 1) * cellHeight).toFloat(), errorPaint)
+                }
+
+                if (cell.value == selectedCell?.value && cell.isValid && selectedCell?.value != 0) {
+                    canvas?.drawRect((cell.column * cellWidth).toFloat(),
+                        (cell.row * cellHeight).toFloat(),
+                        ((cell.column + 1) * cellWidth).toFloat(),
+                        ((cell.row + 1) * cellHeight).toFloat(), sameDigitPaint)
                 }
             }
         }
@@ -131,14 +144,16 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        Log.wtf("Test", "isEditable: $isEditable, ${event?.action}")
+        if (!isEditable) {
+            return true
+        }
+
         val x = event.x
         val y = event.y
 
         when (event.action) {
             MotionEvent.ACTION_MOVE -> {
                 selectedCell = getCellFromCoord(x, y)
-                Log.wtf("cell","${selectedCell.row} ${selectedCell.column}" )
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
@@ -150,7 +165,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return true
     }
 
-    private fun getCellFromCoord(x: Float, y: Float): Cell {
+    private fun getCellFromCoord(x: Float, y: Float): Cell? {
         val row: Int = (y / cellHeight).toInt()
         val col: Int = (x / cellWidth).toInt()
 
@@ -158,7 +173,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
             return cells[row][col]
         }
 
-        return Cell()
+        return null
     }
 
     fun to2DIntArray(): Array<IntArray> {
@@ -181,6 +196,8 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
                 cells[x][y].isGiven = false
             }
         }
+        isEditable = true
+        isValid = true
     }
 
     override fun invalidate() {

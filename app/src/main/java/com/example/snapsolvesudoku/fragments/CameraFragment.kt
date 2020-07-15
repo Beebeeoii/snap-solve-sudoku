@@ -99,6 +99,7 @@ class CameraFragment : BottomSheetDialogFragment() {
 
         captureButton.setOnClickListener {
             crossfade()
+            val startTime = System.currentTimeMillis()
             dialog?.setCancelable(false)
 
             var pic = cameraView.bitmap
@@ -152,6 +153,7 @@ class CameraFragment : BottomSheetDialogFragment() {
 //                        GlobalScope.launch {
 //                            resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
 //                        }
+                        //TODO Save individual cells into a folder for the scanned board
                         tImage.load(resizedPic)
 
                         tflite.run(convertBitmapToByteBuffer(resizedPic), output)
@@ -171,9 +173,10 @@ class CameraFragment : BottomSheetDialogFragment() {
                 }
 
                 tflite.close()
-                Log.w(TAG, "onCreateView: ${findNavController().currentDestination}")
-                val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(sudokuBoard2DIntArray)
 
+                val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(sudokuBoard2DIntArray)
+                val endTime = System.currentTimeMillis()
+                val timeTaken = (endTime - startTime) / 1000
                 findNavController().navigate(action)
             }
         }

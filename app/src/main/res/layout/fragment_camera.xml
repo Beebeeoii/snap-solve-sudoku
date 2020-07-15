@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/cameraFragmentContainer"
-    android:paddingTop="32dp"
+<LinearLayout
+    android:id="@+id/cameraFragmentContainer"
+    android:paddingTop="16dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingBottom="16dp"
