@@ -25,7 +25,7 @@ private const val ARG_PARAM2 = "param2"
 private const val TAG = "MainFragment"
 private lateinit var mainFragmentContainer: ConstraintLayout
 private lateinit var importButton: ExtendedFloatingActionButton
-private lateinit var sudokuBoardView: SudokuBoard
+lateinit var sudokuBoardView: SudokuBoard
 private lateinit var clear: MaterialButton
 private lateinit var solve: MaterialButton
 private lateinit var input_1_button: MaterialButton

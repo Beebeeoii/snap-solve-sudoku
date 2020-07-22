@@ -17,7 +17,6 @@ class ImageProcessor {
         var originalMat = Mat()
         Utils.bitmapToMat(bitmap, originalMat)
 
-
         var grayMat = Mat()
         Imgproc.cvtColor(originalMat, grayMat, Imgproc.COLOR_BGR2GRAY, 1)
 
@@ -33,6 +32,29 @@ class ImageProcessor {
         Core.bitwise_not(threshMat, swopMat)
 
         Imgproc.dilate(swopMat,swopMat,Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, Size(3.0, 3.0), Point(2.0, 2.0)))
+
+        return swopMat
+    }
+
+    fun processImage(mat : Mat) : Mat {
+//        var originalMat = mat
+//        Utils.bitmapToMat(bitmap, originalMat)
+
+//        var grayMat = Mat()
+//        Imgproc.cvtColor(mat, grayMat, Imgproc.COLOR_YUV2GRAY_NV21, 1)
+
+        Photo.fastNlMeansDenoising(mat, mat, 13F, 13, 23)
+
+        var blurMat = Mat()
+        Imgproc.GaussianBlur(mat, blurMat, Size(9.0, 9.0), 0.0)
+
+        var threshMat = Mat()
+        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 7, 2.0)
+
+        var swopMat = Mat()
+        Core.bitwise_not(threshMat, swopMat)
+
+//        Imgproc.dilate(swopMat,swopMat,Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, Size(3.0, 3.0), Point(2.0, 2.0)))
 
         return swopMat
     }

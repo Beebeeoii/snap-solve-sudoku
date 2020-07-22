@@ -10,10 +10,17 @@ private const val TAG = "GridlinesRemover"
 class GridlinesRemover {
 
     fun removeGridLines(grid : Mat, lines : Mat) : Mat {
-        val LINE_POSITIONS : Double = grid.rows() / 9.0
-        val MIN_THRESHOLD : Double = (LINE_POSITIONS / 100.0) * 15.0
-        val MAX_THRESHOLD : Double = (LINE_POSITIONS / 100.0) * 85.0
-        val SAME_LINE : Double = (grid.rows() / 100.0) * 1.0
+        val HORIZONTAL_LINE_POSITIONS : Double = grid.rows() / 9.0
+        val HORIZONTAL_MIN_THRESHOLD : Double = (HORIZONTAL_LINE_POSITIONS / 100.0) * 15.0
+        val HORIZONTAL_MAX_THRESHOLD : Double = (HORIZONTAL_LINE_POSITIONS / 100.0) * 85.0
+
+        val VERTICAL_LINE_POSITIONS : Double = grid.cols() / 9.0
+        val VERTICAL_MIN_THRESHOLD : Double = (HORIZONTAL_LINE_POSITIONS / 100.0) * 15.0
+        val VERTICAL_MAX_THRESHOLD : Double = (HORIZONTAL_LINE_POSITIONS / 100.0) * 85.0
+
+        val HORIZONTAL_SAME_LINE : Double = (grid.rows() / 100.0) * 1.0
+        val VERTICAL_SAME_LINE : Double = (grid.cols() / 100.0) * 1.0
+
         val LINE_THICKNESS : Int = ((grid.rows() / 100.0) * 1.0).toInt()
 
         for (i in 0 until lines.rows()) {
@@ -23,16 +30,16 @@ class GridlinesRemover {
             val x2 = vec[2]
             val y2 = vec[3]
 
-            val startLine : Point = Point(x1, y1)
-            val endLine : Point = Point(x2, y2)
+            val startLine = Point(x1, y1)
+            val endLine = Point(x2, y2)
 
-            val isHorizontal = (startLine.y - endLine.y < SAME_LINE) && (startLine.y - endLine.y > -SAME_LINE)
-            val isVertical = (startLine.x - endLine.x < SAME_LINE) && (startLine.x - endLine.x > -SAME_LINE)
+            val isHorizontal = (startLine.y - endLine.y < HORIZONTAL_SAME_LINE) && (startLine.y - endLine.y > -HORIZONTAL_SAME_LINE)
+            val isVertical = (startLine.x - endLine.x < VERTICAL_SAME_LINE) && (startLine.x - endLine.x > -VERTICAL_SAME_LINE)
 
-            if (isHorizontal && (startLine.y % LINE_POSITIONS <= MIN_THRESHOLD || startLine.y % LINE_POSITIONS >= MAX_THRESHOLD)) {
+            if (isHorizontal && (startLine.y % HORIZONTAL_LINE_POSITIONS <= HORIZONTAL_MIN_THRESHOLD || startLine.y % HORIZONTAL_LINE_POSITIONS >= HORIZONTAL_MAX_THRESHOLD)) {
                 startLine.x = 0.0
                 endLine.x = grid.rows().toDouble()
-            } else if (isVertical && (startLine.x % LINE_POSITIONS <= MIN_THRESHOLD || startLine.x % LINE_POSITIONS >= MAX_THRESHOLD)) {
+            } else if (isVertical && (startLine.x % VERTICAL_LINE_POSITIONS <= VERTICAL_MIN_THRESHOLD || startLine.x % VERTICAL_LINE_POSITIONS >= VERTICAL_MAX_THRESHOLD)) {
                 startLine.y = 0.0
                 endLine.y = grid.cols().toDouble()
             } else {

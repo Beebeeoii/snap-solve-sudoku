@@ -1,5 +1,7 @@
 package com.example.snapsolvesudoku.solver
 
+import android.util.Log
+
 class BoardValidator (private val board : Array<IntArray>) {
 
     var isBoardValid : Boolean = true

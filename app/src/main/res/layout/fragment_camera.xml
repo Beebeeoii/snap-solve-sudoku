@@ -1,51 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/cameraFragmentContainer"
-    android:paddingTop="16dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingBottom="16dp"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".fragments.CameraFragment">
+    android:layout_height="match_parent"
+    tools:context=".fragments.CameraFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <org.opencv.android.JavaCamera2View
+        android:id="@+id/cameraView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        app:camera_id="back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextureView
-            android:id="@+id/cameraView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/captureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Capture"
+        app:icon="@drawable/ic_import_photo_24dp"
+        app:iconTint="@color/white"
+        app:backgroundTint="@color/colorPrimaryLight"
+        android:textColor="@color/white"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/captureButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Snap"
-            android:layout_marginTop="24dp"
-            android:layout_gravity="center_horizontal" />
-
-        <ProgressBar
-            android:id="@+id/loadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:visibility="gone"/>
-
-    </FrameLayout>
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

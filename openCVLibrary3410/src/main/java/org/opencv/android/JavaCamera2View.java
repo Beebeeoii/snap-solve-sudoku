@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Range;
 import android.view.Surface;
 import android.view.ViewGroup.LayoutParams;
 
@@ -204,10 +205,7 @@ public class JavaCamera2View extends CameraBridgeViewBase {
                         }
                         mCaptureSession = cameraCaptureSession;
                         try {
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(30,30));
 
                             mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, mBackgroundHandler);
                             Log.i(LOGTAG, "CameraPreviewSession has been started");

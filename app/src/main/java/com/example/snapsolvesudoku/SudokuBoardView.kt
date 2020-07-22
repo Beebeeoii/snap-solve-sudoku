@@ -71,7 +71,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
 
         val digitPaint = Paint()
-        digitPaint.textSize = 90F
+        digitPaint.textSize = ((cellHeight / 2).toFloat())
 
         val offsetWidth = (cellWidth - digitPaint.measureText("9")) / 2
         val offsetHeight = (cellHeight + digitPaint.textSize) / 2

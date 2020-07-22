@@ -48,11 +48,11 @@ class GridExtractor {
         return destImg
     }
 
-    private fun identifyCorners(contourPoints : Array<Point>): Array<Point> {
-        var leftTopCorner : Point = Point()
-        var rightTopCorner : Point = Point()
-        var leftBottomCorner : Point = Point()
-        var rightBottomCorner : Point = Point()
+    fun identifyCorners(contourPoints : Array<Point>): Array<Point> {
+        var leftTopCorner = Point()
+        var rightTopCorner = Point()
+        var leftBottomCorner = Point()
+        var rightBottomCorner = Point()
 
         var xplusy : Double
         var xminusy : Double

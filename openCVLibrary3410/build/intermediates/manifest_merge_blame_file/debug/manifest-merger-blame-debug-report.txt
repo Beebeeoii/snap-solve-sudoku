@@ -10,4 +10,8 @@
 9        android:targetSdkVersion="29" />
 9-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml
 10
-11</manifest>
+11    <uses-permission android:name="android.permission.CAMERA" />
+11-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml:7:5-65
+11-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml:7:22-62
+12
+13</manifest>
