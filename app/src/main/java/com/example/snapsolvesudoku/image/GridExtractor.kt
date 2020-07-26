@@ -98,4 +98,30 @@ class GridExtractor {
         return arrayOf(leftTopCorner, rightTopCorner, leftBottomCorner, rightBottomCorner)
     }
 
+    //X and Y are swapped as the mat is rotated for preview. aka height of mat is actually the width viewed
+    private fun getAverageXCoordFromCorners(corners: Array<Point>): Double {
+        val topLeftCornerX = corners[0].x
+        val topRightCornerX = corners[1].x
+        val bottomLeftCornerX = corners[2].x
+        val bottomRightCornerX = corners[3].x
+
+        return (topLeftCornerX + topRightCornerX + bottomLeftCornerX + bottomRightCornerX) / 4
+    }
+
+    private fun getAverageYCoordFromCorners(corners: Array<Point>): Double {
+        val topLeftCornerY = corners[0].y
+        val topRightCornerY = corners[1].y
+        val bottomLeftCornerY = corners[2].y
+        val bottomRightCornerY = corners[3].y
+
+        return (topLeftCornerY + topRightCornerY + bottomLeftCornerY + bottomRightCornerY) / 4
+    }
+
+    fun getAverageXCoordFromContour(contour: Array<Point>): Double {
+        return getAverageXCoordFromCorners(identifyCorners(contour))
+    }
+
+    fun getAverageYCoordFromContour(contour: Array<Point>): Double {
+        return getAverageYCoordFromCorners(identifyCorners(contour))
+    }
 }

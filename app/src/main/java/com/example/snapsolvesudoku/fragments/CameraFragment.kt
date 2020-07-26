@@ -50,6 +50,7 @@ import java.io.FileOutputStream
 import java.lang.Exception
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -848,9 +849,12 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
     }
 
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {        
         val ogMat = inputFrame!!.rgba()
+        val centrePoint = Point(ogMat.size().width / 2, ogMat.size().height / 2)
         Imgproc.cvtColor(ogMat, ogMat, Imgproc.COLOR_RGBA2GRAY)
+
+        Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
         var blurMat = Mat()
         Imgproc.GaussianBlur(ogMat, blurMat, Size(9.0, 9.0), 0.0)
@@ -858,8 +862,6 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         var threshMat = Mat()
         Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 7, 2.0)
 
-//        var cannyMat = Mat()
-//        Imgproc.Canny(threshMat, cannyMat, 50.0, 150.0,3, true)
         var contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
 
@@ -868,30 +870,43 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         val maxArea = ogArea * 0.3
         Log.d(TAG, "onCameraFrame: $minArea $maxArea ${contours.size}")
         Imgproc.cvtColor(ogMat, ogMat, Imgproc.COLOR_GRAY2RGBA)
-        var smallestArea : MatOfPoint = contours[0]
-        Log.d(TAG, "onCameraFrame: smallestArea ${Imgproc.contourArea(smallestArea)}")
+
         val realContours = ArrayList<MatOfPoint>(0)
         for (counter in 1 until contours.size) {
             val contourArea = Imgproc.contourArea(contours[counter], true)
 
             if (contourArea > minArea && contourArea < maxArea) {
-                Log.d(TAG, "onCameraFrame: $contourArea")
                 realContours.add(contours[counter])
-                if (Imgproc.contourArea(smallestArea) < minArea) {
-                    smallestArea = contours[counter]
-                } else {
-                    if (Imgproc.contourArea(smallestArea) >= contourArea) {
-                        smallestArea = contours[counter]
-                    }
-                }
             }
         }
-        Log.d(TAG, "onCameraFrame: area of frame is ${Imgproc.contourArea(smallestArea)}")
-        Imgproc.drawContours(ogMat, mutableListOf(smallestArea), 0, Scalar(255.0, 0.0, 0.0),3)
-//        Imgproc.drawContours(ogMat, realContours, -1, Scalar(0.0, 0.0, 255.0),3)
 
-        val boundingRect = Imgproc.boundingRect(smallestArea)
+        val helper = GridExtractor()
+
+        realContours.sortBy {
+            Imgproc.contourArea(it)
+        }
+
+        val indexOfBoard = realContours.indexOfFirst {
+            val corners = helper.identifyCorners(it.toArray())
+            val topLeftCornerX = corners[0].x
+            val topRightCornerX = corners[1].x
+            val bottomLeftCornerX = corners[2].x
+            val bottomRightCornerX = corners[3].x
+            val topLeftCornerY = corners[0].y
+            val topRightCornerY = corners[1].y
+            val bottomLeftCornerY = corners[2].y
+            val bottomRightCornerY = corners[3].y
+
+            val isXInRange = centrePoint.x <= (topRightCornerX + bottomRightCornerX) / 2 && centrePoint.x >= (topLeftCornerX + bottomLeftCornerX) / 2
+            val isYInRange = centrePoint.y <= (bottomLeftCornerY + bottomRightCornerY) / 2 && centrePoint.y >= (topLeftCornerY + topRightCornerY) / 2
+            isXInRange && isYInRange
+        }
+
+        Imgproc.drawMarker(ogMat, Point(centrePoint.x, centrePoint.y), Scalar(204.0, 193.0, 90.0),Imgproc.MARKER_CROSS, 20,3)
+        Imgproc.drawContours(ogMat, realContours, indexOfBoard, Scalar(255.0, 0.0, 255.0),3)
+
         try {
+            val boundingRect = Imgproc.boundingRect(realContours[indexOfBoard])
             sudokuBoardMat = Mat(threshMat, Rect((boundingRect.x - 10), (boundingRect.y - 10), (boundingRect.width + 20), (boundingRect.height + 20)))
         } catch (e: Exception) {
             e.printStackTrace()
