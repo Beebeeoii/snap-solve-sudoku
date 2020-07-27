@@ -4,17 +4,15 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import com.example.snapsolvesudoku.solver.BoardValidator
 
-class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) {
+private const val TAG = "SudokuBoardView"
 
+class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var cellHeight: Int = 0
     private var cellWidth: Int = 0
 
@@ -40,7 +38,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         paint.color = Color.WHITE
         canvas?.drawRect(0F, 10F, width.toFloat(), height.toFloat(), paint)
 
-        Log.wtf("Height", "$width $height")
+        Log.d(TAG, "onDraw: SudokuBoardView Width - ${width}px Height - ${height}px")
 
         var paintDivider = Paint()
         paintDivider.color = Color.BLACK
@@ -124,7 +122,6 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
-        Log.wtf("Test", "$widthMode $widthSize $heightMode $heightSize")
 
         var width : Int
         var height : Int

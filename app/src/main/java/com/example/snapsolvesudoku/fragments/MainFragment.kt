@@ -107,12 +107,14 @@ class MainFragment : Fragment() {
             sudokuBoardView.invalidate()
 
             solve.isClickable = true
+            solve.setBackgroundColor(Color.WHITE)
             true
         }
 
         solve.setOnClickListener {
             if (sudokuBoardView.isValid) {
                 it.isClickable = false
+                it.setBackgroundColor(Color.argb(50, 82, 26, 74))
                 var solver = BoardSolver(sudokuBoardView.to2DIntArray(),2)
                 solver.solveBoard()
 

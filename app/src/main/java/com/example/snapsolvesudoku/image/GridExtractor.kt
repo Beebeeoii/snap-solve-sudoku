@@ -13,7 +13,7 @@ class GridExtractor {
         var contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(original, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
 
-        var largestArea : MatOfPoint = contours[0]
+        var largestArea = contours[0]
 
         for (counter in 0 until contours.size) {
             if (Imgproc.contourArea(largestArea) <= Imgproc.contourArea(contours[counter])) {
@@ -21,17 +21,17 @@ class GridExtractor {
             }
         }
 
-        val corners: Array<Point> = identifyCorners(largestArea.toArray())
+        val corners = identifyCorners(largestArea.toArray())
 
         //List of original corners
-        val oCorners: ArrayList<Point> = ArrayList<Point>()
+        val oCorners: ArrayList<Point> = ArrayList()
         oCorners.add(corners[0])
         oCorners.add(corners[1])
         oCorners.add(corners[2])
         oCorners.add(corners[3])
 
         //List of final corners
-        val fCorners: ArrayList<Point> = ArrayList<Point>()
+        val fCorners: ArrayList<Point> = ArrayList()
         fCorners.add(Point(0.0, 0.0))
         fCorners.add(Point(original.width().toDouble(), 0.0))
         fCorners.add(Point(0.0, original.height().toDouble()))
@@ -96,32 +96,5 @@ class GridExtractor {
         }
 
         return arrayOf(leftTopCorner, rightTopCorner, leftBottomCorner, rightBottomCorner)
-    }
-
-    //X and Y are swapped as the mat is rotated for preview. aka height of mat is actually the width viewed
-    private fun getAverageXCoordFromCorners(corners: Array<Point>): Double {
-        val topLeftCornerX = corners[0].x
-        val topRightCornerX = corners[1].x
-        val bottomLeftCornerX = corners[2].x
-        val bottomRightCornerX = corners[3].x
-
-        return (topLeftCornerX + topRightCornerX + bottomLeftCornerX + bottomRightCornerX) / 4
-    }
-
-    private fun getAverageYCoordFromCorners(corners: Array<Point>): Double {
-        val topLeftCornerY = corners[0].y
-        val topRightCornerY = corners[1].y
-        val bottomLeftCornerY = corners[2].y
-        val bottomRightCornerY = corners[3].y
-
-        return (topLeftCornerY + topRightCornerY + bottomLeftCornerY + bottomRightCornerY) / 4
-    }
-
-    fun getAverageXCoordFromContour(contour: Array<Point>): Double {
-        return getAverageXCoordFromCorners(identifyCorners(contour))
-    }
-
-    fun getAverageYCoordFromContour(contour: Array<Point>): Double {
-        return getAverageYCoordFromCorners(identifyCorners(contour))
     }
 }
