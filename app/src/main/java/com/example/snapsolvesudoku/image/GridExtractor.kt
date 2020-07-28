@@ -9,8 +9,7 @@ import org.opencv.utils.Converters
 class GridExtractor {
 
     fun contourGridExtract(original : Mat) : Mat {
-
-        var contours : ArrayList<MatOfPoint> = ArrayList(0)
+        val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(original, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
 
         var largestArea = contours[0]
@@ -38,8 +37,8 @@ class GridExtractor {
         fCorners.add(Point(original.width().toDouble(), original.height().toDouble()))
 
         //Perspective Transform
-        var initialPoints = Converters.vector_Point2f_to_Mat(oCorners)
-        var finalPoints = Converters.vector_Point2f_to_Mat(fCorners)
+        val initialPoints = Converters.vector_Point2f_to_Mat(oCorners)
+        val finalPoints = Converters.vector_Point2f_to_Mat(fCorners)
 
         val transform = Imgproc.getPerspectiveTransform(initialPoints, finalPoints)
         val destImg = Mat()
@@ -49,10 +48,10 @@ class GridExtractor {
     }
 
     fun identifyCorners(contourPoints : Array<Point>): Array<Point> {
-        var leftTopCorner = Point()
-        var rightTopCorner = Point()
-        var leftBottomCorner = Point()
-        var rightBottomCorner = Point()
+        val leftTopCorner = Point()
+        val rightTopCorner = Point()
+        val leftBottomCorner = Point()
+        val rightBottomCorner = Point()
 
         var xplusy : Double
         var xminusy : Double

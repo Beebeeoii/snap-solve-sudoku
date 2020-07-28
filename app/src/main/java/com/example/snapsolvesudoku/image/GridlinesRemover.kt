@@ -22,7 +22,7 @@ class GridlinesRemover {
         val HORIZONTAL_SAME_LINE = (grid.height() / 100.0) * 2.0
         val VERTICAL_SAME_LINE = (grid.width() / 100.0) * 2.0
 
-        val LINE_THICKNESS = ((grid.width() / 100.0) * 2.0).toInt()
+        val LINE_THICKNESS = ((grid.width() / 100.0) * 1.0).toInt()
 
         for (i in 0 until lines.rows()) {
             val vec = lines.get(i, 0)

@@ -25,6 +25,9 @@
             android:id="@+id/action_importPictureFragment_to_cameraFragment"
             app:destination="@id/cameraFragment"
             app:popUpTo="@id/mainFragment" />
+        <action
+            android:id="@+id/action_importPictureFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </dialog>
     <dialog
         android:id="@+id/cameraFragment"

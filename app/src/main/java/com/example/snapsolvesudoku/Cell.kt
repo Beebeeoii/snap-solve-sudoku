@@ -17,5 +17,4 @@ class Cell(value: Int = 0, isGiven: Boolean = false, isValid: Boolean = true, ro
         this.row = row
         this.column = col
     }
-
 }

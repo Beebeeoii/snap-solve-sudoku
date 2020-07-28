@@ -1,13 +1,13 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <!-- Customize your theme here. -->
 
         <item name="android:colorBackground">@color/white</item>
         <item name="colorPrimary">@color/colorPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondaryLight</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="iconTint">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

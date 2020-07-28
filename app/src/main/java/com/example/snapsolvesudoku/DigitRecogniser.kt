@@ -1,0 +1,153 @@
+package com.example.snapsolvesudoku
+
+import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.Color
+import com.example.snapsolvesudoku.image.CellExtractor
+import com.example.snapsolvesudoku.image.GridExtractor
+import com.example.snapsolvesudoku.image.GridlinesRemover
+import com.example.snapsolvesudoku.image.ImageProcessor
+import org.opencv.android.Utils
+import org.opencv.core.Core
+import org.opencv.core.Mat
+import org.opencv.imgproc.Imgproc
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.image.TensorImage
+import java.io.File
+import java.io.FileOutputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+
+class DigitRecogniser(private var activity: Activity, board: Mat) {
+
+    private var sudokuBoardMat: Mat = board
+    lateinit var sudokuBoard2DIntArray: SudokuBoard2DIntArray
+
+    fun processBoard(fromCamera: Boolean) : Bitmap {
+        val processedBoardBitmap = Bitmap.createBitmap(sudokuBoardMat.width(), sudokuBoardMat.height(), Bitmap.Config.ARGB_8888)
+
+        val imageProcessor = ImageProcessor()
+        val processedImage = imageProcessor.processImage(sudokuBoardMat, fromCamera)
+
+        val gridExtractor = GridExtractor()
+        val gridMat = gridExtractor.contourGridExtract(processedImage)
+
+        val gLineRemover = GridlinesRemover()
+        val lines = Mat()
+        Imgproc.HoughLinesP(gridMat, lines, 1.0, Math.PI / 180, 100, 50.0, 5.0)
+        val gridWOLines = gLineRemover.removeGridLines(gridMat, lines)
+
+        Core.bitwise_not(gridWOLines, gridWOLines)
+        Utils.matToBitmap(gridWOLines, processedBoardBitmap)
+
+        gridMat.release()
+        lines.release()
+        gridWOLines.release()
+
+        return processedBoardBitmap
+    }
+
+    fun recogniseDigits(boardBitmap: Bitmap) {
+        sudokuBoard2DIntArray = SudokuBoard2DIntArray()
+
+        val tflite = Interpreter(
+            File(
+                activity.getExternalFilesDir(null).toString() + "/model/model.tflite"
+            )
+        )
+        val tImage = TensorImage(DataType.FLOAT32)
+        val tempMat = Mat()
+
+        val output = Array(1) { FloatArray(10) }
+
+        val dirFile = File(activity.getExternalFilesDir(null).toString())
+        val noFiles = dirFile.listFiles().size
+        val boardDirFile =
+            File(activity.getExternalFilesDir(null).toString() + "/board" + noFiles.toString())
+        if (!boardDirFile.exists()) {
+            boardDirFile.mkdir()
+        }
+        val out = FileOutputStream(
+            activity.getExternalFilesDir(null)
+                .toString() + "/board" + noFiles.toString() + "/og.png"
+        )
+
+        boardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+        val cells = CellExtractor().splitBitmap(boardBitmap, 9, 9)
+
+        for (i in 0..8) {
+            for (j in 0..8) {
+                val cell = cells[i][j]
+                Utils.bitmapToMat(cell, tempMat)
+
+                val avgPix = Core.mean(tempMat).`val`[0]
+                val byteBuffer = ByteBuffer.allocateDirect(4 * 28 * 28 * 1)
+
+                val resizedPic = Bitmap.createScaledBitmap(cell, 28, 28, true)
+                resizedPic.copyPixelsToBuffer(byteBuffer)
+
+                val dirFile = File(activity.getExternalFilesDir(null).toString())
+                val noFiles = dirFile.listFiles().size
+                val boardDirFile = File(
+                    activity.getExternalFilesDir(null)
+                        .toString() + "/board" + (noFiles - 1).toString()
+                )
+                val boardNoFiles = boardDirFile.listFiles().size
+                val out = FileOutputStream(
+                    activity.getExternalFilesDir(null)
+                        .toString() + "/board" + (noFiles - 1).toString() + "/" + boardNoFiles + ".png"
+                )
+                resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+                tImage.load(resizedPic)
+
+                tflite.run(convertBitmapToByteBuffer(resizedPic), output)
+
+                val result = output[0]
+
+                val maxConfidence = result.max()
+                val prediction = maxConfidence?.let { it1 -> result.indexOf(it1) }
+                val isCellEmpty = avgPix > 250
+
+                if (prediction != null && !isCellEmpty) {
+                    sudokuBoard2DIntArray.board2DIntArray[i][j] = prediction
+                }
+
+                println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
+            }
+        }
+
+        tflite.close()
+    }
+
+    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer? {
+        val byteBuffer = ByteBuffer.allocateDirect(4 * 28 * 28 )
+        byteBuffer.order(ByteOrder.nativeOrder())
+        val intValues = IntArray(28*28)
+        bitmap.getPixels(
+            intValues,
+            0,
+            bitmap.width,
+            0,
+            0,
+            bitmap.width,
+            bitmap.height
+        )
+        var pixel = 0
+        for (i in 0 until 28) {
+            for (j in 0 until 28) {
+                val `val` = intValues[pixel++]
+                val red = Color.red(`val`)
+                val green = Color.green(`val`)
+                val blue = Color.blue(`val`)
+
+                val grayValue = ((red + green + blue) / (3 * 255.0)).toFloat()
+
+                byteBuffer.putFloat(grayValue)
+            }
+        }
+        return byteBuffer
+    }
+}

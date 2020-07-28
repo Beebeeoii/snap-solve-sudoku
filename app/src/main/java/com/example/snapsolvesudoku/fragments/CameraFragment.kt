@@ -3,8 +3,6 @@ package com.example.snapsolvesudoku.fragments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -15,12 +13,9 @@ import android.widget.ProgressBar
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
+import com.example.snapsolvesudoku.DigitRecogniser
 import com.example.snapsolvesudoku.R
-import com.example.snapsolvesudoku.SudokuBoard2DIntArray
-import com.example.snapsolvesudoku.image.CellExtractor
 import com.example.snapsolvesudoku.image.GridExtractor
-import com.example.snapsolvesudoku.image.GridlinesRemover
-import com.example.snapsolvesudoku.image.ImageProcessor
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -30,17 +25,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.JavaCamera2View
-import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
-import org.tensorflow.lite.DataType
-import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.image.TensorImage
-import java.io.File
-import java.io.FileOutputStream
 import java.lang.Exception
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 private const val TAG = "CameraFragment"
 
@@ -55,7 +42,7 @@ private lateinit var loadingProgressBar: ProgressBar
 
 private lateinit var captureButton: ExtendedFloatingActionButton
 
-private lateinit var sudokuBoardMat: Mat
+private var sudokuBoardMat: Mat? = null
 
 class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -70,6 +57,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         guideTextView = view.findViewById(R.id.guideTextView)
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
 
+        sudokuBoardMat = null
+
         val displayMetrics = DisplayMetrics()
         val windowManager = requireActivity().windowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -82,98 +71,26 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         cameraView.setMaxFrameSize(height, width)
 
         captureButton.setOnClickListener {
-            cameraView.disableView()
-            dialog?.setCancelable(false)
+            if (sudokuBoardMat == null) {
+                guideTextView.text = "No board detected"
+                guideTextView.invalidate()
+            } else {
+                cameraView.disableView()
+                dialog?.setCancelable(false)
 
-            crossfade()
+                crossfade()
 
-            Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
+                Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
 
-            var pic = Bitmap.createBitmap(sudokuBoardMat.width(), sudokuBoardMat.height(), Bitmap.Config.ARGB_8888)
-            val sudokuBoard2DIntArray = SudokuBoard2DIntArray()
-
-            val processedImage = GlobalScope.async {
-                val imageProcessor = ImageProcessor()
-                val processedImage = imageProcessor.processImage(sudokuBoardMat)
-
-                val gridExtractor = GridExtractor()
-                val gridMat = gridExtractor.contourGridExtract(processedImage)
-
-                val gLineRemover = GridlinesRemover()
-                val lines = Mat()
-                Imgproc.HoughLinesP(gridMat, lines, 1.0, Math.PI / 180, 100, 50.0, 5.0)
-                val gridWOLines = gLineRemover.removeGridLines(gridMat, lines)
-
-                Core.bitwise_not(gridWOLines, gridWOLines)
-                Utils.matToBitmap(gridWOLines, pic)
-
-                gridMat.release()
-                lines.release()
-                gridWOLines.release()
-
-                pic
-            }
-
-            GlobalScope.launch {
-                val tflite = Interpreter(File(requireActivity().getExternalFilesDir(null).toString() + "/model/model.tflite"))
-                var tImage = TensorImage(DataType.FLOAT32)
-                var tempMat = Mat()
-
-                val output = Array(1){FloatArray(10)}
-
-                var dirFile = File(requireActivity().getExternalFilesDir(null).toString())
-                var noFiles = dirFile.listFiles().size
-                var boardDirFile = File(requireActivity().getExternalFilesDir(null).toString() + "/board" + noFiles.toString())
-                if (!boardDirFile.exists()) {
-                    boardDirFile.mkdir()
+                val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
+                val sudokuBoardBitmap = GlobalScope.async {
+                    digitRecogniser.processBoard(true)
                 }
-                var out = FileOutputStream(requireActivity().getExternalFilesDir(null).toString() + "/board" + noFiles.toString() + "/og.png")
-
-                val processedBoard = processedImage.await()
-                processedBoard.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-                val cells = CellExtractor().splitBitmap(processedBoard, 9, 9)
-
-                for (i in 0..8) {
-                    for (j in 0..8) {
-                        val cell = cells[i][j]
-                        Utils.bitmapToMat(cell, tempMat)
-
-                        val avgPix = Core.mean(tempMat).`val`[0]
-                        var byteBuffer = ByteBuffer.allocateDirect(4* 28*28*1)
-
-                        val resizedPic = Bitmap.createScaledBitmap(cell, 28, 28, true)
-                        resizedPic.copyPixelsToBuffer(byteBuffer)
-
-                        var dirFile = File(requireActivity().getExternalFilesDir(null).toString())
-                        var noFiles = dirFile.listFiles().size
-                        var boardDirFile = File(requireActivity().getExternalFilesDir(null).toString() + "/board" + (noFiles - 1).toString())
-                        var boardNoFiles = boardDirFile.listFiles().size
-                        var out = FileOutputStream(requireActivity().getExternalFilesDir(null).toString() + "/board" + (noFiles - 1).toString() + "/" + boardNoFiles + ".png")
-                        resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-                        tImage.load(resizedPic)
-
-                        tflite.run(convertBitmapToByteBuffer(resizedPic), output)
-
-                        val result = output[0]
-
-                        val maxConfidence = result.max()
-                        val prediction = maxConfidence?.let { it1 -> result.indexOf(it1) }
-                        val isCellEmpty = avgPix > 250
-
-                        if (prediction != null && !isCellEmpty) {
-                            sudokuBoard2DIntArray.board2DIntArray[i][j] = prediction
-                        }
-
-                        println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
-                    }
+                GlobalScope.launch {
+                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
+                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(digitRecogniser.sudokuBoard2DIntArray)
+                    findNavController().navigate(action)
                 }
-
-                tflite.close()
-
-                val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(sudokuBoard2DIntArray)
-                findNavController().navigate(action)
             }
         }
         return view
@@ -182,21 +99,15 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     private fun crossfade() {
         val shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         loadingProgressBar.apply {
-            // Set the content view to 0% opacity but visible, so that it is visible
-            // (but fully transparent) during the animation.
             alpha = 0f
             visibility = View.VISIBLE
 
-            // Animate the content view to 100% opacity, and clear any animation
-            // listener set on the view.
             animate()
                 .alpha(1f)
                 .setDuration(shortAnimationDuration.toLong())
                 .setListener(null)
         }
-        // Animate the loading view to 0% opacity. After the animation ends,
-        // set its visibility to GONE as an optimization step (it won't
-        // participate in layout passes, etc.)
+
         captureButton.animate()
             .alpha(0f)
             .setDuration(shortAnimationDuration.toLong())
@@ -215,36 +126,6 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
             val d = it as BottomSheetDialog
             d.behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels
         }
-    }
-
-    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer? {
-        val byteBuffer =
-            ByteBuffer.allocateDirect(4 * 28 * 28 )
-        byteBuffer.order(ByteOrder.nativeOrder())
-        val intValues = IntArray(28*28)
-        bitmap.getPixels(
-            intValues,
-            0,
-            bitmap.width,
-            0,
-            0,
-            bitmap.width,
-            bitmap.height
-        )
-        var pixel = 0
-        for (i in 0 until 28) {
-            for (j in 0 until 28) {
-                var `val` = intValues[pixel++]
-                var red = Color.red(`val`)
-                var green = Color.green(`val`)
-                var blue = Color.blue(`val`)
-
-                var grayValue = ((red + green + blue) / (3 * 255.0)).toFloat()
-
-                byteBuffer.putFloat(grayValue)
-            }
-        }
-        return byteBuffer
     }
 
     private fun openBackgroundThread() {

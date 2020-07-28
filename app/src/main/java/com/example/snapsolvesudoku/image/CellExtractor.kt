@@ -12,10 +12,10 @@ private const val TAG = "CellExtractor"
 class CellExtractor {
 
     fun splitBitmap(grid : Bitmap, xCount : Int, yCount : Int) : Array<Array<Bitmap>> {
-        var indiCell : Array<Array<Bitmap>> = Array(9) {Array(9) { Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)} }
+        val indiCell : Array<Array<Bitmap>> = Array(9) {Array(9) { Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)} }
 
-        var width : Int = grid.width / xCount
-        var height : Int = grid.height / yCount
+        val width = grid.width / xCount
+        val height = grid.height / yCount
 
         Log.d(TAG, "splitBitmap: $width $height")
 
@@ -41,8 +41,8 @@ class CellExtractor {
         val cellArea = originalCellBitmap.height * originalCellBitmap.width
         val minAreaForDigits = 0.07 * cellArea
 
-        var originalCellMat = Mat()
-        var contours = mutableListOf<MatOfPoint>()
+        val originalCellMat = Mat()
+        val contours = mutableListOf<MatOfPoint>()
         Utils.bitmapToMat(originalCellBitmap, originalCellMat)
 
         Log.d(TAG, "digitExtract: cell area $cellArea")
@@ -65,18 +65,18 @@ class CellExtractor {
 
         if (croppingBound.area() < minAreaForDigits) {
             Log.d(TAG, "digitExtract: Rejected Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
-            var emptyBitmap = Bitmap.createBitmap(originalCellMat.width(), originalCellMat.height(), Bitmap.Config.ARGB_8888)
+            val emptyBitmap = Bitmap.createBitmap(originalCellMat.width(), originalCellMat.height(), Bitmap.Config.ARGB_8888)
             emptyBitmap.eraseColor(Color.WHITE)
             return emptyBitmap
         } else {
-            var croppedDigitMat = Mat(originalCellMat, croppingBound)
+            val croppedDigitMat = Mat(originalCellMat, croppingBound)
             val margin = croppedDigitMat.height() / 2
 
             Log.d(TAG, "digitExtract: Accepted Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
 
             Core.copyMakeBorder(croppedDigitMat, croppedDigitMat, margin, margin, margin, margin, Core.BORDER_CONSTANT, Scalar(0.0, 0.0, 0.0))
 
-            var croppedDigitBitmap = Bitmap.createBitmap(croppedDigitMat.width(), croppedDigitMat.height(), Bitmap.Config.ARGB_8888)
+            val croppedDigitBitmap = Bitmap.createBitmap(croppedDigitMat.width(), croppedDigitMat.height(), Bitmap.Config.ARGB_8888)
 
             Core.bitwise_not(croppedDigitMat, croppedDigitMat)
             Utils.matToBitmap(croppedDigitMat, croppedDigitBitmap)

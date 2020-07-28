@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
         copyModelData()
+
     }
 
     private fun copyModelData() {

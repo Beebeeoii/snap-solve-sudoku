@@ -9,21 +9,32 @@ import org.opencv.photo.Photo
 private const val TAG = "ImageProcessor"
 
 class ImageProcessor {
-    fun processImage(mat : Mat) : Mat {
-        var denoisedMat = Mat()
+    fun processImage(mat : Mat, fromCamera: Boolean) : Mat {
+        if (!fromCamera) {
+            val threshMat = Mat()
+            Imgproc.adaptiveThreshold(mat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 9, 16.0)
+
+            val swopMat = Mat()
+            Core.bitwise_not(threshMat, swopMat)
+            return swopMat
+        }
+
+        val denoisedMat = Mat()
         Photo.fastNlMeansDenoising(mat, denoisedMat, 13F, 13, 23)
 
-        var blurMat = Mat()
+        val blurMat = Mat()
         Imgproc.GaussianBlur(denoisedMat, blurMat, Size(11.0, 11.0), 0.0)
 
-        var threshMat = Mat()
+        denoisedMat.release()
+
+        val threshMat = Mat()
         Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 9, 2.0)
 
-        var swopMat = Mat()
+        blurMat.release()
+
+        val swopMat = Mat()
         Core.bitwise_not(threshMat, swopMat)
 
-        denoisedMat.release()
-        blurMat.release()
         threshMat.release()
 
         return swopMat

@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.example.snapsolvesudoku.solver.BoardValidator
@@ -13,8 +12,8 @@ import com.example.snapsolvesudoku.solver.BoardValidator
 private const val TAG = "SudokuBoardView"
 
 class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    private var cellHeight: Int = 0
-    private var cellWidth: Int = 0
+    private var cellHeight: Float = 0.0F
+    private var cellWidth: Float = 0.0F
 
     var cells: Array<Array<Cell>> = arrayOf(
         arrayOf(Cell(row = 0, col = 0), Cell(row = 0, col = 1), Cell(row = 0, col = 2), Cell(row = 0, col = 3), Cell(row = 0, col = 4), Cell(row = 0, col = 5), Cell(row = 0, col = 6), Cell(row = 0, col = 7), Cell(row = 0, col = 8)),
@@ -34,42 +33,45 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        var paint = Paint()
-        paint.color = Color.WHITE
-        canvas?.drawRect(0F, 10F, width.toFloat(), height.toFloat(), paint)
+        val backgroundPaint = Paint()
+        backgroundPaint.color = Color.WHITE
+        canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 
-        Log.d(TAG, "onDraw: SudokuBoardView Width - ${width}px Height - ${height}px")
-
-        var paintDivider = Paint()
-        paintDivider.color = Color.BLACK
-        for (x in 0 until width step width/9) {
-            canvas?.drawRect(x.toFloat(), 10F, (x + 1).toFloat(), height.toFloat(), paintDivider)
-            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 1).toFloat(), paintDivider)
+        //TODO fix majorline minorline offset bug being obvious on lower res display
+        val majorGridDividerPaint = Paint()
+        majorGridDividerPaint.color = Color.BLACK
+        for (x in 0..width step width/9) {
+            canvas?.drawRect(x.toFloat(), 0F, (x + 1).toFloat(), height.toFloat(), majorGridDividerPaint)
+            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 1).toFloat(), majorGridDividerPaint)
         }
 
-        for (x in 0 until width step width/3) {
-            canvas?.drawRect(x.toFloat(), 10F, (x + 3).toFloat(), height.toFloat(), paintDivider)
-            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 3).toFloat(), paintDivider)
+        for (x in 0..width step width/3) {
+            canvas?.drawRect(x.toFloat(), 0F, (x + 3).toFloat(), height.toFloat(), majorGridDividerPaint)
+            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 3).toFloat(), majorGridDividerPaint)
         }
+        canvas?.drawRect((width - 3).toFloat(), 0F, width.toFloat(), height.toFloat(), majorGridDividerPaint)
+        canvas?.drawRect(0F, (height - 3).toFloat(), width.toFloat(), height.toFloat(), majorGridDividerPaint)
 
-        paintDivider.color = Color.LTGRAY
-        paintDivider.alpha = 80
+        val selectedGridPaint = Paint()
+        selectedGridPaint.color = Color.LTGRAY
+        selectedGridPaint.alpha = 80
 
         if (selectedCell != null && isEditable) {
-            canvas?.drawRect((selectedCell!!.column * cellWidth).toFloat(),
+            canvas?.drawRect(
+                selectedCell!!.column * cellWidth,
                 0F,
-                ((selectedCell!!.column + 1) * cellWidth).toFloat(),
+                (selectedCell!!.column + 1) * cellWidth,
                 height.toFloat(),
-                paintDivider)
+                selectedGridPaint)
             canvas?.drawRect(0F,
-                (selectedCell!!.row * cellHeight).toFloat(),
+                selectedCell!!.row * cellHeight,
                 width.toFloat(),
-                ((selectedCell!!.row + 1) * cellHeight).toFloat(),
-                paintDivider)
+                (selectedCell!!.row + 1) * cellHeight,
+                selectedGridPaint)
         }
 
         val digitPaint = Paint()
-        digitPaint.textSize = ((cellHeight / 2).toFloat())
+        digitPaint.textSize = cellHeight / 2
 
         val offsetWidth = (cellWidth - digitPaint.measureText("9")) / 2
         val offsetHeight = (cellHeight + digitPaint.textSize) / 2
@@ -94,23 +96,26 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
                     }
                     val avgY = (cell.row * cellHeight) + offsetHeight
                     val avgX = (cell.column * cellWidth) + offsetWidth
-                    canvas?.drawText(cell.value.toString(),
+                    canvas?.drawText(
+                        cell.value.toString(),
                         avgX,
                         avgY, digitPaint)
                 }
 
                 if (!cell.isValid) {
-                    canvas?.drawRect((cell.column * cellWidth).toFloat(),
-                        (cell.row * cellHeight).toFloat(),
-                        ((cell.column + 1) * cellWidth).toFloat(),
-                        ((cell.row + 1) * cellHeight).toFloat(), errorPaint)
+                    canvas?.drawRect(
+                        cell.column * cellWidth,
+                        cell.row * cellHeight,
+                        (cell.column + 1) * cellWidth,
+                        (cell.row + 1) * cellHeight, errorPaint)
                 }
 
                 if (cell.value == selectedCell?.value && cell.isValid && selectedCell?.value != 0) {
-                    canvas?.drawRect((cell.column * cellWidth).toFloat(),
-                        (cell.row * cellHeight).toFloat(),
-                        ((cell.column + 1) * cellWidth).toFloat(),
-                        ((cell.row + 1) * cellHeight).toFloat(), sameDigitPaint)
+                    canvas?.drawRect(
+                        cell.column * cellWidth,
+                        cell.row * cellHeight,
+                        (cell.column + 1) * cellWidth,
+                        (cell.row + 1) * cellHeight, sameDigitPaint)
                 }
             }
         }
@@ -122,14 +127,13 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
+        val width: Float
+        val height: Float
 
-        var width : Int
-        var height : Int
-
-        width = widthSize
+        width = widthSize.toFloat()
 
         height = if (heightMode == MeasureSpec.EXACTLY) {
-            heightSize
+            heightSize.toFloat()
         } else {
             width
         }
@@ -137,7 +141,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         cellHeight = height / 9
         cellWidth = width / 9
 
-        setMeasuredDimension(width, height)
+        setMeasuredDimension(width.toInt(), height.toInt())
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -174,7 +178,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     fun to2DIntArray(): Array<IntArray> {
-        var board2DArray = Array(9){IntArray(9){0}}
+        val board2DArray = Array(9){IntArray(9){0}}
 
         for (x in 0..8) {
             for (y in 0..8) {
