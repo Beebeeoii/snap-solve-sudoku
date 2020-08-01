@@ -16,6 +16,15 @@
             app:destination="@id/importPictureFragment" />
         <argument android:name="board2DIntArray"
             app:argType="com.example.snapsolvesudoku.SudokuBoard2DIntArray" />
+        <action
+            android:id="@+id/action_mainFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <dialog
         android:id="@+id/importPictureFragment"
@@ -38,4 +47,22 @@
             android:id="@+id/action_cameraFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.snapsolvesudoku.fragments.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.snapsolvesudoku.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.snapsolvesudoku.fragments.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
 </navigation>

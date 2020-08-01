@@ -37,20 +37,24 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         backgroundPaint.color = Color.WHITE
         canvas?.drawRect(0F, 0F, width.toFloat(), height.toFloat(), backgroundPaint)
 
-        //TODO fix majorline minorline offset bug being obvious on lower res display
         val majorGridDividerPaint = Paint()
         majorGridDividerPaint.color = Color.BLACK
-        for (x in 0..width step width/9) {
-            canvas?.drawRect(x.toFloat(), 0F, (x + 1).toFloat(), height.toFloat(), majorGridDividerPaint)
-            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 1).toFloat(), majorGridDividerPaint)
+        for (x in 1 until 9) {
+
+            if (x % 3 == 0) { //major divider
+                canvas?.drawRect(((x * cellWidth) - 1.5).toFloat(), 0F, ((x * cellWidth) + 1.5).toFloat(), height.toFloat(), majorGridDividerPaint)
+                canvas?.drawRect(0F, ((x * cellWidth) - 1.5).toFloat(), width.toFloat(), ((x * cellWidth) + 1.5).toFloat(), majorGridDividerPaint)
+            } else { //minor divider
+                canvas?.drawRect(((x * cellWidth) - 0.5).toFloat(), 0F, ((x * cellWidth) + 0.5).toFloat(), height.toFloat(), majorGridDividerPaint)
+                canvas?.drawRect(0F, ((x * cellWidth) - 0.5).toFloat(), width.toFloat(), ((x * cellWidth) + 0.5).toFloat(), majorGridDividerPaint)
+
+            }
         }
 
-        for (x in 0..width step width/3) {
-            canvas?.drawRect(x.toFloat(), 0F, (x + 3).toFloat(), height.toFloat(), majorGridDividerPaint)
-            canvas?.drawRect(0F, x.toFloat(), width.toFloat(), (x + 3).toFloat(), majorGridDividerPaint)
-        }
         canvas?.drawRect((width - 3).toFloat(), 0F, width.toFloat(), height.toFloat(), majorGridDividerPaint)
+        canvas?.drawRect(0F, 0F, 3F, height.toFloat(), majorGridDividerPaint)
         canvas?.drawRect(0F, (height - 3).toFloat(), width.toFloat(), height.toFloat(), majorGridDividerPaint)
+        canvas?.drawRect(0F, 0F, width.toFloat(), 3F, majorGridDividerPaint)
 
         val selectedGridPaint = Paint()
         selectedGridPaint.color = Color.LTGRAY
@@ -138,8 +142,8 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
             width
         }
 
-        cellHeight = height / 9
-        cellWidth = width / 9
+        cellHeight = (height / 9.0).toFloat()
+        cellWidth = (width / 9.0).toFloat()
 
         setMeasuredDimension(width.toInt(), height.toInt())
     }

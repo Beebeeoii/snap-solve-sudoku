@@ -9,5 +9,4 @@
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
         <item name="iconTint">@color/colorPrimaryDark</item>
     </style>
-
 </resources>

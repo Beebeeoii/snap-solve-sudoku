@@ -11,13 +11,19 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.drawToBitmap
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.snapsolvesudoku.R
 import com.example.snapsolvesudoku.SudokuBoard
+import com.example.snapsolvesudoku.db.Database
+import com.example.snapsolvesudoku.db.HistoryEntity
 import com.example.snapsolvesudoku.solver.BoardSolver
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
@@ -67,15 +73,15 @@ class MainFragment : Fragment() {
         appBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.history -> {
-                    Toast.makeText(requireActivity(), "History clicked", Toast.LENGTH_SHORT).show()
+                    val action = MainFragmentDirections.actionMainFragmentToHistoryFragment()
+                    findNavController().navigate(action)
                     true
                 }
-
                 R.id.settings -> {
-                    Toast.makeText(requireActivity(), "Settings clicked", Toast.LENGTH_SHORT).show()
+                    val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                    findNavController().navigate(action)
                     true
                 }
-
                 else -> false
             }
         }
@@ -137,8 +143,8 @@ class MainFragment : Fragment() {
         }
 
         moreDetails.setOnClickListener {
-            //TODO Details: 1)allsolutions 2) statistics (time taken to solve, no hints, no solutions, datetime)
-            Toast.makeText(requireContext(), "More details clicked", Toast.LENGTH_SHORT).show()
+            val action = MainFragmentDirections.actionMainFragmentToDetailsFragment()
+            findNavController().navigate(action)
         }
 
         share.setOnClickListener {
@@ -148,8 +154,15 @@ class MainFragment : Fragment() {
             val sudokuBoardBitmap = sudokuBoardView.drawToBitmap(Bitmap.Config.ARGB_8888)
             val dirFile = File(requireActivity().getExternalFilesDir(null).toString())
             val noFiles = dirFile.listFiles().size
-            val out = FileOutputStream(requireActivity().getExternalFilesDir(null).toString() + "/boardBit_${noFiles}.png")
+            val filePath = requireActivity().getExternalFilesDir(null).toString() + "/boardBit_${noFiles}.png"
+            val out = FileOutputStream(filePath)
             sudokuBoardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+            val database = Database.invoke(requireContext())
+            val historyDao = database?.getHistoryDao()
+            CoroutineScope(Dispatchers.IO).launch {
+                historyDao.insertHistoryEntry(HistoryEntity(filePath, "Saturday", "1 August 2020", "144220", List(1){"132"}))
+            }
 
             val snackbar = Snackbar.make(mainFragmentContainer, "Board image saved!", Snackbar.LENGTH_SHORT)
             snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
