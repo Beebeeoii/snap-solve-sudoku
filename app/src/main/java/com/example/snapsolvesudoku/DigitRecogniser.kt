@@ -3,10 +3,14 @@ package com.example.snapsolvesudoku
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
+import com.example.snapsolvesudoku.db.Database
 import com.example.snapsolvesudoku.image.CellExtractor
 import com.example.snapsolvesudoku.image.GridExtractor
 import com.example.snapsolvesudoku.image.GridlinesRemover
 import com.example.snapsolvesudoku.image.ImageProcessor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.Mat
@@ -61,22 +65,27 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
         val output = Array(1) { FloatArray(10) }
 
-        val dirFile = File(activity.getExternalFilesDir(null).toString())
-        val noFiles = dirFile.listFiles().size
-        val boardDirFile =
-            File(activity.getExternalFilesDir(null).toString() + "/board" + noFiles.toString())
+        val uniqueId = UniqueIdGenerator.uniqueId
+        val boardDirPath = "${activity.getExternalFilesDir(null).toString()}/${uniqueId}"
+        val processedPicturePath = "${boardDirPath}/${uniqueId}_processed.png"
+        val boardDirFile = File(boardDirPath)
         if (!boardDirFile.exists()) {
             boardDirFile.mkdir()
         }
-        val out = FileOutputStream(
-            activity.getExternalFilesDir(null)
-                .toString() + "/board" + noFiles.toString() + "/og.png"
-        )
+        val out = FileOutputStream(processedPicturePath)
+        boardBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+        val database = Database.invoke(activity.applicationContext)
+        val historyDao = database?.getHistoryDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            historyDao.updateProcessedPicturePath(
+                uniqueId = uniqueId,
+                processedPicturePath = processedPicturePath)
+        }
 
-        boardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        sudokuBoard2DIntArray.uniqueId = uniqueId
 
         val cells = CellExtractor().splitBitmap(boardBitmap, 9, 9)
-
+        var recognisedDigits = ""
         for (i in 0..8) {
             for (j in 0..8) {
                 val cell = cells[i][j]
@@ -88,18 +97,9 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
                 val resizedPic = Bitmap.createScaledBitmap(cell, 28, 28, true)
                 resizedPic.copyPixelsToBuffer(byteBuffer)
 
-                val dirFile = File(activity.getExternalFilesDir(null).toString())
-                val noFiles = dirFile.listFiles().size
-                val boardDirFile = File(
-                    activity.getExternalFilesDir(null)
-                        .toString() + "/board" + (noFiles - 1).toString()
-                )
-                val boardNoFiles = boardDirFile.listFiles().size
-                val out = FileOutputStream(
-                    activity.getExternalFilesDir(null)
-                        .toString() + "/board" + (noFiles - 1).toString() + "/" + boardNoFiles + ".png"
-                )
-                resizedPic.compress(Bitmap.CompressFormat.PNG, 100, out)
+                val individialProcessedCellPicturePath = "${boardDirPath}/${i}${j}.png"
+                val out = FileOutputStream(individialProcessedCellPicturePath)
+                resizedPic.compress(Bitmap.CompressFormat.PNG, 50, out)
 
                 tImage.load(resizedPic)
 
@@ -113,10 +113,18 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
                 if (prediction != null && !isCellEmpty) {
                     sudokuBoard2DIntArray.board2DIntArray[i][j] = prediction
+                    recognisedDigits += prediction
+                } else {
+                    recognisedDigits += "0"
                 }
 
                 println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
             }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            historyDao.updateRecognisedDigits(
+                uniqueId = uniqueId,
+                recognisedDigits = recognisedDigits)
         }
 
         tflite.close()

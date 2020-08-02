@@ -64,5 +64,10 @@
         android:id="@+id/detailsFragment"
         android:name="com.example.snapsolvesudoku.fragments.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="uniqueId"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
 </navigation>

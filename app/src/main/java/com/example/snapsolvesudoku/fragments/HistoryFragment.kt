@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,15 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snapsolvesudoku.HistoryRecyclerAdapter
 import com.example.snapsolvesudoku.R
 import com.example.snapsolvesudoku.db.Database
-import com.example.snapsolvesudoku.db.HistoryEntity
 import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.coroutines.*
 
 private const val TAG = "HistoryFragment"
 
 private lateinit var appBar: MaterialToolbar
 private lateinit var recyclerView: RecyclerView
 private lateinit var constraintLayout: ConstraintLayout
+private lateinit var noHistoryEntryImageView: AppCompatImageView
 
 class HistoryFragment : Fragment() {
 
@@ -30,11 +30,21 @@ class HistoryFragment : Fragment() {
         appBar = rootView.findViewById(R.id.appBar)
         constraintLayout = rootView.findViewById(R.id.historyConstraintLayout)
         recyclerView = rootView.findViewById(R.id.historyRecyclerView)
+        noHistoryEntryImageView = rootView.findViewById(R.id.historyNoHistoryIcon)
 
         val database = Database.invoke(requireContext())
-        val historyDao = database?.getHistoryDao()
-        historyDao?.getAllHistoryEntry().observe(viewLifecycleOwner, Observer {
-            recyclerView.adapter = HistoryRecyclerAdapter(it, requireContext(), requireActivity())
+        val historyDao = database.getHistoryDao()
+        historyDao.getAllHistoryEntry().observe(viewLifecycleOwner, Observer {
+
+            if (it.isEmpty()) {
+                noHistoryEntryImageView.visibility = View.VISIBLE
+            }
+
+            recyclerView.adapter = HistoryRecyclerAdapter(
+                it.filter { historyEntity ->
+                    historyEntity.solutionsPath != null
+                },
+                requireContext(), requireActivity())
         })
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

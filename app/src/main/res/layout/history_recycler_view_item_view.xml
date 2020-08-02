@@ -8,6 +8,12 @@
     app:cardUseCompatPadding="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/history_unique_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,10 +26,12 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/history_item_image"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:layout_weight="1" />
+            app:srcCompat="@drawable/ic_no_board_picture_48dp"
+            android:layout_weight="1"
+            android:visibility="invisible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"

@@ -38,4 +38,16 @@
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/historyNoHistoryIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/no_history_background"
+        android:alpha="0.5"
+        app:layout_constraintLeft_toLeftOf="@id/historyRecyclerView"
+        app:layout_constraintRight_toRightOf="@id/historyRecyclerView"
+        app:layout_constraintTop_toTopOf="@id/historyRecyclerView"
+        app:layout_constraintBottom_toBottomOf="@id/historyRecyclerView"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

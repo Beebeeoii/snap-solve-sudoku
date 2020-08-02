@@ -2,7 +2,6 @@ package com.example.snapsolvesudoku
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +10,15 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snapsolvesudoku.db.HistoryEntity
-import com.example.snapsolvesudoku.fragments.HistoryFragment
 import com.example.snapsolvesudoku.fragments.HistoryFragmentDirections
-import com.example.snapsolvesudoku.fragments.MainFragmentDirections
 import com.google.android.material.textview.MaterialTextView
 
-class HistoryRecyclerAdapter(private val data: List<HistoryEntity>, context: Context, activity: Activity) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryEntryHolder>() {
+private const val TAG = "HistoryRecyclerAdapter"
 
-    private val context = context
-    private val activity = activity
+class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
+                             private val context: Context,
+                             private val activity: Activity) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryEntryHolder>() {
+
     private val historyData = data
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryEntryHolder {
@@ -33,13 +32,25 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>, context: Con
     }
 
     override fun onBindViewHolder(holder: HistoryEntryHolder, position: Int) {
-        holder.picture.setImageBitmap(BitmapFactory.decodeFile(historyData[position].picturePath))
-        holder.dayTextView.text = historyData[position].day
-        holder.dateTextView.text = historyData[position].date
+        if (itemCount == 0) {
+            return
+        }
+
+        holder.uniqueIdTextView.text = historyData[position].uniqueId
+        if (historyData[position].originalPicturePath != null) {
+            holder.picture.setImageBitmap(BitmapFactory.decodeFile(historyData[position].originalPicturePath))
+        }
+        holder.picture.visibility = View.VISIBLE
+
+        val dateTime = historyData[position].dateTime
+        val dayOfWeek = DateTimeGenerator.getDayOfWeekFromDateTime(dateTime)
+        val formattedDate = DateTimeGenerator.getFormattedDate(dateTime)
+        holder.dayTextView.text = dayOfWeek
+        holder.dateTextView.text = formattedDate
     }
 
-
     class HistoryEntryHolder(view: View, private val activity: Activity) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        val uniqueIdTextView: MaterialTextView = view.findViewById(R.id.history_unique_id)
         val picture: AppCompatImageView = view.findViewById(R.id.history_item_image)
         val dayTextView: MaterialTextView = view.findViewById(R.id.history_item_day)
         val dateTextView: MaterialTextView = view.findViewById(R.id.history_item_date)
@@ -49,10 +60,9 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>, context: Con
         }
 
         override fun onClick(v: View?) {
-            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment()
+            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(uniqueIdTextView.text.toString())
             findNavController(activity, R.id.historyRecyclerView).navigate(action)
         }
-
     }
 }
 

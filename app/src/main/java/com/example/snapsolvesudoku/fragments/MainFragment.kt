@@ -1,19 +1,23 @@
 package com.example.snapsolvesudoku.fragments
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.example.snapsolvesudoku.DateTimeGenerator
 import com.example.snapsolvesudoku.R
 import com.example.snapsolvesudoku.SudokuBoard
+import com.example.snapsolvesudoku.UniqueIdGenerator
 import com.example.snapsolvesudoku.db.Database
 import com.example.snapsolvesudoku.db.HistoryEntity
 import com.example.snapsolvesudoku.solver.BoardSolver
@@ -26,11 +30,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileWriter
+import java.io.IOException
 
 private const val TAG = "MainFragment"
 private lateinit var mainFragmentContainer: ConstraintLayout
 private lateinit var importButton: ExtendedFloatingActionButton
-lateinit var sudokuBoardView: SudokuBoard
+private lateinit var sudokuBoardView: SudokuBoard
 private lateinit var appBar: MaterialToolbar
 private lateinit var clearCell: MaterialButton
 private lateinit var clearBoard: MaterialButton
@@ -78,6 +84,7 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.settings -> {
+
                     val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
                     findNavController().navigate(action)
                     true
@@ -88,6 +95,7 @@ class MainFragment : Fragment() {
 
         if (arguments != null && !requireArguments().isEmpty) {
             val sudokuBoard2DIntArray = MainFragmentArgs.fromBundle(requireArguments()).board2DIntArray
+            sudokuBoardView.uniqueId =sudokuBoard2DIntArray.uniqueId
 
             for (i in 0..8) {
                 for (j in 0..8) {
@@ -99,7 +107,6 @@ class MainFragment : Fragment() {
                 }
             }
             sudokuBoardView.invalidate()
-
         }
 
         clearBoard.setOnClickListener {
@@ -120,20 +127,67 @@ class MainFragment : Fragment() {
         solve.setOnClickListener {
             if (sudokuBoardView.isValid) {
                 it.isClickable = false
-                it.setBackgroundColor(Color.argb(50, 82, 26, 74))
-                var solver = BoardSolver(sudokuBoardView.to2DIntArray(),2)
+
+                val givenDigits = sudokuBoardView.toString()
+
+                val solver = BoardSolver(sudokuBoardView.to2DIntArray(),2)
                 solver.solveBoard()
 
-                var solution = solver.boardSolutions[0]
-                for (i in 0..8) {
-                    for (j in 0..8) {
-                        sudokuBoardView.cells[i][j].value = solution[i][j]
+                var solutionString = ""
+                for (solutionCounter in solver.boardSolutions.indices) {
+                    val solution = solver.boardSolutions[solutionCounter]
+                    for (i in 0..8) {
+                        for (j in 0..8) {
+                            if (solutionCounter == 0) {
+                                sudokuBoardView.cells[i][j].value = solution[i][j]
+                            }
+
+                            solutionString += solution[i][j].toString()
+                        }
+                    }
+                    solutionString += "\n"
+                }
+
+                val database = Database.invoke(requireContext())
+                val historyDao = database.getHistoryDao()
+
+                if (sudokuBoardView.uniqueId == "") {
+                    sudokuBoardView.uniqueId = UniqueIdGenerator.generateId().uniqueId
+                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${sudokuBoardView.uniqueId}"
+                    val root = File(boardDirPath)
+                    if (!root.exists()) {
+                        root.mkdirs()
+                    }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        historyDao.insertHistoryEntry(HistoryEntity(
+                            uniqueId = sudokuBoardView.uniqueId,
+                            dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                            folderPath = boardDirPath,
+                            recognisedDigits = givenDigits,
+                            solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                        ))
+                    }
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        historyDao.updateSolutions(
+                            uniqueId = sudokuBoardView.uniqueId,
+                            solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                        )
+                    }
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        historyDao.updateRecognisedDigits(
+                            uniqueId = sudokuBoardView.uniqueId,
+                            recognisedDigits = givenDigits
+                        )
                     }
                 }
 
                 sudokuBoardView.isEditable = false
                 sudokuBoardView.selectedCell = null
                 sudokuBoardView.invalidate()
+
+                requireArguments().clear()
             } else {
                 val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
                 snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
@@ -143,8 +197,23 @@ class MainFragment : Fragment() {
         }
 
         moreDetails.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToDetailsFragment()
-            findNavController().navigate(action)
+            if (!sudokuBoardView.isEditable) {
+                val database = Database.invoke(requireContext())
+                val historyDao = database?.getHistoryDao()
+                CoroutineScope(Dispatchers.IO).launch {
+                    historyDao.getSpecificEntry(sudokuBoardView.uniqueId)
+                }
+                val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(sudokuBoardView.uniqueId)
+                findNavController().navigate(action)
+            } else {
+                val snackbar = Snackbar.make(mainFragmentContainer, "Unable to view details as board is unsolved", Snackbar.LENGTH_SHORT)
+                snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                snackbar.anchorView = importButton
+                snackbar.setAction("Solve") {
+                    solve.performClick()
+                }
+                snackbar.show()
+            }
         }
 
         share.setOnClickListener {
@@ -152,22 +221,26 @@ class MainFragment : Fragment() {
             sudokuBoardView.invalidate()
 
             val sudokuBoardBitmap = sudokuBoardView.drawToBitmap(Bitmap.Config.ARGB_8888)
-            val dirFile = File(requireActivity().getExternalFilesDir(null).toString())
-            val noFiles = dirFile.listFiles().size
-            val filePath = requireActivity().getExternalFilesDir(null).toString() + "/boardBit_${noFiles}.png"
-            val out = FileOutputStream(filePath)
-            sudokuBoardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-            val database = Database.invoke(requireContext())
-            val historyDao = database?.getHistoryDao()
-            CoroutineScope(Dispatchers.IO).launch {
-                historyDao.insertHistoryEntry(HistoryEntity(filePath, "Saturday", "1 August 2020", "144220", List(1){"132"}))
+            val cacheDir = File(requireActivity().cacheDir, "sharedBoard")
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs()
             }
+            val out = FileOutputStream(cacheDir.path + "/shared_board.png")
+            sudokuBoardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            out.close()
 
-            val snackbar = Snackbar.make(mainFragmentContainer, "Board image saved!", Snackbar.LENGTH_SHORT)
-            snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-            snackbar.anchorView = importButton
-            snackbar.show()
+            val imagePath = File(requireActivity().cacheDir, "sharedBoard")
+            val newFile = File(imagePath, "shared_board.png")
+            val contentUri: Uri? = FileProvider.getUriForFile(requireContext(), "com.example.snapsolvesudoku.fileprovider", newFile)
+
+            if (contentUri != null) {
+                val shareIntent = Intent()
+                shareIntent.action = Intent.ACTION_SEND
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // temp permission for receiving app to read this file
+                shareIntent.setDataAndType(contentUri, requireActivity().contentResolver.getType(contentUri))
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                startActivity(Intent.createChooser(shareIntent, "Share to"))
+            }
         }
 
         input_1_button.setOnClickListener {
@@ -230,5 +303,27 @@ class MainFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun saveSolutionsFile(uniqueId: String, boardSolution: String) : String? {
+        val fileName = "${uniqueId}_solutions.txt"
+
+        try {
+            val root = File("${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}")
+            if (!root.exists()) {
+                root.mkdirs()
+            }
+            val solution = File(root, fileName)
+            val writer = FileWriter(solution)
+            writer.append(boardSolution)
+            writer.flush()
+            writer.close()
+
+            return "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}/$fileName"
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return null
     }
 }
