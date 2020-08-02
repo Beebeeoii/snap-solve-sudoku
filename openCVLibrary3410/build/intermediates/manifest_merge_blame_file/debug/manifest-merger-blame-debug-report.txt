@@ -6,12 +6,12 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="26"
-8-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml
+8-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="29" />
-9-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml
+9-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml
 10
 11    <uses-permission android:name="android.permission.CAMERA" />
-11-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml:7:5-65
-11-->D:\AndroidStudio\AndroidStudioProjects\SnapSolveSudoku\openCVLibrary3410\src\main\AndroidManifest.xml:7:22-62
+11-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml:7:5-65
+11-->C:\Users\beebe\AndroidStudioProjects\SnapSolveSudoku2\openCVLibrary3410\src\main\AndroidManifest.xml:7:22-62
 12
 13</manifest>
