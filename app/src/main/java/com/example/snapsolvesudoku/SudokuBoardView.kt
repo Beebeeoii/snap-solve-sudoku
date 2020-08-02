@@ -29,6 +29,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     var isEditable: Boolean = true
     var isValid: Boolean = true
+    var uniqueId = ""
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -203,6 +204,17 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
         isEditable = true
         isValid = true
+        uniqueId = ""
+    }
+
+    override fun toString(): String {
+        var boardString = ""
+        for (x in 0..8) {
+            for (y in 0..8) {
+                boardString += cells[x][y].value.toString()
+            }
+        }
+        return boardString
     }
 
     override fun invalidate() {

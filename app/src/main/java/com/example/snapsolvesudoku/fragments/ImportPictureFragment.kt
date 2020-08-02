@@ -10,18 +10,21 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.example.snapsolvesudoku.DateTimeGenerator
 import com.example.snapsolvesudoku.DigitRecogniser
 import com.example.snapsolvesudoku.R
+import com.example.snapsolvesudoku.UniqueIdGenerator
+import com.example.snapsolvesudoku.db.Database
+import com.example.snapsolvesudoku.db.HistoryEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
+import java.io.File
 
 private const val TAG = "ImportPictureFragment"
 
@@ -88,6 +91,24 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
                             digitRecogniser.processBoard(false)
                         }
                         GlobalScope.launch {
+                            val uniqueId = UniqueIdGenerator.generateId().uniqueId
+                            val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
+                            val boardDirFile = File(boardDirPath)
+                            if (!boardDirFile.exists()) {
+                                boardDirFile.mkdir()
+                            }
+
+                            val database = Database.invoke(requireContext())
+                            val historyDao = database.getHistoryDao()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                historyDao.insertHistoryEntry(HistoryEntity(
+                                    uniqueId = uniqueId,
+                                    dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                                    folderPath = boardDirPath,
+                                    originalPicturePath = croppedImagePath)
+                                )
+                            }
+
                             digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
                             val action = ImportPictureFragmentDirections.actionImportPictureFragmentToMainFragment(digitRecogniser.sudokuBoard2DIntArray)
                             findNavController().navigate(action)

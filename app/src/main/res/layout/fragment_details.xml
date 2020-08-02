@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/detailsConstraintLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,6 +24,7 @@
             app:navigationIcon="@drawable/ic_arrow_back_24dp"
             app:title="Details"
             app:titleTextColor="@color/colorPrimaryDark"
+            app:menu="@menu/details_fragment_app_bar_meu"
             android:background="@color/white"
             style="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary" />
 
@@ -36,7 +38,8 @@
         android:layout_gravity="center"
         android:background="@color/white"
         android:gravity="center"
-        android:padding="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
@@ -44,10 +47,12 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/detailsPicture"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:adjustViewBounds="true"
+            app:srcCompat="@drawable/ic_no_board_picture_48dp"
             android:scaleType="fitCenter"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="invisible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -84,6 +89,9 @@
         android:id="@+id/detailsSudokuBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detailsLinearLayout" />
@@ -96,6 +104,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detailsSudokuBoard"
+        app:layout_constraintVertical_bias="0.3"
         android:paddingLeft="64dp"
         android:paddingRight="64dp">
 

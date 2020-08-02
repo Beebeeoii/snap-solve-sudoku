@@ -3,6 +3,7 @@ package com.example.snapsolvesudoku.fragments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -13,20 +14,22 @@ import android.widget.ProgressBar
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
-import com.example.snapsolvesudoku.DigitRecogniser
-import com.example.snapsolvesudoku.R
+import com.example.snapsolvesudoku.*
+import com.example.snapsolvesudoku.db.Database
+import com.example.snapsolvesudoku.db.HistoryEntity
 import com.example.snapsolvesudoku.image.GridExtractor
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textview.MaterialTextView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.JavaCamera2View
+import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 
 private const val TAG = "CameraFragment"
@@ -81,12 +84,34 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 crossfade()
 
                 Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
+                val originalSudokuBitmap = Bitmap.createBitmap(sudokuBoardMat!!.width(), sudokuBoardMat!!.height(), Bitmap.Config.ARGB_8888)
 
                 val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
                 GlobalScope.launch {
+                    Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
+                    val uniqueId = UniqueIdGenerator.generateId().uniqueId
+                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
+                    val boardDirFile = File(boardDirPath)
+                    if (!boardDirFile.exists()) {
+                        boardDirFile.mkdir()
+                    }
+                    val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
+                    val out = FileOutputStream(originalPicturePath)
+                    originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+
+                    val database = Database.invoke(requireContext())
+                    val historyDao = database.getHistoryDao()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        historyDao.insertHistoryEntry(HistoryEntity(
+                            uniqueId = uniqueId,
+                            dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                            folderPath = boardDirPath,
+                            originalPicturePath = originalPicturePath))
+                    }
+
                     digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
                     val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(digitRecogniser.sudokuBoard2DIntArray)
                     findNavController().navigate(action)
@@ -135,9 +160,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     }
 
     private fun closeBackgroundThread() {
-        if (backgroundHandler != null) {
-            backgroundThread.quitSafely();
-        }
+        backgroundThread.quitSafely()
     }
 
     override fun onResume() {
