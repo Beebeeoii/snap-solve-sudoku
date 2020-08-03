@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#521A4A</color>
     <color name="colorSecondaryLight">#CCC15A</color>
     <color name="white">#FFFFFF</color>
+    <color name="darkerWhite">#FAF5FF</color>
     <color name="black">#16181E</color>
 </resources>

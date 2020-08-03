@@ -8,27 +8,27 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.snapsolvesudoku.fragments.MainFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_importPictureFragment"
             app:destination="@id/importPictureFragment" />
         <argument android:name="board2DIntArray"
-            app:argType="com.example.snapsolvesudoku.SudokuBoard2DIntArray" />
+            app:argType="com.beebeeoii.snapsolvesudoku.SudokuBoard2DIntArray" />
         <action
             android:id="@+id/action_mainFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <dialog
         android:id="@+id/importPictureFragment"
-        android:name="com.example.snapsolvesudoku.fragments.ImportPictureFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"
         android:label="ImportPictureFragment" >
         <action
             android:id="@+id/action_importPictureFragment_to_cameraFragment"
@@ -40,7 +40,7 @@
     </dialog>
     <dialog
         android:id="@+id/cameraFragment"
-        android:name="com.example.snapsolvesudoku.fragments.CameraFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action
@@ -49,7 +49,7 @@
     </dialog>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.snapsolvesudoku.fragments.HistoryFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" >
         <action
@@ -57,12 +57,8 @@
             app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.snapsolvesudoku.fragments.SettingsFragment"
-        android:label="SettingsFragment" />
-    <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.example.snapsolvesudoku.fragments.DetailsFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" >
         <argument
@@ -70,4 +66,18 @@
             app:argType="string"
             android:defaultValue='""' />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
 </navigation>

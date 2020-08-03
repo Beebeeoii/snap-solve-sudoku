@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CameraFragment"
+    tools:context="com.beebeeoii.snapsolvesudoku.fragments.CameraFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.opencv.android.JavaCamera2View

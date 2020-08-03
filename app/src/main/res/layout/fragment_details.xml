@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.DetailsFragment">
+    tools:context="com.beebeeoii.snapsolvesudoku.fragments.DetailsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -85,7 +85,7 @@
 
     </LinearLayout>
 
-    <com.example.snapsolvesudoku.SudokuBoard
+    <com.beebeeoii.snapsolvesudoku.SudokuBoard
         android:id="@+id/detailsSudokuBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
