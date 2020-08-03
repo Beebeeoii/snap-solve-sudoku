@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/aboutConstraintLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.beebeeoii.snapsolvesudoku.AboutFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="About"
+            app:titleTextColor="@color/colorPrimaryDark"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back_24dp"
+            style="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:isScrollContainer="true">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                android:layout_marginTop="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/colorPrimaryDark"
+                app:cardBackgroundColor="@color/white">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/aboutDeveloper"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aboutDeveloperTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Developer"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/aboutDeveloperIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:srcCompat="@drawable/dev_icon"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/aboutDeveloperTitle" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/aboutDeveloperName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Jia Wei"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/aboutDeveloperIcon"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="b33b33o11@gmail.com"
+                        android:textSize="12sp"
+                        android:paddingBottom="8dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/aboutDeveloperName"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                android:layout_marginTop="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/colorPrimaryDark">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:gravity="center">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Support"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="32sp"
+                        android:padding="8dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutRate"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutRateIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_about_rate_24dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutRateTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Rate"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutRateTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Rate me on Playstore"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutGithub"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutGithubIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_github"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutGithubTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Github"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutGithubTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Follow and fork this project on Github"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutDonate"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutDonateIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_donate_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutDonateTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Donate"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutDonateTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Contribute in a financial way"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutShare"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutShareIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_share_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutShareTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Share"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutShareTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Spread the word"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutReport"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutReportIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_bug_report_black_24dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutReportTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Report bugs"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutReportTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Spray some insecticide"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutFeature"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutFeatureIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_feature_request_black_24dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutFeatureTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Feature Request"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutFeatureTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Leave some thoughts here"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                android:layout_marginTop="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/colorPrimaryDark">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:gravity="center">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Miscellaneous"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="32sp"
+                        android:padding="8dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutFAQ"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutFAQIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_faq_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutFAQTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="FAQ"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutFAQTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Seek assistance"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutChangelog"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutChangelogIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_changelog_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutChangelogTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Changelog"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutChangelogTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="View what's new"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutUpcomingFeatures"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutUpcomingFeaturesIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_upcoming_features_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutUpcomingFeaturesTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Planned Features"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutUpcomingFeaturesTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Sneak peak into the future"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutLibraries"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/aboutLibrariesIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_libraries_24px"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutLibrariesTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Open source libraries"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/aboutLibrariesTitle"
+                            app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
+                            android:layout_marginLeft="16dp"
+                            android:text="Without which, this project would not be possible"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Version 2.0"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.MainFragment">
+    tools:context="com.beebeeoii.snapsolvesudoku.fragments.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -27,7 +27,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.example.snapsolvesudoku.SudokuBoard
+    <com.beebeeoii.snapsolvesudoku.SudokuBoard
         android:id="@+id/sudokuBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +61,7 @@
             app:iconGravity="textStart"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:textColor="@color/colorPrimaryDark"
+            android:tooltipText="Clear board"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_weight="1" />
@@ -74,6 +75,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             app:iconGravity="textStart"
             android:textColor="@color/colorPrimaryDark"
+            android:tooltipText="Clear cell"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_weight="1" />
@@ -85,6 +87,7 @@
             android:text="Solve"
             android:textStyle="bold"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:tooltipText="Solve board"
             app:strokeColor="@color/colorPrimaryDark"
             app:strokeWidth="2dp"
             android:textColor="@color/colorPrimaryDark"
@@ -97,6 +100,7 @@
             app:icon="@drawable/ic_read_more_24px"
             app:iconTint="@color/colorPrimaryDark"
             style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:tooltipText="View details"
             app:iconGravity="textStart"
             android:textColor="@color/colorPrimaryDark"
             android:layout_gravity="center"
@@ -110,6 +114,7 @@
             app:icon="@drawable/ic_share_24px"
             app:iconTint="@color/colorPrimaryDark"
             style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:tooltipText="Share board"
             app:iconGravity="textStart"
             android:textColor="@color/colorPrimaryDark"
             android:layout_gravity="center"

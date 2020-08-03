@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:title="General">
+
+        <SeekBarPreference
+            app:title="Maximum solutions"
+            app:key="maximumNoSolutions"
+            app:min="1"
+            android:max="50"
+            app:seekBarIncrement="1"
+            app:defaultValue="1"
+            app:showSeekBarValue="true"
+            app:updatesContinuously="true"
+            app:icon="@drawable/ic_max_no_solutions_preference_24dp"/>
+
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="autoSaveEntry"-->
+<!--            app:title="Auto save sudoku boards"-->
+<!--            app:defaultValue="true"-->
+<!--            app:summaryOff="Manually save sudoku boards from details page"-->
+<!--            app:summaryOn="Automatically save entries after solving"-->
+<!--            app:icon="@drawable/ic_auto_save_preference_24dp" />-->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Digit Recognition Engine">
+
+        <Preference
+            app:key="modelUpdate"
+            app:title="Check for updates"
+            app:summary="Update digit recognition model"
+            app:icon="@drawable/ic_update_model_preference_black_24dp" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
