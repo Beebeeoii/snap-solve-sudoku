@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.SettingsFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -77,7 +77,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.AboutFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
 </navigation>

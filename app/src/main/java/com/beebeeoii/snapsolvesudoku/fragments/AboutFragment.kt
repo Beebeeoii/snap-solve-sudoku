@@ -1,15 +1,19 @@
-package com.beebeeoii.snapsolvesudoku
+package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.beebeeoii.snapsolvesudoku.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.heinrichreimersoftware.androidissuereporter.IssueReporterLauncher
 import com.michaelflisar.changelog.ChangelogBuilder
@@ -35,19 +39,45 @@ class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_about, container, false)
 
-        constraintLayout = rootView.findViewById(R.id.aboutConstraintLayout)
-        appBar = rootView.findViewById(R.id.appBar)
-        developer = rootView.findViewById(R.id.aboutDeveloper)
-        rate = rootView.findViewById(R.id.aboutRate)
-        github = rootView.findViewById(R.id.aboutGithub)
-        donate = rootView.findViewById(R.id.aboutDonate)
-        share = rootView.findViewById(R.id.aboutShare)
-        reportBug = rootView.findViewById(R.id.aboutReport)
-        featureRequest = rootView.findViewById(R.id.aboutFeature)
-        faq = rootView.findViewById(R.id.aboutFAQ)
-        changelog = rootView.findViewById(R.id.aboutChangelog)
-        upcomingFeatures = rootView.findViewById(R.id.aboutUpcomingFeatures)
-        libraries = rootView.findViewById(R.id.aboutLibraries)
+        constraintLayout = rootView.findViewById(
+            R.id.aboutConstraintLayout
+        )
+        appBar = rootView.findViewById(
+            R.id.appBar
+        )
+        developer = rootView.findViewById(
+            R.id.aboutDeveloper
+        )
+        rate = rootView.findViewById(
+            R.id.aboutRate
+        )
+        github = rootView.findViewById(
+            R.id.aboutGithub
+        )
+        donate = rootView.findViewById(
+            R.id.aboutDonate
+        )
+        share = rootView.findViewById(
+            R.id.aboutShare
+        )
+        reportBug = rootView.findViewById(
+            R.id.aboutReport
+        )
+        featureRequest = rootView.findViewById(
+            R.id.aboutFeature
+        )
+        faq = rootView.findViewById(
+            R.id.aboutFAQ
+        )
+        changelog = rootView.findViewById(
+            R.id.aboutChangelog
+        )
+        upcomingFeatures = rootView.findViewById(
+            R.id.aboutUpcomingFeatures
+        )
+        libraries = rootView.findViewById(
+            R.id.aboutLibraries
+        )
 
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -98,7 +128,12 @@ class AboutFragment : Fragment() {
         }
 
         featureRequest.setOnClickListener {
-
+            val dialogBuilder = AlertDialog.Builder(requireContext())
+            val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
+            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_feature_request, viewGroup, false)
+            dialogBuilder.setView(dialogView)
+            val dialog = dialogBuilder.create()
+            dialog.show()
         }
 
         faq.setOnClickListener {
