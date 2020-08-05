@@ -6,14 +6,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('C:\\Users\\beebe\\OneDrive\\Android Dev\\beebeeoii.jks')
-            storePassword 'oceanparcific123123'
-            keyAlias 'snapsolvesudokukey'
-            keyPassword 'oceanparcific123123'
-        }
-    }
+
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
@@ -31,7 +24,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 
