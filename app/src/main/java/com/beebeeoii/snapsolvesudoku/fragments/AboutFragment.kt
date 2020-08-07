@@ -1,10 +1,9 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
-import android.content.ActivityNotFoundException
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.R
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.heinrichreimersoftware.androidissuereporter.IssueReporterLauncher
 import com.michaelflisar.changelog.ChangelogBuilder
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -33,6 +40,7 @@ private lateinit var faq: ConstraintLayout
 private lateinit var changelog: ConstraintLayout
 private lateinit var upcomingFeatures: ConstraintLayout
 private lateinit var libraries: ConstraintLayout
+private const val TAG = "AboutFragment"
 
 class AboutFragment : Fragment() {
 
@@ -103,7 +111,8 @@ class AboutFragment : Fragment() {
         }
 
         donate.setOnClickListener {
-
+            val action = AboutFragmentDirections.actionAboutFragmentToDonateFragment()
+            findNavController().navigate(action)
         }
 
         share.setOnClickListener {
@@ -134,6 +143,31 @@ class AboutFragment : Fragment() {
             dialogBuilder.setView(dialogView)
             val dialog = dialogBuilder.create()
             dialog.show()
+
+            val requestInput = dialogView.findViewById<TextInputEditText>(R.id.feature_dialog_input)
+            val submitRequest = dialogView.findViewById<MaterialButton>(R.id.feature_dialog_submit_button)
+            submitRequest.setOnClickListener {
+                val firestore = Firebase.firestore
+                val feature = hashMapOf("request" to requestInput.text.toString())
+                firestore.collection("feature_requests")
+                    .add(feature)
+                    .addOnSuccessListener { documentReference ->
+                        val snackbar = Snackbar.make(constraintLayout, "Request ID: ${documentReference.id}", Snackbar.LENGTH_LONG)
+                        snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                        snackbar.setAction("Copy ID") {
+                            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            clipboard.setPrimaryClip(ClipData.newPlainText("Request ID", documentReference.id))
+                        }
+                        snackbar.show()
+                    }
+                    .addOnFailureListener {e ->
+                        Log.d(TAG, "onCreateView: $e")
+                        val snackbar = Snackbar.make(constraintLayout, "Error encountered while sending request. Please try again.", Snackbar.LENGTH_SHORT)
+                        snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                        snackbar.show()
+                    }
+                dialog.dismiss()
+            }
         }
 
         faq.setOnClickListener {
@@ -150,7 +184,7 @@ class AboutFragment : Fragment() {
         }
 
         upcomingFeatures.setOnClickListener {
-
+            FinestWebView.Builder(requireActivity()).show("https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/UPCOMING_FEATURES.md")
         }
 
         libraries.setOnClickListener {

@@ -53,12 +53,13 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
     }
 
     fun recogniseDigits(boardBitmap: Bitmap) {
-        sudokuBoard2DIntArray =
-            SudokuBoard2DIntArray()
+        sudokuBoard2DIntArray = SudokuBoard2DIntArray()
+
+        val modelFileName = "070820090621"
 
         val tflite = Interpreter(
             File(
-                activity.getExternalFilesDir(null).toString() + "/model/model.tflite"
+                "${activity.getExternalFilesDir(null).toString()}/model/${modelFileName}"
             )
         )
         val tImage = TensorImage(DataType.FLOAT32)
@@ -73,10 +74,10 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
         if (!boardDirFile.exists()) {
             boardDirFile.mkdir()
         }
-        val out = FileOutputStream(processedPicturePath)
-        boardBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+        val outputStream = FileOutputStream(processedPicturePath)
+        boardBitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
         val database = Database.invoke(activity.applicationContext)
-        val historyDao = database?.getHistoryDao()
+        val historyDao = database.getHistoryDao()
         CoroutineScope(Dispatchers.IO).launch {
             historyDao.updateProcessedPicturePath(
                 uniqueId = uniqueId,

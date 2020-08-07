@@ -21,18 +21,21 @@ object DateTimeGenerator {
         }
     }
 
-    fun getDayOfWeekFromDateTime(dateTime: String) : String {
-        val dateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
+    fun getDayOfWeekFromDateTime(dateTimeString: String) : String {
+        val dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
         return dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     }
 
     //eg 01 August 2020
-    fun getFormattedDate(dateTime: String) : String {
-        val dateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
+    fun getFormattedDate(dateTimeString: String) : String {
+        val dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
         val day = dateTime.dayOfMonth
         val month = dateTime.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
         val year = dateTime.year
         return "$day $month $year"
     }
 
+    fun getDateTimeObjectFromString(dateTimeString: String) : LocalDateTime {
+        return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
+    }
 }

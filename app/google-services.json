@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "65001788650",
+    "firebase_url": "https://snapsolvesudoku.firebaseio.com",
+    "project_id": "snapsolvesudoku",
+    "storage_bucket": "snapsolvesudoku.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65001788650:android:b39301c9e0cfabeee7b393",
+        "android_client_info": {
+          "package_name": "com.beebeeoii.snapsolvesudoku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65001788650-hl5tjgpsh1dmabfrpe757gt490hlm5cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABPvHrb9_CcKw7q8O2-dfSGYgJD1YV6x8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65001788650-hl5tjgpsh1dmabfrpe757gt490hlm5cm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

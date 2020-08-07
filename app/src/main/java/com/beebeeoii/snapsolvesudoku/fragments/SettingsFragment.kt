@@ -14,27 +14,19 @@ import com.google.android.material.appbar.MaterialToolbar
 private lateinit var fragmentContainer: FragmentContainerView
 private lateinit var appBar: MaterialToolbar
 
-
 class SettingsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        fragmentContainer = rootView.findViewById(
-            R.id.settingsFragmentContainer
-        )
+        fragmentContainer = rootView.findViewById(R.id.settingsFragmentContainer)
         requireActivity()
             .supportFragmentManager
             .beginTransaction()
-            .replace(
-                R.id.settingsFragmentContainer,
-                Preferences()
-            )
+            .replace(R.id.settingsFragmentContainer, Preferences())
             .addToBackStack(null)
             .commit()
-        appBar = rootView.findViewById(
-            R.id.appBar
-        )
+        appBar = rootView.findViewById(R.id.appBar)
 
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -50,6 +42,7 @@ class SettingsFragment : Fragment() {
                 else -> false
             }
         }
+
 
         return rootView
     }

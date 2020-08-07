@@ -206,13 +206,13 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
         Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
-        var blurMat = Mat()
+        val blurMat = Mat()
         Imgproc.GaussianBlur(ogGRAYMat, blurMat, Size(9.0, 9.0), 0.0)
 
-        var threshMat = Mat()
+        val threshMat = Mat()
         Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 7, 2.0)
 
-        var contours : ArrayList<MatOfPoint> = ArrayList(0)
+        val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
 
         val ogArea = ogGRAYMat.size().width * ogGRAYMat.size().height

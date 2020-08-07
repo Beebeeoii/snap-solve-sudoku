@@ -12,6 +12,7 @@ import java.io.*
 
 private const val TAG = "MainActivity"
 
+
 class MainActivity : AppCompatActivity() {
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
@@ -41,16 +42,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun copyModelData() {
+        val modelFileName = "070820090621"
+        val modelPath = "${getExternalFilesDir(null).toString()}/model"
         try {
-            val dir = File(getExternalFilesDir(null).toString() + "/model")
+            val dir = File(modelPath)
 
             if (!dir.exists()) {
                 dir.mkdirs()
             }
 
-            val pathToDataFile = getExternalFilesDir(null).toString() + "/model" + "/model.tflite"
+            val pathToDataFile = "${modelPath}/${modelFileName}"
             if (!File(pathToDataFile).exists()) {
-                val `in` = assets.open("converted_model.tflite")
+                val `in` = assets.open(modelFileName)
                 val out = FileOutputStream(pathToDataFile)
                 val buffer = ByteArray(1024)
                 var read = `in`.read(buffer)
