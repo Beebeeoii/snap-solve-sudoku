@@ -12,7 +12,6 @@ import java.io.*
 
 private const val TAG = "MainActivity"
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
@@ -21,9 +20,7 @@ class MainActivity : AppCompatActivity() {
                 LoaderCallbackInterface.SUCCESS -> {
                     Log.i(TAG, "OpenCV loaded successfully")
                 }
-                else -> {
-                    super.onManagerConnected(status)
-                }
+                else -> super.onManagerConnected(status)
             }
         }
     }
@@ -49,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
             if (!dir.exists()) {
                 dir.mkdirs()
+            } else {
+                return
             }
 
             val pathToDataFile = "${modelPath}/${modelFileName}"

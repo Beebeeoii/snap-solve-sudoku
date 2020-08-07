@@ -55,7 +55,8 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
     fun recogniseDigits(boardBitmap: Bitmap) {
         sudokuBoard2DIntArray = SudokuBoard2DIntArray()
 
-        val modelFileName = "070820090621"
+        val modelFileDir = File("${activity.getExternalFilesDir(null).toString()}/model")
+        val modelFileName = modelFileDir.list()[0]
 
         val tflite = Interpreter(
             File(

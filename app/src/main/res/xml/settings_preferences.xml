@@ -15,14 +15,6 @@
             app:updatesContinuously="true"
             app:icon="@drawable/ic_max_no_solutions_preference_24dp"/>
 
-<!--        <SwitchPreferenceCompat-->
-<!--            app:key="autoSaveEntry"-->
-<!--            app:title="Auto save sudoku boards"-->
-<!--            app:defaultValue="true"-->
-<!--            app:summaryOff="Manually save sudoku boards from details page"-->
-<!--            app:summaryOn="Automatically save entries after solving"-->
-<!--            app:icon="@drawable/ic_auto_save_preference_24dp" />-->
-
     </PreferenceCategory>
 
     <PreferenceCategory

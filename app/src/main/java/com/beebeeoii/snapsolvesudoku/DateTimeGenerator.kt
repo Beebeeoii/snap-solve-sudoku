@@ -38,4 +38,12 @@ object DateTimeGenerator {
     fun getDateTimeObjectFromString(dateTimeString: String) : LocalDateTime {
         return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
     }
+
+    fun getDateTimeStringFromObject(dateTimeObject: LocalDateTime?) : String {
+        if (dateTimeObject != null) {
+            return dateTimeObject.format(DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
+        }
+
+        return "000000000000"
+    }
 }

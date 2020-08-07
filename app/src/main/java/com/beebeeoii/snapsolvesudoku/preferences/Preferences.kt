@@ -25,12 +25,15 @@ class Preferences : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
 
-        val dateTimeObjects = mutableListOf<LocalDateTime>()
-        val modelFileDir = File("${requireActivity().getExternalFilesDir(null).toString()}/model")
-        val modelDateTimeCreated = DateTimeGenerator.getDateTimeObjectFromString(modelFileDir.list()[0])
-
         val updateModelButton: Preference? = findPreference("modelUpdate")
+
         updateModelButton?.setOnPreferenceClickListener {
+
+            val dateTimeObjects = mutableListOf<LocalDateTime>()
+            val modelFileDir = File("${requireActivity().getExternalFilesDir(null).toString()}/model")
+            val modelFileName = modelFileDir.list()[0]
+            val modelDateTimeCreated = DateTimeGenerator.getDateTimeObjectFromString(modelFileName)
+
             var modelHasUpdate: Boolean
 
             val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
@@ -53,11 +56,35 @@ class Preferences : PreferenceFragmentCompat() {
                     if (modelHasUpdate) {
                         statusText.text = "Update is available"
                         button.text = "Update"
-
-                        button.setOnClickListener(updateModel)
-
                         progressBar.visibility = View.INVISIBLE
                         statusText.visibility = View.VISIBLE
+
+                        button.setOnClickListener {
+                            dialog.setCancelable(false)
+
+                            progressBar.visibility = View.VISIBLE
+                            statusText.visibility = View.INVISIBLE
+
+                            val updatedModelName = DateTimeGenerator.getDateTimeStringFromObject(dateTimeObjects.max())
+                            val updatedModelReference = storageReference
+                                .child("models/${updatedModelName}")
+                            val localFile = File("${requireActivity().getExternalFilesDir(null).toString()}/model/$updatedModelName")
+
+                            updatedModelReference.getFile(localFile)
+                                .addOnProgressListener {
+                                    progressBar.isIndeterminate = false
+                                    progressBar.progress = (it.bytesTransferred / it.totalByteCount * 100).toInt()
+                                }
+                                .addOnSuccessListener {
+                                    Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show()
+                                    deleteOutdatedModelFile(modelFileName)
+                                    dialog.dismiss()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(requireActivity(), "Update failed. Please try again", Toast.LENGTH_SHORT).show()
+                                    dialog.dismiss()
+                                }
+                        }
                     } else {
                         progressBar.visibility = View.INVISIBLE
                         statusText.visibility = View.VISIBLE
@@ -75,12 +102,11 @@ class Preferences : PreferenceFragmentCompat() {
         }
     }
 
-    private var updateModel: View.OnClickListener = View.OnClickListener {
-        Toast.makeText(requireActivity(), "Updated", Toast.LENGTH_SHORT).show()
+    private var closeDialog: View.OnClickListener = View.OnClickListener {
         dialog.dismiss()
     }
 
-    private var closeDialog: View.OnClickListener = View.OnClickListener {
-        dialog.dismiss()
+    private fun deleteOutdatedModelFile(outdatedModelFileName: String) : Boolean {
+        return File("${requireActivity().getExternalFilesDir(null).toString()}/model/$outdatedModelFileName").delete()
     }
 }
