@@ -55,9 +55,7 @@ class DetailsFragment : Fragment() {
         nextBoard = rootView.findViewById(R.id.detailsNextBoard)
 
         if (arguments != null && !requireArguments().isEmpty) {
-            uniqueId = DetailsFragmentArgs.fromBundle(
-                requireArguments()
-            ).uniqueId
+            uniqueId = DetailsFragmentArgs.fromBundle(requireArguments()).uniqueId
 
             detailsSudokuBoardView.uniqueId = uniqueId
 

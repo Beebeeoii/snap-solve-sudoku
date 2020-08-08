@@ -21,7 +21,6 @@ import com.beebeeoii.snapsolvesudoku.*
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.image.GridExtractor
-import com.beebeeoii.snapsolvesudoku.fragments.CameraFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -87,16 +86,10 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
                 crossfade()
 
-                Core.rotate(
-                    sudokuBoardMat,
-                    sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
+                Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
                 val originalSudokuBitmap = Bitmap.createBitmap(sudokuBoardMat!!.width(), sudokuBoardMat!!.height(), Bitmap.Config.ARGB_8888)
 
-                val digitRecogniser =
-                    DigitRecogniser(
-                        requireActivity(),
-                        sudokuBoardMat!!
-                    )
+                val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
@@ -197,9 +190,13 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         cameraView.disableView()
     }
 
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {        
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
         val ogRGBMat = inputFrame!!.rgba()
-        val centrePoint = Point(ogRGBMat.size().width / 2, ogRGBMat.size().height / 2)
+
+        val width = ogRGBMat.size().width
+        val height = ogRGBMat.size().height
+
+        val centrePoint = Point( width / 2, height / 2)
 
         val ogGRAYMat = Mat()
         Imgproc.cvtColor(ogRGBMat, ogGRAYMat, Imgproc.COLOR_BGR2GRAY, 1)
@@ -207,10 +204,10 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
         val blurMat = Mat()
-        Imgproc.GaussianBlur(ogGRAYMat, blurMat, Size(9.0, 9.0), 0.0)
+        Imgproc.GaussianBlur(ogGRAYMat, blurMat, Size(7.0, 7.0), 0.0)
 
         val threshMat = Mat()
-        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 7, 2.0)
+        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
 
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -256,7 +253,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
         try {
             val boundingRect = Imgproc.boundingRect(realContours[indexOfBoard])
-            sudokuBoardMat = Mat(ogGRAYMat, Rect((boundingRect.x - 10), (boundingRect.y - 10), (boundingRect.width + 20), (boundingRect.height + 20)))
+            sudokuBoardMat = Mat(ogGRAYMat, Rect((boundingRect.x - 5), (boundingRect.y - 5), (boundingRect.width + 10), (boundingRect.height + 10)))
         } catch (e: Exception) {
             e.printStackTrace()
         }

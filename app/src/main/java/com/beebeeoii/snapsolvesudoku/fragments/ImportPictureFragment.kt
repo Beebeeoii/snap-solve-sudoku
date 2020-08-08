@@ -2,6 +2,7 @@ package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +17,6 @@ import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
-import com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.theartofdev.edmodo.cropper.CropImage
@@ -26,6 +26,7 @@ import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.io.File
+import java.io.FileOutputStream
 
 private const val TAG = "ImportPictureFragment"
 
@@ -103,6 +104,9 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
                             if (!boardDirFile.exists()) {
                                 boardDirFile.mkdir()
                             }
+                            val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
+                            val out = FileOutputStream(originalPicturePath)
+                            croppedSudokuBoardBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
 
                             val database = Database.invoke(requireContext())
                             val historyDao = database.getHistoryDao()

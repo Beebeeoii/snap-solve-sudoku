@@ -12,7 +12,7 @@ class ImageProcessor {
     fun processImage(mat : Mat, fromCamera: Boolean) : Mat {
         if (!fromCamera) {
             val threshMat = Mat()
-            Imgproc.adaptiveThreshold(mat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 9, 16.0)
+            Imgproc.adaptiveThreshold(mat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
 
             val swopMat = Mat()
             Core.bitwise_not(threshMat, swopMat)
@@ -23,12 +23,12 @@ class ImageProcessor {
         Photo.fastNlMeansDenoising(mat, denoisedMat, 13F, 13, 23)
 
         val blurMat = Mat()
-        Imgproc.GaussianBlur(denoisedMat, blurMat, Size(11.0, 11.0), 0.0)
+        Imgproc.GaussianBlur(denoisedMat, blurMat, Size(7.0, 7.0), 0.0)
 
         denoisedMat.release()
 
         val threshMat = Mat()
-        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 9, 2.0)
+        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
 
         blurMat.release()
 

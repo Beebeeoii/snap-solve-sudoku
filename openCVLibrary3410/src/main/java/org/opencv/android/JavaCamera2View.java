@@ -86,14 +86,14 @@ public class JavaCamera2View extends CameraBridgeViewBase {
         }
     }
 
-    protected boolean initializeCamera() {
+    protected void initializeCamera() {
         Log.i(LOGTAG, "initializeCamera");
         CameraManager manager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
         try {
             String camList[] = manager.getCameraIdList();
             if (camList.length == 0) {
                 Log.e(LOGTAG, "Error: camera isn't detected.");
-                return false;
+                return;
             }
             if (mCameraIndex == CameraBridgeViewBase.CAMERA_ID_ANY) {
                 mCameraID = camList[0];
@@ -123,7 +123,6 @@ public class JavaCamera2View extends CameraBridgeViewBase {
                     throw new CameraAccessException(CameraAccessException.CAMERA_DISCONNECTED);
                 }
             }
-            return true;
         } catch (CameraAccessException e) {
             Log.e(LOGTAG, "OpenCamera - Camera Access Exception", e);
         } catch (IllegalArgumentException e) {
@@ -131,7 +130,6 @@ public class JavaCamera2View extends CameraBridgeViewBase {
         } catch (SecurityException e) {
             Log.e(LOGTAG, "OpenCamera - Security Exception", e);
         }
-        return false;
     }
 
     private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
@@ -205,7 +203,7 @@ public class JavaCamera2View extends CameraBridgeViewBase {
                         }
                         mCaptureSession = cameraCaptureSession;
                         try {
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(15,15));
+                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(30,30));
 
                             mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, mBackgroundHandler);
                             Log.i(LOGTAG, "CameraPreviewSession has been started");

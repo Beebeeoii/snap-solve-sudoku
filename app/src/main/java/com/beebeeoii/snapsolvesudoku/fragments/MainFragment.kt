@@ -26,6 +26,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,10 +97,10 @@ class MainFragment : Fragment() {
         }
 
         if (arguments != null && !requireArguments().isEmpty) {
-            val sudokuBoard2DIntArray = MainFragmentArgs.fromBundle(
-                requireArguments()
-            ).board2DIntArray
-            sudokuBoardView.uniqueId =sudokuBoard2DIntArray.uniqueId
+            val sudokuBoard2DIntArray = MainFragmentArgs
+                .fromBundle(requireArguments())
+                .board2DIntArray
+            sudokuBoardView.uniqueId = sudokuBoard2DIntArray.uniqueId
 
             for (i in 0..8) {
                 for (j in 0..8) {
@@ -138,6 +141,16 @@ class MainFragment : Fragment() {
                 val solver = BoardSolver(sudokuBoardView.to2DIntArray(), maxSols)
                 solver.solveBoard()
 
+                if (solver.boardSolutions.size == 0) {
+                    val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
+                    snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                    snackbar.anchorView = importButton
+                    snackbar.show()
+
+                    it.isClickable = true
+                    return@setOnClickListener
+                }
+
                 var solutionString = ""
                 for (solutionCounter in solver.boardSolutions.indices) {
                     val solution = solver.boardSolutions[solutionCounter]
@@ -158,6 +171,7 @@ class MainFragment : Fragment() {
 
                 if (sudokuBoardView.uniqueId == "") {
                     sudokuBoardView.uniqueId = UniqueIdGenerator.generateId().uniqueId
+                    uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, false)
                     val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${sudokuBoardView.uniqueId}"
                     val root = File(boardDirPath)
                     if (!root.exists()) {
@@ -175,10 +189,13 @@ class MainFragment : Fragment() {
                         )
                     }
                 } else {
+                    val solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                    uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, true)
+                    uploadCapturedDigits(sudokuBoardView.uniqueId)
                     CoroutineScope(Dispatchers.IO).launch {
                         historyDao.updateSolutions(
                             uniqueId = sudokuBoardView.uniqueId,
-                            solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                            solutionsPath = solutionsPath
                         )
                     }
 
@@ -198,8 +215,7 @@ class MainFragment : Fragment() {
             } else {
                 val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
                 snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-                snackbar.anchorView =
-                    importButton
+                snackbar.anchorView = importButton
                 snackbar.show()
             }
         }
@@ -207,14 +223,11 @@ class MainFragment : Fragment() {
         moreDetails.setOnClickListener {
             if (!sudokuBoardView.isEditable) {
                 val database = Database.invoke(requireContext())
-                val historyDao = database?.getHistoryDao()
+                val historyDao = database.getHistoryDao()
                 CoroutineScope(Dispatchers.IO).launch {
                     historyDao.getSpecificEntry(sudokuBoardView.uniqueId)
                 }
-                val action =
-                    MainFragmentDirections.actionMainFragmentToDetailsFragment(
-                        sudokuBoardView.uniqueId
-                    )
+                val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(sudokuBoardView.uniqueId)
                 findNavController().navigate(action)
             } else {
                 val snackbar = Snackbar.make(mainFragmentContainer, "Unable to view details as board is unsolved", Snackbar.LENGTH_SHORT)
@@ -338,5 +351,25 @@ class MainFragment : Fragment() {
         }
 
         return null
+    }
+
+    private fun uploadCapturedDigits(uniqueId: String) {
+        val storageReference = FirebaseStorage.getInstance().reference.child("boards")
+        val boardRef = storageReference.child("/${uniqueId}")
+
+        val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
+        val allPics = File(boardDirPath).listFiles()
+        allPics.forEach {
+            val pic = Uri.fromFile(it)
+            boardRef.child("/${pic.lastPathSegment}").putFile(pic)
+        }
+    }
+
+    private fun uploadBoardWithDigits(uniqueId: String, boardString: String, fromCamera: Boolean) {
+        val firestore = Firebase.firestore
+        val board = hashMapOf(uniqueId to boardString, "fromCamera" to fromCamera)
+        firestore.collection("boards")
+            .document(uniqueId)
+            .set(board)
     }
 }

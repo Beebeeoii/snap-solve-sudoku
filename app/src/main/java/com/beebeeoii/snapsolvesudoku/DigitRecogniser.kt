@@ -87,8 +87,7 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
         sudokuBoard2DIntArray.uniqueId = uniqueId
 
-        val cells = CellExtractor()
-            .splitBitmap(boardBitmap, 9, 9)
+        val cells = CellExtractor().splitBitmap(boardBitmap, 9, 9)
         var recognisedDigits = ""
         for (i in 0..8) {
             for (j in 0..8) {
