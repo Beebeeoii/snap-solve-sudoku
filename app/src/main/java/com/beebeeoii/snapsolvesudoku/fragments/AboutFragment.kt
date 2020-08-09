@@ -124,13 +124,23 @@ class AboutFragment : Fragment() {
         }
 
         reportBug.setOnClickListener {
-            IssueReporterLauncher.forTarget("Beebeeoii", "SnapSolveSudoku")
-                .theme(R.style.Theme_IssueReporter_Light)
-                .guestToken("0e6959e1ba556a92cc3ae04994d2ac6f4b0af85b")
-                .guestEmailRequired(false)
-                .minDescriptionLength(10)
-                .homeAsUpEnabled(true)
-                .launch(requireContext())
+            val gitHubReference = Firebase.firestore
+                .collection("ENV_VAR")
+                .document("GITHUB")
+            gitHubReference.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot != null) {
+                        val gitHubToken = documentSnapshot.data!!["KEY"]
+
+                        IssueReporterLauncher.forTarget("Beebeeoii", "SnapSolveSudoku")
+                            .theme(R.style.Theme_IssueReporter_Light)
+                            .guestToken(gitHubToken as String?)
+                            .guestEmailRequired(false)
+                            .minDescriptionLength(10)
+                            .homeAsUpEnabled(true)
+                            .launch(requireContext())
+                    }
+                }
         }
 
         featureRequest.setOnClickListener {

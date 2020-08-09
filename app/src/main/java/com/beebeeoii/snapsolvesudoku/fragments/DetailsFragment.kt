@@ -22,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 
 private lateinit var constraintLayout: ConstraintLayout
 private lateinit var appBar: MaterialToolbar
@@ -38,7 +39,7 @@ class DetailsFragment : Fragment() {
 
     private val solution2DIntArrayList = mutableListOf<Array<IntArray>>()
     private var solutionCounter = 0
-    private val givenDigitsIndices = mutableListOf<Int>()
+    private val givenDigitsIndices = mutableListOf<IntArray>()
     private lateinit var uniqueId: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -75,12 +76,19 @@ class DetailsFragment : Fragment() {
                 dayTextView.text = dayOfWeek
 
                 val recognisedDigitsString = it[0].recognisedDigits
-                recognisedDigitsString?.forEach { digit ->
-                    if (Character.getNumericValue(digit) != 0) {
-                        val lastIndex = if (givenDigitsIndices.size != 0) givenDigitsIndices.last() else 0
-                        givenDigitsIndices.add(recognisedDigitsString.indexOf(digit, lastIndex))
+                if (recognisedDigitsString != null) {
+                    for (i in recognisedDigitsString.indices) {
+                        if (Character.getNumericValue(recognisedDigitsString[i]) != 0) {
+                            givenDigitsIndices.add(intArrayOf(i/9, i%9))
+                        }
                     }
                 }
+//                recognisedDigitsString?.forEach { digit ->
+//                    if (Character.getNumericValue(digit) != 0) {
+//                        val lastIndex = if (givenDigitsIndices.size != 0) givenDigitsIndices.last() else 0
+//                        givenDigitsIndices.add(recognisedDigitsString.indexOf(digit, lastIndex))
+//                    }
+//                }
 
                 val solutionTextFile = File(it[0].solutionsPath)
                 val inputStream = solutionTextFile.inputStream()
@@ -98,8 +106,10 @@ class DetailsFragment : Fragment() {
                         if (detailsSudokuBoardView.isEditable) {
                             detailsSudokuBoardView.cells[i / 9][i % 9].value = digit
 
-                            if (givenDigitsIndices.contains(i)) {
-                                detailsSudokuBoardView.cells[i / 9][i % 9].isGiven = true
+                            givenDigitsIndices.stream().forEach {t ->
+                                if (t!!.contentEquals(intArrayOf(i/9, i%9))) {
+                                    detailsSudokuBoardView.cells[i / 9][i % 9].isGiven = true
+                                }
                             }
                         }
                     }
