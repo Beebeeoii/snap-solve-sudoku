@@ -1,19 +1,67 @@
 <resources>
-    <string name="app_name">SnapSolveSudoku</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="app_name">Snap Solve Sudoku</string>
+    <string name="app_version">2.0</string>
+    <string name="app_package">com.beebeeoii.snapsolvesudoku</string>
+    <string name="dev_name">Jia Wei</string>
+    <string name="dev_nick">Beebeeoii</string>
+    <string name="dev_email">b33b33o11@gmail.com</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- Main Fragment -->
+    <string name="main_frag_history_button_title">History</string>
+    <string name="main_frag_history_button_description">View previously scanned sudoku boards</string>
+    <string name="main_frag_settings_button_title">Settings</string>
+    <string name="main_frag_settings_button_description">Settings</string>
+    <string name="main_frag_solve_button_text">Solve</string>
+    <string name="main_frag_clear_board_button_tooltip">Clear Board</string>
+    <string name="main_frag_clear_cell_button_tooltip">Clear Cell</string>
+    <string name="main_frag_solve_button_tooltip">Solve Board</string>
+    <string name="main_frag_details_button_tooltip">View Details</string>
+    <string name="main_frag_share_button_tooltip">Share Board</string>
+    <string name="main_frag_import_button_text">Import</string>
+    <string name="main_frag_input_1_button_text">1</string>
+    <string name="main_frag_input_2_button_text">2</string>
+    <string name="main_frag_input_3_button_text">3</string>
+    <string name="main_frag_input_4_button_text">4</string>
+    <string name="main_frag_input_5_button_text">5</string>
+    <string name="main_frag_input_6_button_text">6</string>
+    <string name="main_frag_input_7_button_text">7</string>
+    <string name="main_frag_input_8_button_text">8</string>
+    <string name="main_frag_input_9_button_text">9</string>
+    <!-- Main Fragment -->
+
+
+    <!-- Settings Fragment -->
+    <string name="settings_frag_title">Settings</string>
+    <string name="settings_frag_about_button_title">About</string>
+    <string name="settings_frag_about_button_description">About</string>
+    <!-- Category 1 -->
+    <string name="pref_cat_1_title">General</string>
+    <string name="pref_cat_1_max_sols_title">Maximum Solutions</string>
+    <!-- Category 2 -->
+    <string name="pref_cat_2_title">Digit Recognition Engine</string>
+    <string name="pref_cat_2_check_for_update_title">Check for update</string>
+    <string name="pref_cat_2_check_for_update_subtitle">Update digit recognition model</string>
+    <!-- Settings Fragment -->
+
+
+    <!-- Dialog Feature Requests -->
+    <string name="dialog_feature_requests_title">Feature Request</string>
+    <string name="dialog_feature_requests_input_hint">Request</string>
+    <string name="dialog_feature_requests_submit_button_text">Submit</string>
+    <!-- Dialog Feature Requests -->
+
+
+    <!-- Dialog Import Picture Requests -->
+    <string name="dialog_import_picture_title">Import Picture</string>
+    <string name="dialog_import_picture_use_camera">Use Camera</string>
+    <string name="dialog_import_picture_open_gallery">Open from Gallery</string>
+    <!-- Dialog Import Picture Requests -->
+
+
+    <!-- Dialog Update Model Requests -->
+    <string name="dialog_update_model_title">Model Update</string>
+    <string name="dialog_update_model_no_updates_available">No Updates Available</string>
+    <string name="dialog_update_model_close_dialog">Close</string>
+    <!-- Dialog Update Model Requests -->
 </resources>

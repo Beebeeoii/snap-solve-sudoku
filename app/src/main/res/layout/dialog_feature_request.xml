@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
+
+    <ProgressBar
+        android:id="@+id/feature_dialog_loading_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feature_dialog_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/feature_dialog_title"
@@ -16,13 +25,13 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="Feature Request" />
+        android:text="@string/dialog_feature_requests_title" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/feature_dialog_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Request"
+        android:hint="@string/dialog_feature_requests_input_hint"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,7 +41,7 @@
         android:id="@+id/feature_dialog_submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="@string/dialog_feature_requests_submit_button_text"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_marginTop="8dp"
         app:layout_constraintRight_toRightOf="parent"

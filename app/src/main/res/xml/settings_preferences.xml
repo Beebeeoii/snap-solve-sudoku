@@ -1,11 +1,12 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        app:title="General">
+        app:title="@string/pref_cat_1_title">
 
         <SeekBarPreference
-            app:title="Maximum solutions"
+            app:title="@string/pref_cat_1_max_sols_title"
             app:key="maximumNoSolutions"
             app:min="1"
             android:max="50"
@@ -18,12 +19,12 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="Digit Recognition Engine">
+        app:title="@string/pref_cat_2_title">
 
         <Preference
             app:key="modelUpdate"
-            app:title="Check for updates"
-            app:summary="Update digit recognition model"
+            app:title="@string/pref_cat_2_check_for_update_title"
+            app:summary="@string/pref_cat_2_check_for_update_subtitle"
             app:icon="@drawable/ic_update_model_preference_black_24dp" />
 
     </PreferenceCategory>

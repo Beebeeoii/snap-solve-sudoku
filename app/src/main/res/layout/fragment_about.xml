@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Jia Wei"
+                        android:text="@string/dev_name"
                         android:textStyle="bold"
                         android:textSize="12sp"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="b33b33o11@gmail.com"
+                        android:text="@string/dev_email"
                         android:textSize="12sp"
                         android:paddingBottom="8dp"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -132,8 +132,8 @@
                         android:text="Support"
                         android:textStyle="bold"
                         android:textSize="18sp"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="32sp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="32sp"
                         android:padding="8dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -160,7 +160,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Rate"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -170,7 +170,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutRateTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Rate me on Playstore"
                             android:textSize="12sp"/>
 
@@ -200,7 +200,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Github"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutGithubTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Follow and fork this project on Github"
                             android:textSize="12sp"/>
 
@@ -240,7 +240,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Donate"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -250,7 +250,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutDonateTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Contribute in a financial way"
                             android:textSize="12sp"/>
 
@@ -280,7 +280,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Share"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -290,7 +290,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutShareTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Spread the word"
                             android:textSize="12sp"/>
 
@@ -320,7 +320,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Report bugs"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -330,7 +330,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutReportTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Spray some insecticide"
                             android:textSize="12sp"/>
 
@@ -360,7 +360,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Feature Request"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -370,7 +370,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutFeatureTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Leave some thoughts here"
                             android:textSize="12sp"/>
 
@@ -402,8 +402,8 @@
                         android:text="Miscellaneous"
                         android:textStyle="bold"
                         android:textSize="18sp"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="32sp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="32sp"
                         android:padding="8dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -430,7 +430,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="FAQ"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -440,7 +440,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutFAQTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Seek assistance"
                             android:textSize="12sp"/>
 
@@ -470,7 +470,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Changelog"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -480,7 +480,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutChangelogTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="View what's new"
                             android:textSize="12sp"/>
 
@@ -510,7 +510,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Planned Features"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -520,7 +520,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutUpcomingFeaturesTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Sneak peak into the future"
                             android:textSize="12sp"/>
 
@@ -550,7 +550,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Open source libraries"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -560,7 +560,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@id/aboutLibrariesTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:text="Without which, this project would not be possible"
                             android:textSize="12sp"/>
 
@@ -573,7 +573,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Version 2.0"
+                android:text="@string/app_version"
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"/>

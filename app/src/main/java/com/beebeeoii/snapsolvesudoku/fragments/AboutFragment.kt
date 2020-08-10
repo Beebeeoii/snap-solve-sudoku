@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +18,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.heinrichreimersoftware.androidissuereporter.IssueReporterLauncher
@@ -151,6 +153,7 @@ class AboutFragment : Fragment() {
             val dialog = dialogBuilder.create()
             dialog.show()
 
+            val loadingBar = dialogView.findViewById<ProgressBar>(R.id.feature_dialog_loading_bar)
             val requestInput = dialogView.findViewById<TextInputEditText>(R.id.feature_dialog_input)
             val submitRequest = dialogView.findViewById<MaterialButton>(R.id.feature_dialog_submit_button)
             submitRequest.setOnClickListener {
@@ -172,8 +175,14 @@ class AboutFragment : Fragment() {
                         val snackbar = Snackbar.make(constraintLayout, "Error encountered while sending request. Please try again.", Snackbar.LENGTH_SHORT)
                         snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
                         snackbar.show()
+                    }.addOnCompleteListener {
+                        dialog.dismiss()
                     }
-                dialog.dismiss()
+
+                requestInput.visibility = View.INVISIBLE
+                submitRequest.visibility = View.INVISIBLE
+                loadingBar.visibility = View.VISIBLE
+                dialog.setCancelable(false)
             }
         }
 

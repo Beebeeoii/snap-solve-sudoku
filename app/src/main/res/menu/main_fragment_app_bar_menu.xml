@@ -6,15 +6,15 @@
     <item
         android:id="@+id/history"
         android:icon="@drawable/ic_history_24dp"
-        android:title="History"
-        android:contentDescription="View previously scanned sudoku boards"
+        android:title="@string/main_frag_history_button_title"
+        android:contentDescription="@string/main_frag_history_button_description"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings_24dp"
-        android:title="Settings"
-        android:contentDescription="Settings"
+        android:title="@string/main_frag_settings_button_title"
+        android:contentDescription="@string/main_frag_settings_button_description"
         app:showAsAction="ifRoom" />
 
 </menu>
