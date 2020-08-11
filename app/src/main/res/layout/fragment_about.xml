@@ -19,7 +19,7 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="About"
+            app:title="@string/about_frag_title"
             app:titleTextColor="@color/colorPrimaryDark"
             android:background="@color/white"
             app:navigationIcon="@drawable/ic_arrow_back_24dp"
@@ -65,7 +65,7 @@
                         android:id="@+id/aboutDeveloperTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Developer"
+                        android:text="@string/about_frag_developer"
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:layout_gravity="center"
@@ -129,7 +129,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Support"
+                        android:text="@string/about_frag_support"
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:layout_gravity="start"
@@ -161,7 +161,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Rate"
+                            android:text="@string/about_frag_rate_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -171,7 +171,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutRateTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutRateIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Rate me on Playstore"
+                            android:text="@string/about_frag_rate_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -201,7 +201,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Github"
+                            android:text="@string/about_frag_github_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -211,7 +211,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutGithubTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutGithubIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Follow and fork this project on Github"
+                            android:text="@string/about_frag_github_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -241,7 +241,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Donate"
+                            android:text="@string/donate_frag_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -251,7 +251,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutDonateTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutDonateIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Contribute in a financial way"
+                            android:text="@string/about_frag_donate_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -281,7 +281,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Share"
+                            android:text="@string/about_frag_share_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -291,7 +291,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutShareTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutShareIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Spread the word"
+                            android:text="@string/about_frag_share_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -321,7 +321,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Report bugs"
+                            android:text="@string/about_frag_report_bugs_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -331,7 +331,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutReportTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutReportIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Spray some insecticide"
+                            android:text="@string/about_frag_report_bugs_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -361,7 +361,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Feature Request"
+                            android:text="@string/about_frag_feature_request_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -371,7 +371,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutFeatureTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutFeatureIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Leave some thoughts here"
+                            android:text="@string/about_frag_feature_request_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -399,7 +399,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Miscellaneous"
+                        android:text="@string/about_frag_miscellaneous_title"
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:layout_gravity="start"
@@ -431,7 +431,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
                             android:layout_marginStart="16dp"
-                            android:text="FAQ"
+                            android:text="@string/about_frag_faq_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -441,7 +441,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutFAQTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutFAQIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Seek assistance"
+                            android:text="@string/about_frag_faq_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -471,7 +471,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Changelog"
+                            android:text="@string/about_frag_changelog_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -481,7 +481,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutChangelogTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutChangelogIcon"
                             android:layout_marginStart="16dp"
-                            android:text="View what's new"
+                            android:text="@string/about_frag_changelog_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -511,7 +511,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Planned Features"
+                            android:text="@string/about_frag_planned_features_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -521,7 +521,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutUpcomingFeaturesTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutUpcomingFeaturesIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Sneak peak into the future"
+                            android:text="@string/about_frag_planned_features_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -551,7 +551,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Open source libraries"
+                            android:text="@string/about_frag_oss_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -561,7 +561,7 @@
                             app:layout_constraintTop_toBottomOf="@id/aboutLibrariesTitle"
                             app:layout_constraintLeft_toRightOf="@id/aboutLibrariesIcon"
                             android:layout_marginStart="16dp"
-                            android:text="Without which, this project would not be possible"
+                            android:text="@string/about_frag_oss_subtitle"
                             android:textSize="12sp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

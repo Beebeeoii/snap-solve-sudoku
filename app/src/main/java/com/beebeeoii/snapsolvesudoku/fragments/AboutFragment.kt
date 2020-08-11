@@ -91,7 +91,7 @@ class AboutFragment : Fragment() {
         }
 
         developer.setOnClickListener {
-            FinestWebView.Builder(requireActivity()).show("https://github.com/Beebeeoii")
+            FinestWebView.Builder(requireActivity()).show(getString(R.string.github_profile_page))
         }
 
         rate.setOnClickListener {
@@ -106,7 +106,7 @@ class AboutFragment : Fragment() {
 
         github.setOnClickListener {
             FinestWebView.Builder(requireActivity())
-                .show("https://github.com/Beebeeoii/SnapSolveSudoku")
+                .show(getString(R.string.github_project_main))
         }
 
         donate.setOnClickListener {
@@ -127,14 +127,14 @@ class AboutFragment : Fragment() {
 
         reportBug.setOnClickListener {
             val gitHubReference = Firebase.firestore
-                .collection("ENV_VAR")
-                .document("GITHUB")
+                .collection(getString(R.string.firebase_collection_ENV_VAR))
+                .document(getString(R.string.firebase_collection_ENV_VAR_document_github))
             gitHubReference.get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot != null) {
                         val gitHubToken = documentSnapshot.data!!["KEY"]
 
-                        IssueReporterLauncher.forTarget("Beebeeoii", "SnapSolveSudoku")
+                        IssueReporterLauncher.forTarget(getString(R.string.dev_nick), "SnapSolveSudoku")
                             .theme(R.style.Theme_IssueReporter_Light)
                             .guestToken(gitHubToken as String?)
                             .guestEmailRequired(false)
@@ -159,7 +159,7 @@ class AboutFragment : Fragment() {
             submitRequest.setOnClickListener {
                 val firestore = Firebase.firestore
                 val feature = hashMapOf("request" to requestInput.text.toString())
-                firestore.collection("feature_requests")
+                firestore.collection(getString(R.string.firebase_collection_feature_requests))
                     .add(feature)
                     .addOnSuccessListener { documentReference ->
                         val snackbar = Snackbar.make(constraintLayout, "Request ID: ${documentReference.id}", Snackbar.LENGTH_LONG)
@@ -187,7 +187,7 @@ class AboutFragment : Fragment() {
         }
 
         faq.setOnClickListener {
-            FinestWebView.Builder(requireActivity()).show("https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/FAQ.md")
+            FinestWebView.Builder(requireActivity()).show(getString(R.string.github_project_faq))
         }
 
         changelog.setOnClickListener {
@@ -200,12 +200,12 @@ class AboutFragment : Fragment() {
         }
 
         upcomingFeatures.setOnClickListener {
-            FinestWebView.Builder(requireActivity()).show("https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/UPCOMING_FEATURES.md")
+            FinestWebView.Builder(requireActivity()).show(getString(R.string.github_project_features))
         }
 
         libraries.setOnClickListener {
             LibsBuilder()
-                .withAboutAppName("Snap Solve Sudoku")
+                .withAboutAppName(getString(R.string.app_name))
                 .withAboutDescription("A big thank you to all OSS developers!")
                 .withAboutMinimalDesign(false)
                 .start(requireContext())

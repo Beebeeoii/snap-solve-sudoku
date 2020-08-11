@@ -7,6 +7,21 @@
     <string name="dev_email">b33b33o11@gmail.com</string>
 
 
+    <!-- Firebase -->
+    <string name="firebase_collection_feature_requests">feature_requests</string>
+    <string name="firebase_collection_ENV_VAR">ENV_VAR</string>
+    <string name="firebase_collection_ENV_VAR_document_github">GITHUB</string>
+    <!-- Firebase -->
+
+
+    <!-- URLs -->
+    <string name="github_profile_page">https://github.com/Beebeeoii</string>
+    <string name="github_project_main">https://github.com/Beebeeoii/SnapSolveSudoku</string>
+    <string name="github_project_faq">https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/FAQ.md</string>
+    <string name="github_project_features">https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/UPCOMING_FEATURES.md</string>
+    <!-- URLs -->
+
+
     <!-- Main Fragment -->
     <string name="main_frag_history_button_title">History</string>
     <string name="main_frag_history_button_description">View previously scanned sudoku boards</string>
@@ -31,6 +46,17 @@
     <!-- Main Fragment -->
 
 
+    <!-- Camera Fragment -->
+    <string name="camera_frag_hint">Please centralise the sudoku board</string>
+    <string name="camera_frag_capture_button">Capture</string>
+    <!-- Camera Fragment -->
+
+
+    <!-- Details Fragment -->
+    <string name="details_frag_title">Details</string>
+    <string name="details_frag_board_tracker_default">1/1</string>
+
+
     <!-- Settings Fragment -->
     <string name="settings_frag_title">Settings</string>
     <string name="settings_frag_about_button_title">About</string>
@@ -43,6 +69,49 @@
     <string name="pref_cat_2_check_for_update_title">Check for update</string>
     <string name="pref_cat_2_check_for_update_subtitle">Update digit recognition model</string>
     <!-- Settings Fragment -->
+
+
+    <!-- About Fragment -->
+    <string name="about_frag_title">About</string>
+    <string name="about_frag_developer">Developer</string>
+
+    <string name="about_frag_support">Support</string>
+    <string name="about_frag_rate_title">Rate</string>
+    <string name="about_frag_rate_subtitle">Rate me on Playstore</string>
+    <string name="about_frag_github_title">Github</string>
+    <string name="about_frag_github_subtitle">Follow and fork this project on Github</string>
+    <string name="about_frag_donate_title">Donate</string>
+    <string name="about_frag_donate_subtitle">Contribute in a financial way</string>
+    <string name="about_frag_share_title">Share</string>
+    <string name="about_frag_share_subtitle">Spread the word</string>
+    <string name="about_frag_report_bugs_title">Report bugs</string>
+    <string name="about_frag_report_bugs_subtitle">Spray some insecticide</string>
+    <string name="about_frag_feature_request_title">Feature Request</string>
+    <string name="about_frag_feature_request_subtitle">Leave some thoughts here</string>
+
+    <string name="about_frag_miscellaneous_title">Miscellaneous</string>
+    <string name="about_frag_faq_title">FAQ</string>
+    <string name="about_frag_faq_subtitle">Seek assistance</string>
+    <string name="about_frag_changelog_title">Changelog</string>
+    <string name="about_frag_changelog_subtitle">View what\'s new</string>
+    <string name="about_frag_planned_features_title">Planned Features</string>
+    <string name="about_frag_planned_features_subtitle">Sneak peak into the future</string>
+    <string name="about_frag_oss_title">Open source libraries</string>
+    <string name="about_frag_oss_subtitle">Without which, this project would not be possible</string>
+    <!-- About Fragment -->
+
+
+    <!-- Donate Fragment -->
+    <string name="donate_frag_title">Donate</string>
+    <string name="donate_frag_cup_of_coffee">Cup of Coffee</string>
+    <string name="donate_frag_cup_of_coffee_price">$0.99</string>
+    <string name="donate_frag_slice_of_cake">Slice of Cake</string>
+    <string name="donate_frag_slice_of_cake_price">$1.99</string>
+    <string name="donate_frag_slice_of_pizza">Slice of Pizza</string>
+    <string name="donate_frag_slice_of_pizza_price">$3.99</string>
+    <string name="donate_frag_cup_of_wine">Cup of Wine</string>
+    <string name="donate_frag_cup_of_wine_price">$6.99</string>
+    <!-- Donate Fragment -->
 
 
     <!-- Dialog Feature Requests -->
