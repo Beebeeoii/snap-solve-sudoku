@@ -20,7 +20,7 @@ class ImageProcessor {
         }
 
         val denoisedMat = Mat()
-        Photo.fastNlMeansDenoising(mat, denoisedMat, 13F, 13, 23)
+        Photo.fastNlMeansDenoising(mat, denoisedMat, 17F, 13, 23)
 
         val blurMat = Mat()
         Imgproc.GaussianBlur(denoisedMat, blurMat, Size(7.0, 7.0), 0.0)
