@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku
+package com.beebeeoii.snapsolvesudoku.sudokuboard
 
 import android.content.Context
 import android.graphics.Canvas

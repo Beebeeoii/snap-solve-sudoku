@@ -18,7 +18,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.heinrichreimersoftware.androidissuereporter.IssueReporterLauncher

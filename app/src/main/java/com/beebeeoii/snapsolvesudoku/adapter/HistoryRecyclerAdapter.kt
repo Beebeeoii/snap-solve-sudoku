@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku
+package com.beebeeoii.snapsolvesudoku.adapter
 
 import android.app.Activity
 import android.content.Context
@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.fragments.HistoryFragmentDirections
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.google.android.material.textview.MaterialTextView
 
 private const val TAG = "HistoryRecyclerAdapter"

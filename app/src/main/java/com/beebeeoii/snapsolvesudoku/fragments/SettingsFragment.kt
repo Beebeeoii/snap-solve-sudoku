@@ -43,7 +43,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-
         return rootView
     }
 }

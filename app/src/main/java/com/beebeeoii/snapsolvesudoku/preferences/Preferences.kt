@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.beebeeoii.snapsolvesudoku.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView

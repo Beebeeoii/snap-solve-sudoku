@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku
+package com.beebeeoii.snapsolvesudoku.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

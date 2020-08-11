@@ -1,13 +1,11 @@
-package com.beebeeoii.snapsolvesudoku
+package com.beebeeoii.snapsolvesudoku.image
 
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.beebeeoii.snapsolvesudoku.db.Database
-import com.beebeeoii.snapsolvesudoku.image.CellExtractor
-import com.beebeeoii.snapsolvesudoku.image.GridExtractor
-import com.beebeeoii.snapsolvesudoku.image.GridlinesRemover
-import com.beebeeoii.snapsolvesudoku.image.ImageProcessor
+import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +51,8 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
     }
 
     fun recogniseDigits(boardBitmap: Bitmap) {
-        sudokuBoard2DIntArray = SudokuBoard2DIntArray()
+        sudokuBoard2DIntArray =
+            SudokuBoard2DIntArray()
 
         val modelFileDir = File("${activity.getExternalFilesDir(null).toString()}/model")
         val modelFileName = modelFileDir.list()[0]

@@ -14,9 +14,9 @@ import android.widget.ProgressBar
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
-import com.beebeeoii.snapsolvesudoku.DateTimeGenerator
-import com.beebeeoii.snapsolvesudoku.DigitRecogniser
-import com.beebeeoii.snapsolvesudoku.UniqueIdGenerator
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.*
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
@@ -89,7 +89,11 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
                 val originalSudokuBitmap = Bitmap.createBitmap(sudokuBoardMat!!.width(), sudokuBoardMat!!.height(), Bitmap.Config.ARGB_8888)
 
-                val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
+                val digitRecogniser =
+                    DigitRecogniser(
+                        requireActivity(),
+                        sudokuBoardMat!!
+                    )
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
@@ -111,7 +115,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                         historyDao.insertHistoryEntry(
                             HistoryEntity(
                                 uniqueId = uniqueId,
-                                dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                                dateTime = DateTimeGenerator.generateDateTime(
+                                    DateTimeGenerator.DATE_AND_TIME),
                                 folderPath = boardDirPath,
                                 originalPicturePath = originalPicturePath
                             )

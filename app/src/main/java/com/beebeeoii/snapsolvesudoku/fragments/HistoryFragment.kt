@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beebeeoii.snapsolvesudoku.HistoryRecyclerAdapter
+import com.beebeeoii.snapsolvesudoku.adapter.HistoryRecyclerAdapter
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.google.android.material.appbar.MaterialToolbar

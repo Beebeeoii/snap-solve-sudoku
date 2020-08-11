@@ -11,10 +11,10 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import com.beebeeoii.snapsolvesudoku.DateTimeGenerator
-import com.beebeeoii.snapsolvesudoku.DigitRecogniser
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
 import com.beebeeoii.snapsolvesudoku.R
-import com.beebeeoii.snapsolvesudoku.UniqueIdGenerator
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

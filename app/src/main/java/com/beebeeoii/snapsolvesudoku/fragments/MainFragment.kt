@@ -15,10 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import com.beebeeoii.snapsolvesudoku.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
-import com.beebeeoii.snapsolvesudoku.SudokuBoard
-import com.beebeeoii.snapsolvesudoku.UniqueIdGenerator
+import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.solver.BoardSolver
@@ -181,7 +181,8 @@ class MainFragment : Fragment() {
                         historyDao.insertHistoryEntry(
                             HistoryEntity(
                                 uniqueId = sudokuBoardView.uniqueId,
-                                dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                                dateTime = DateTimeGenerator.generateDateTime(
+                                    DateTimeGenerator.DATE_AND_TIME),
                                 folderPath = boardDirPath,
                                 recognisedDigits = givenDigits,
                                 solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)

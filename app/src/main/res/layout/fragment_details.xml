@@ -85,7 +85,7 @@
 
     </LinearLayout>
 
-    <com.beebeeoii.snapsolvesudoku.SudokuBoard
+    <com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
         android:id="@+id/detailsSudokuBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

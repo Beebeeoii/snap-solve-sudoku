@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import com.beebeeoii.snapsolvesudoku.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
-import com.beebeeoii.snapsolvesudoku.SudokuBoard
+import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
 import com.beebeeoii.snapsolvesudoku.db.Database
-import com.beebeeoii.snapsolvesudoku.fragments.DetailsFragmentArgs
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -22,7 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.*
 
 private lateinit var constraintLayout: ConstraintLayout
 private lateinit var appBar: MaterialToolbar
