@@ -1,4 +1,4 @@
-# Snap Solve Sudoku V2 (Preview)
+# Snap Solve Sudoku V2
 OCR Sudoku Puzzle Solver for Android!
 
 This branch is still under construction! Much testings are being made and the results are very promising!
