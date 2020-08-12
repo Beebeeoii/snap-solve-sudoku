@@ -6,11 +6,11 @@ Snap Solve Sudoku V2 is completely (about 70%) rewritten from V1. Leveraging on 
 
 ## Screenshots
 
-| ![Main Screen](../screenshots/main_screen.jpg) | ![Import](../screenshots/import.jpg) |
+| ![Main Screen](../v2/screenshots/main_screen.jpg) | ![Import](../v2/screenshots/import.jpg) |
 |:-------------------:|:--------------:|
 | Main Screen | Import from Camera or Gallery |
 
-| ![Camera](../screenshots/camera.jpg) | ![Details](../screenshots/details.jpg) | ![History](../screenshots/history.jpg) | ![Settings](../screenshots/settings.jpg) |
+| ![Camera](../v2/screenshots/camera.jpg) | ![Details](../v2/screenshots/details.jpg) | ![History](../v2/screenshots/history.jpg) | ![Settings](../v2/screenshots/settings.jpg) |
 |:--------------:|:---------------:|:---------------:|:----------------:|
 | Camera         | Details         | History         | Settings         |
 
