@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
@@ -47,7 +46,6 @@ private lateinit var clearBoard: MaterialButton
 private lateinit var moreDetails: MaterialButton
 private lateinit var share: MaterialButton
 private lateinit var solve: MaterialButton
-private lateinit var solvingProgressBar: ProgressBar
 private lateinit var input_1_button: MaterialButton
 private lateinit var input_2_button: MaterialButton
 private lateinit var input_3_button: MaterialButton
@@ -70,7 +68,6 @@ class MainFragment : Fragment() {
         moreDetails = view.findViewById(R.id.detailsButton)
         share = view.findViewById(R.id.shareButton)
         solve = view.findViewById(R.id.solveButton)
-        solvingProgressBar = view.findViewById(R.id.solvingProgressBar)
         input_1_button = view.findViewById(R.id.input_1)
         input_2_button = view.findViewById(R.id.input_2)
         input_3_button = view.findViewById(R.id.input_3)

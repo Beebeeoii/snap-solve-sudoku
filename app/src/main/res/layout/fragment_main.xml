@@ -91,17 +91,7 @@
             app:strokeColor="@color/colorPrimaryDark"
             app:strokeWidth="2dp"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="3"
-            android:visibility="visible"/>
-
-        <ProgressBar
-            android:id="@+id/solvingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorPrimaryDark"
-            android:visibility="gone" />
+            android:layout_weight="3" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/detailsButton"
