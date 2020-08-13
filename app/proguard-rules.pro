@@ -21,3 +21,8 @@
 #-renamesourcefileattribute SourceFile
 -keep class * extends androidx.fragment.app.Fragment{}
 -keepnames class * extends java.io.Serializable
+
+-keep class android.R
+-keep class **android.R$* {
+    <fields>;
+}
