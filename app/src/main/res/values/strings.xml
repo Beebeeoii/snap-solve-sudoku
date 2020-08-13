@@ -121,6 +121,11 @@
     <!-- Dialog Feature Requests -->
 
 
+    <!-- Dialog Solving Board -->
+    <string name="dialog_solving_board_title">Solving Board</string>
+    <!-- Dialog Feature Requests -->
+
+
     <!-- Dialog Import Picture Requests -->
     <string name="dialog_import_picture_title">Import Picture</string>
     <string name="dialog_import_picture_use_camera">Use Camera</string>
