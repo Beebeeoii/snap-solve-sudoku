@@ -12,6 +12,7 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
@@ -203,10 +204,18 @@ public class JavaCamera2View extends CameraBridgeViewBase {
                         }
                         mCaptureSession = cameraCaptureSession;
                         try {
-//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(15,15));
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_AUTO);
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                            long exposureTime = mPreviewRequestBuilder.get(CaptureRequest.SENSOR_EXPOSURE_TIME);
+                            long frameDuration = mPreviewRequestBuilder.get(CaptureRequest.SENSOR_FRAME_DURATION);
+//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
+                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
+
+//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(15,30));
+//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_SCENE_MODE, CaptureRequest.CONTROL_SCENE_MODE_FIREWORKS);
+
+                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CaptureRequest.CONTROL_AE_ANTIBANDING_MODE_60HZ);
+                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposureTime);
+                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, 100);
+                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, frameDuration);
 
                             mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, mBackgroundHandler);
                             Log.i(LOGTAG, "CameraPreviewSession has been started");
@@ -224,6 +233,46 @@ public class JavaCamera2View extends CameraBridgeViewBase {
             );
         } catch (CameraAccessException e) {
             Log.e(LOGTAG, "createCameraPreviewSession", e);
+        }
+    }
+
+    private Range<Integer> getRange() {
+        CameraCharacteristics chars = null;
+        CameraManager manager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+        try {
+            chars = manager.getCameraCharacteristics(mCameraID);
+            Range<Integer>[] ranges = chars.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
+            Range<Integer> result = null;
+            for (Range<Integer> range : ranges) {
+                int upper = range.getUpper();
+                int lower = range.getLower();
+                // 10 - min range upper for my needs
+                Log.e("Upper fps :",""+upper);
+                Log.e("range fps :",""+range);
+                if (upper >= 10000) {
+                    if (result == null || upper < result.getUpper().intValue()) {
+                        Range<Integer> newsrange = new Range<>(range.getLower()/1000,range.getLower()/1000);
+                        result = newsrange;
+                        Log.e("result fps :",""+range);
+
+                    }
+                }
+                if (upper >= 10) {
+                    if (result == null || upper < result.getUpper().intValue()) {
+                        result = range;
+                        Log.e("result fps :",""+range);
+
+                    }
+                }
+            }
+            if (result == null) {
+                result = ranges[0];
+                Log.e("result in range[0] is :",""+result);
+            }
+            return result;
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
