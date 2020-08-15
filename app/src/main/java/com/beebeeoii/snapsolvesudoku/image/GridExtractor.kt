@@ -1,5 +1,6 @@
 package com.beebeeoii.snapsolvesudoku.image
 
+import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
 import org.opencv.core.Point
@@ -9,8 +10,11 @@ import org.opencv.utils.Converters
 class GridExtractor {
 
     fun contourGridExtract(original : Mat) : Mat {
+        val thresh = Mat()
+        Imgproc.adaptiveThreshold(original, thresh, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
+
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
-        Imgproc.findContours(original, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+        Imgproc.findContours(thresh, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
 
         var largestArea = contours[0]
 

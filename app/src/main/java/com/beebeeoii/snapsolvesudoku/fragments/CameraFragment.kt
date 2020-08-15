@@ -89,11 +89,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
                 val originalSudokuBitmap = Bitmap.createBitmap(sudokuBoardMat!!.width(), sudokuBoardMat!!.height(), Bitmap.Config.ARGB_8888)
 
-                val digitRecogniser =
-                    DigitRecogniser(
-                        requireActivity(),
-                        sudokuBoardMat!!
-                    )
+                val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
@@ -208,11 +204,12 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
         Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
-        val blurMat = Mat()
-        Imgproc.GaussianBlur(ogGRAYMat, blurMat, Size(7.0, 7.0), 0.0)
+//        val blurMat = Mat()
+//        Imgproc.GaussianBlur(ogGRAYMat, blurMat, Size(7.0, 7.0), 0.0)
 
         val threshMat = Mat()
-        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
+//        Imgproc.threshold(ogGRAYMat, threshMat, 165.0, 255.0, Imgproc.THRESH_BINARY)
+        Imgproc.adaptiveThreshold(ogGRAYMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
 
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -263,9 +260,9 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
             e.printStackTrace()
         }
 
-        blurMat.release()
-        threshMat.release()
+//        blurMat.release()
+//        threshMat.release()
 
-        return ogRGBMat
+        return threshMat
     }
 }

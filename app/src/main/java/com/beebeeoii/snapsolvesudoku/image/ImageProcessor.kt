@@ -19,24 +19,26 @@ class ImageProcessor {
             return swopMat
         }
 
-        val denoisedMat = Mat()
-        Photo.fastNlMeansDenoising(mat, denoisedMat, 17F, 13, 23)
+//        val denoisedMat = Mat()
+//        Photo.fastNlMeansDenoising(mat, denoisedMat, 17F, 13, 71)
 
-        val blurMat = Mat()
-        Imgproc.GaussianBlur(denoisedMat, blurMat, Size(7.0, 7.0), 0.0)
+//        val blurMat = Mat()
+//        Imgproc.GaussianBlur(denoisedMat, blurMat, Size(7.0, 7.0), 0.0)
 
-        denoisedMat.release()
+//        denoisedMat.release()
 
         val threshMat = Mat()
-        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
+        Imgproc.threshold(mat, threshMat, 120.0, 255.0, Imgproc.THRESH_BINARY)
 
-        blurMat.release()
+//        Imgproc.adaptiveThreshold(blurMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 23, 2.0)
 
-        val swopMat = Mat()
-        Core.bitwise_not(threshMat, swopMat)
+//        blurMat.release()
 
-        threshMat.release()
+//        val swopMat = Mat()
+//        Core.bitwise_not(threshMat, swopMat)
 
-        return swopMat
+//        threshMat.release()
+
+        return threshMat
     }
 }
