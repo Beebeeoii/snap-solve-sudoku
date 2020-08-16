@@ -1,5 +1,7 @@
 package com.beebeeoii.snapsolvesudoku.image
 
+import android.util.Log
+import com.beebeeoii.snapsolvesudoku.utils.ImageSaver
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
@@ -7,14 +9,18 @@ import org.opencv.core.Point
 import org.opencv.imgproc.Imgproc
 import org.opencv.utils.Converters
 
+private const val TAG = "GridExtractor"
+
 class GridExtractor {
 
     fun contourGridExtract(original : Mat) : Mat {
-        val thresh = Mat()
-        Imgproc.adaptiveThreshold(original, thresh, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
+        val threshMat = Mat()
+        Imgproc.adaptiveThreshold(original, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
+
+        Core.bitwise_not(threshMat, threshMat)
 
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
-        Imgproc.findContours(thresh, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+        Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
 
         var largestArea = contours[0]
 
@@ -32,6 +38,8 @@ class GridExtractor {
         oCorners.add(corners[1])
         oCorners.add(corners[2])
         oCorners.add(corners[3])
+
+        Log.d(TAG, "contourGridExtract: ${corners[0]} ${corners[1]} ${corners[2]} ${corners[3]}")
 
         //List of final corners
         val fCorners: ArrayList<Point> = ArrayList()

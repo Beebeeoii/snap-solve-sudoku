@@ -34,11 +34,11 @@ class ImageProcessor {
 
 //        blurMat.release()
 
-//        val swopMat = Mat()
-//        Core.bitwise_not(threshMat, swopMat)
+        val swopMat = Mat()
+        Core.bitwise_not(threshMat, swopMat)
 
 //        threshMat.release()
 
-        return threshMat
+        return swopMat
     }
 }

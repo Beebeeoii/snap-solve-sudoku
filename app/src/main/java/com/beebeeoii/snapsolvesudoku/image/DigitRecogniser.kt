@@ -28,20 +28,19 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
     fun processBoard(fromCamera: Boolean) : Bitmap {
         val processedBoardBitmap = Bitmap.createBitmap(sudokuBoardMat.width(), sudokuBoardMat.height(), Bitmap.Config.ARGB_8888)
+
         val gridExtractor = GridExtractor()
         val gridMat = gridExtractor.contourGridExtract(sudokuBoardMat)
 
         val imageProcessor = ImageProcessor()
         val processedImage = imageProcessor.processImage(gridMat, fromCamera)
 
-
-
         val gLineRemover = GridlinesRemover()
         val lines = Mat()
         Imgproc.HoughLinesP(processedImage, lines, 1.0, Math.PI / 180, 100, 50.0, 5.0)
-        val gridWOLines = gLineRemover.removeGridLines(gridMat, lines)
+        val gridWOLines = gLineRemover.removeGridLines(processedImage, lines)
 
-//        Core.bitwise_not(gridWOLines, gridWOLines)
+        Core.bitwise_not(gridWOLines, gridWOLines)
         Utils.matToBitmap(gridWOLines, processedBoardBitmap)
 
         gridMat.release()
@@ -52,8 +51,7 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
     }
 
     fun recogniseDigits(boardBitmap: Bitmap) {
-        sudokuBoard2DIntArray =
-            SudokuBoard2DIntArray()
+        sudokuBoard2DIntArray = SudokuBoard2DIntArray()
 
         val modelFileDir = File("${activity.getExternalFilesDir(null).toString()}/model")
         val modelFileName = modelFileDir.list()[0]
