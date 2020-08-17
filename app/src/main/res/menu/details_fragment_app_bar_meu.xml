@@ -9,4 +9,11 @@
         android:contentDescription="Save to history"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/editHistory"
+        android:icon="@drawable/ic_create_24px"
+        android:title="Edit"
+        android:contentDescription="Edit history"
+        app:showAsAction="ifRoom" />
+
 </menu>

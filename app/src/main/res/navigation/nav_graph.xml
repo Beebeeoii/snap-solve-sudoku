@@ -65,6 +65,9 @@
             android:name="uniqueId"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/action_detailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

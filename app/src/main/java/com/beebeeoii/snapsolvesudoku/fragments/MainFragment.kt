@@ -98,9 +98,7 @@ class MainFragment : Fragment() {
         }
 
         if (arguments != null && !requireArguments().isEmpty) {
-            val sudokuBoard2DIntArray = MainFragmentArgs
-                .fromBundle(requireArguments())
-                .board2DIntArray
+            val sudokuBoard2DIntArray = MainFragmentArgs.fromBundle(requireArguments()).board2DIntArray
             sudokuBoardView.uniqueId = sudokuBoard2DIntArray.uniqueId
 
             for (i in 0..8) {

@@ -284,6 +284,23 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         return board2DArray
     }
 
+    fun givenTo2DIntArray(): Array<IntArray> {
+        val board2DArray = Array(9){IntArray(9){0}}
+
+        for (x in 0..8) {
+            for (y in 0..8) {
+                if (cells[x][y].isGiven) {
+                    board2DArray[x][y] = cells[x][y].value
+                } else {
+                    board2DArray[x][y] = 0
+                }
+
+            }
+        }
+
+        return board2DArray
+    }
+
     fun reset() {
         for (x in 0..8) {
             for (y in 0..8) {

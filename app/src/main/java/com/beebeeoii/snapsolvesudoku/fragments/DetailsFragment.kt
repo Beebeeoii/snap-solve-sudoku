@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
 import com.beebeeoii.snapsolvesudoku.db.Database
+import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -81,12 +83,6 @@ class DetailsFragment : Fragment() {
                         }
                     }
                 }
-//                recognisedDigitsString?.forEach { digit ->
-//                    if (Character.getNumericValue(digit) != 0) {
-//                        val lastIndex = if (givenDigitsIndices.size != 0) givenDigitsIndices.last() else 0
-//                        givenDigitsIndices.add(recognisedDigitsString.indexOf(digit, lastIndex))
-//                    }
-//                }
 
                 val solutionTextFile = File(it[0].solutionsPath)
                 val inputStream = solutionTextFile.inputStream()
@@ -142,6 +138,17 @@ class DetailsFragment : Fragment() {
                     }
                     true
                 }
+
+                R.id.editHistory -> {
+                    val sudokuBoard2DIntArray = SudokuBoard2DIntArray()
+                    sudokuBoard2DIntArray.uniqueId = detailsSudokuBoardView.uniqueId
+                    sudokuBoard2DIntArray.board2DIntArray = detailsSudokuBoardView.givenTo2DIntArray()
+
+                    val action = DetailsFragmentDirections.actionDetailsFragmentToMainFragment(sudokuBoard2DIntArray)
+                    findNavController().navigate(action)
+                    true
+                }
+
                 else -> false
             }
         }
