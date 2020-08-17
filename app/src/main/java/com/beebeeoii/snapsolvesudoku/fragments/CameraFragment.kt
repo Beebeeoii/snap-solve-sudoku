@@ -256,8 +256,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
             e.printStackTrace()
         }
 
-//        blurMat.release()
-//        threshMat.release()
+        threshMat.release()
 
         return ogRGBMat
     }

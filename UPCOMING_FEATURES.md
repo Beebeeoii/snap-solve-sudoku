@@ -6,9 +6,17 @@ If you have any suggestions, please use the `Feature Request` function under `Se
 
 ## History
 
-- [ ] Enable option to sync history to database
+- [ ] Implement option to sync history to database
+- [ ] Implement searching and filtering of history entries
 - [ ] Implement deletion of history entries
 - [ ] Implement adding/editing of notes to history entries
+
+## Details
+
+- [ ] Including more details to the page like
+  - Entry Unique ID
+  - Processed picture
+  - OCR's % confidence and average confidence
 
 ## Sudoku Board
 

@@ -341,8 +341,7 @@ class MainFragment : Fragment() {
         }
 
         importButton.setOnClickListener {
-            val action =
-                MainFragmentDirections.actionMainFragmentToImportPictureFragment()
+            val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
             it.findNavController().navigate(action)
         }
 

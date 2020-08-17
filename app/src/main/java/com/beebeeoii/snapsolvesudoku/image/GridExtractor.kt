@@ -1,7 +1,6 @@
 package com.beebeeoii.snapsolvesudoku.image
 
 import android.util.Log
-import com.beebeeoii.snapsolvesudoku.utils.ImageSaver
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
