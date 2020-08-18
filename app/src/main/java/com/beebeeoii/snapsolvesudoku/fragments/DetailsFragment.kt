@@ -1,11 +1,14 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -14,6 +17,7 @@ import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
 import com.beebeeoii.snapsolvesudoku.db.Database
+import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -41,6 +45,7 @@ class DetailsFragment : Fragment() {
     private var solutionCounter = 0
     private val givenDigitsIndices = mutableListOf<IntArray>()
     private lateinit var uniqueId: String
+    private lateinit var historyEntity: HistoryEntity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_details, container, false)
@@ -64,6 +69,7 @@ class DetailsFragment : Fragment() {
             val historyDao = database.getHistoryDao()
 
             historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner, Observer {
+                historyEntity = it[0]
                 if (it[0].originalPicturePath != null) {
                     boardPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
                 }
@@ -136,6 +142,32 @@ class DetailsFragment : Fragment() {
 
                         }
                     }
+                    true
+                }
+
+                R.id.deleteHistory -> {
+                    val dialogBuilder = AlertDialog.Builder(requireContext())
+                    dialogBuilder.setTitle("Delete history")
+                    dialogBuilder.setMessage("This action cannot be undone.")
+                    dialogBuilder.setPositiveButton("Delete") { dialogInterface: DialogInterface, i: Int ->
+                        val database = Database.invoke(requireContext())
+                        val historyDao = database.getHistoryDao()
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            historyDao.deleteHistoryEntry(historyEntity)
+                        }
+
+                        requireActivity().onBackPressed()
+
+                        Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
+                    }
+
+                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->
+                        dialogInterface.dismiss()
+                    }
+
+                    val dialog = dialogBuilder.create()
+                    dialog.show()
                     true
                 }
 

@@ -26,10 +26,7 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryEntryHolder {
         val inflatedView = LayoutInflater.from(context).inflate(R.layout.history_recycler_view_item_view, parent,false)
 
-        return HistoryEntryHolder(
-            inflatedView,
-            activity
-        )
+        return HistoryEntryHolder(inflatedView, activity)
     }
 
     override fun getItemCount(): Int {
