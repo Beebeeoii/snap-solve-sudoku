@@ -56,7 +56,7 @@ class HistoryFragment : Fragment(){
                 historyEntity.solutionsPath != null
             }
 
-            if (it.isEmpty()) {
+            if (historyEntityList.isEmpty()) {
                 noHistoryEntryImageView.visibility = View.VISIBLE
             }
 
