@@ -139,8 +139,6 @@ class DetailsFragment : Fragment() {
                             val snackbar = Snackbar.make(constraintLayout, "Already saved to history!", Snackbar.LENGTH_SHORT)
                             snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
                             snackbar.show()
-                        } else {
-
                         }
                     }
                     true
@@ -150,7 +148,7 @@ class DetailsFragment : Fragment() {
                     val dialogBuilder = AlertDialog.Builder(requireContext())
                     dialogBuilder.setTitle("Delete history")
                     dialogBuilder.setMessage("This action cannot be undone.")
-                    dialogBuilder.setPositiveButton("Delete") { dialogInterface: DialogInterface, i: Int ->
+                    dialogBuilder.setPositiveButton("Delete") { _: DialogInterface, _: Int ->
                         val database = Database.invoke(requireContext())
                         val historyDao = database.getHistoryDao()
 
@@ -166,7 +164,7 @@ class DetailsFragment : Fragment() {
                         Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
                     }
 
-                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->
+                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
                         dialogInterface.dismiss()
                     }
 

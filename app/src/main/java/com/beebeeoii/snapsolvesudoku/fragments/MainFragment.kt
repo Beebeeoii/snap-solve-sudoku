@@ -162,6 +162,7 @@ class MainFragment : Fragment() {
                         snackbar.show()
 
                         it.isClickable = true
+                        dialog.dismiss()
                         return@launch
                     }
 

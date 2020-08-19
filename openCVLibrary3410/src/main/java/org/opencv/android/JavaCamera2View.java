@@ -204,19 +204,7 @@ public class JavaCamera2View extends CameraBridgeViewBase {
                         }
                         mCaptureSession = cameraCaptureSession;
                         try {
-                            long exposureTime = mPreviewRequestBuilder.get(CaptureRequest.SENSOR_EXPOSURE_TIME);
-                            long frameDuration = mPreviewRequestBuilder.get(CaptureRequest.SENSOR_FRAME_DURATION);
-                            Log.d(LOGTAG, "onConfigured: " + exposureTime + " " + frameDuration);
-
-//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
-
-//                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(15,15));
                             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_ANTIBANDING_MODE, CaptureRequest.CONTROL_AE_ANTIBANDING_MODE_60HZ);
-
-//                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, frameDuration);
-//                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, 50);
-//                            mPreviewRequestBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, frameDuration);
-
                             mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, mBackgroundHandler);
                             Log.i(LOGTAG, "CameraPreviewSession has been started");
                         } catch (Exception e) {

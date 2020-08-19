@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +62,7 @@ class HistoryFragment : Fragment(){
                 noHistoryEntryImageView.visibility = View.VISIBLE
             }
 
+            historyEntityList = historyEntityList.asReversed() //latest on top
             recyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
         })
 
@@ -133,6 +135,18 @@ class HistoryFragment : Fragment(){
 
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        appBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.sort -> {
+                    historyEntityList = historyEntityList.asReversed()
+                    recyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
+                    Log.d(TAG, "onCreateView: SORTED")
+                    true
+                }
+                else -> false
+            }
         }
 
         return rootView
