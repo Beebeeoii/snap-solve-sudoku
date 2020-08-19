@@ -8,7 +8,6 @@ If you have any suggestions, please use the `Feature Request` function under `Se
 
 - [ ] Implement option to sync history to database
 - [ ] Implement searching and filtering of history entries
-- [ ] Implement deletion of history entries
 - [ ] Implement adding/editing of notes to history entries
 
 ## Details
