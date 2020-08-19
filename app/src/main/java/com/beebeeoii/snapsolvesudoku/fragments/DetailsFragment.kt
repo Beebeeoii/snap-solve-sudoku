@@ -19,6 +19,7 @@ import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray
+import com.beebeeoii.snapsolvesudoku.utils.FileDeletor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -156,6 +157,9 @@ class DetailsFragment : Fragment() {
                         CoroutineScope(Dispatchers.IO).launch {
                             historyDao.deleteHistoryEntry(historyEntity)
                         }
+
+                        FileDeletor.deleteFileOrDirectory(File(historyEntity.folderPath))
+
 
                         requireActivity().onBackPressed()
 
