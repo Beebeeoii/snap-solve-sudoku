@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import kotlin.math.absoluteValue
 
 private const val TAG = "HistoryFragment"
 
@@ -83,11 +84,12 @@ class HistoryFragment : Fragment(){
                 val bottom = top + intrinsicHeight
 
                 if (dX < 0) {
-                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    var amountDragged = dX.toInt()
+                    if (amountDragged.absoluteValue >= itemView.width) {
+                        amountDragged = -itemView.width
+                    }
+                    background.setBounds(itemView.right + amountDragged, itemView.top, itemView.right, itemView.bottom)
                     deleteIcon?.setBounds(left, top, right, bottom)
-                } else if (dX > 0) {
-                    background.setBounds(itemView.left + dX.toInt(), itemView.top, itemView.left, itemView.bottom)
-                    deleteIcon?.setBounds(top, top, top, bottom)
                 }
 
                 background.draw(c)
