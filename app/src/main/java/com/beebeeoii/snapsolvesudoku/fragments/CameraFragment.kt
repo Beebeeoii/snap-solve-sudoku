@@ -205,8 +205,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
         val threshMat = Mat()
-        Imgproc.threshold(ogGRAYMat, threshMat, 120.0, 255.0, Imgproc.THRESH_BINARY)
-//        Imgproc.adaptiveThreshold(ogGRAYMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 51, 15.0)
+//        Imgproc.threshold(ogGRAYMat, threshMat, 120.0, 255.0, Imgproc.THRESH_BINARY)
+        Imgproc.adaptiveThreshold(ogGRAYMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
 
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
