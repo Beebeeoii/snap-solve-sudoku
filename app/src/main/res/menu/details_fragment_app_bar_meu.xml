@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/saveToHistory"
-        android:icon="@drawable/ic_save_24px"
-        android:title="Save"
-        android:contentDescription="Save to history"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/saveToHistory"-->
+<!--        android:icon="@drawable/ic_save_24px"-->
+<!--        android:title="Save"-->
+<!--        android:contentDescription="Save to history"-->
+<!--        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/deleteHistory"
@@ -22,5 +22,19 @@
         android:title="Edit"
         android:contentDescription="Edit history"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/shareHistory"
+        android:icon="@drawable/ic_share_24px"
+        android:title="Share"
+        android:contentDescription="Share Board"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/reportInaccuracy"
+        android:icon="@drawable/ic_report_problem_24px"
+        android:title="Report Inaccuracy"
+        android:contentDescription="Report Inaccuracy"
+        app:showAsAction="collapseActionView" />
 
 </menu>

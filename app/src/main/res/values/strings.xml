@@ -8,6 +8,7 @@
 
 
     <!-- Firebase -->
+    <string name="firebase_collection_report_inaccuracy">inaccurate_board</string>
     <string name="firebase_collection_feature_requests">feature_requests</string>
     <string name="firebase_collection_ENV_VAR">ENV_VAR</string>
     <string name="firebase_collection_ENV_VAR_document_github">GITHUB</string>
@@ -55,6 +56,20 @@
     <!-- Details Fragment -->
     <string name="details_frag_title">Details</string>
     <string name="details_frag_board_tracker_default">1/1</string>
+
+    <string name="details_chip_board">Board</string>
+    <string name="details_chip_statistics">Statistics</string>
+    <string name="details_chip_more_details">More Details</string>
+
+    <string name="details_statistics_no_hints_title"><u>No. of Hints</u></string>
+    <string name="details_statistics_no_solutions_title"><u>No. of Solutions</u></string>
+    <string name="details_statistics_time_taken_to_solve_title"><u>Time Taken to Solve (ms)</u></string>
+
+    <string name="details_more_details_unique_id_title"><u>Unique ID</u></string>
+    <string name="details_more_details_folder_path_title"><u>Folder Path</u></string>
+    <string name="details_more_details_original_picture_title"><u>Original Picture Path</u></string>
+    <string name="details_more_details_processed_picture_title"><u>Processed Picture Path</u></string>
+    <string name="details_more_details_solutions_title"><u>Solutions Path</u></string>
 
 
     <!-- Settings Fragment -->
@@ -118,6 +133,13 @@
     <string name="dialog_feature_requests_title">Feature Request</string>
     <string name="dialog_feature_requests_input_hint">Request</string>
     <string name="dialog_feature_requests_submit_button_text">Submit</string>
+    <!-- Dialog Feature Requests -->
+
+
+    <!-- Dialog Report Inaccuracy Requests -->
+    <string name="dialog_report_inaccuracy_title">Report Inaccuracy</string>
+    <string name="dialog_report_inaccuracy_input_hint">Additional comments (optional)</string>
+    <string name="dialog_report_inaccuracy_submit_button_text">Submit</string>
     <!-- Dialog Feature Requests -->
 
 

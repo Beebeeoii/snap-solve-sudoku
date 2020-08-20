@@ -30,6 +30,9 @@ interface HistoryDAO {
     @Query("UPDATE HistoryEntry SET recognisedDigits=:recognisedDigits WHERE uniqueId=:uniqueId")
     fun updateRecognisedDigits(uniqueId: String, recognisedDigits: String?)
 
+    @Query("UPDATE HistoryEntry SET timeTakenToSolve=:timeTakenToSolve WHERE uniqueId=:uniqueId")
+    fun updateTimeTakenToSolve(uniqueId: String, timeTakenToSolve: Int?)
+
     @Query("SELECT EXISTS(SELECT * FROM HistoryEntry WHERE uniqueId=:uniqueId)")
     fun doesEntryExist(uniqueId: String): Boolean
 }

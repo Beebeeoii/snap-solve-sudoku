@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -157,7 +158,9 @@ class AboutFragment : Fragment() {
             val submitRequest = dialogView.findViewById<MaterialButton>(R.id.feature_dialog_submit_button)
             submitRequest.setOnClickListener {
                 val firestore = Firebase.firestore
-                val feature = hashMapOf("request" to requestInput.text.toString())
+                val feature = hashMapOf(
+                    "request" to requestInput.text.toString(),
+                    "dateTime" to DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME))
                 firestore.collection(getString(R.string.firebase_collection_feature_requests))
                     .add(feature)
                     .addOnSuccessListener { documentReference ->

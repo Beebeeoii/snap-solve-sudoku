@@ -1,16 +1,15 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -23,6 +22,7 @@ import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.solver.BoardSolver
+import com.beebeeoii.snapsolvesudoku.utils.ShareBoardBitmap
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -32,9 +32,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileWriter
 import java.io.IOException
+import kotlin.system.measureTimeMillis
 
 private const val TAG = "MainFragment"
 private lateinit var mainFragmentContainer: ConstraintLayout
@@ -132,105 +132,118 @@ class MainFragment : Fragment() {
             val maxSols = sharedPreferences.getInt("maximumNoSolutions", 1)
 
             if (sudokuBoardView.isValid) {
-                it.isClickable = false
+                val database = Database.invoke(requireContext())
+                val historyDao = database.getHistoryDao()
 
-                val givenDigits = sudokuBoardView.toString()
+                val timeTakenToSolve = measureTimeMillis {
+                    it.isClickable = false
 
-                val solverDeffered = CoroutineScope(Dispatchers.Default).async {
-                    val solver = BoardSolver(sudokuBoardView.to2DIntArray(), maxSols)
-                    solver.solveBoard()
+                    val givenDigits = sudokuBoardView.toString()
 
-                    solver
-                }
+                    val solverDeffered = CoroutineScope(Dispatchers.Default).async {
+                        val solver = BoardSolver(sudokuBoardView.to2DIntArray(), maxSols)
+                        solver.solveBoard()
 
-                CoroutineScope(Dispatchers.Main).launch {
-                    val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
-                    val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_solving_board, viewGroup, false)
-
-                    val dialogBuilder = AlertDialog.Builder(requireContext())
-                    dialogBuilder.setView(dialogView)
-                    dialogBuilder.setCancelable(false)
-                    val dialog = dialogBuilder.create()
-                    dialog.show()
-
-                    val solver = solverDeffered.await()
-
-                    if (solver.boardSolutions.size == 0) {
-                        val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
-                        snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-                        snackbar.anchorView = importButton
-                        snackbar.show()
-
-                        it.isClickable = true
-                        dialog.dismiss()
-                        return@launch
+                        solver
                     }
 
-                    var solutionString = ""
-                    for (solutionCounter in solver.boardSolutions.indices) {
-                        val solution = solver.boardSolutions[solutionCounter]
-                        for (i in 0..8) {
-                            for (j in 0..8) {
-                                if (solutionCounter == 0) {
-                                    sudokuBoardView.cells[i][j].value = solution[i][j]
-                                }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
+                        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_solving_board, viewGroup, false)
 
-                                solutionString += solution[i][j].toString()
+                        val dialogBuilder = AlertDialog.Builder(requireContext())
+                        dialogBuilder.setView(dialogView)
+                        dialogBuilder.setCancelable(false)
+                        val dialog = dialogBuilder.create()
+                        dialog.show()
+
+                        val solver = solverDeffered.await()
+
+                        if (solver.boardSolutions.size == 0) {
+                            val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
+                            snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                            snackbar.anchorView = importButton
+                            snackbar.show()
+
+                            it.isClickable = true
+                            dialog.dismiss()
+                            return@launch
+                        }
+
+                        var solutionString = ""
+                        for (solutionCounter in solver.boardSolutions.indices) {
+                            val solution = solver.boardSolutions[solutionCounter]
+                            for (i in 0..8) {
+                                for (j in 0..8) {
+                                    if (solutionCounter == 0) {
+                                        sudokuBoardView.cells[i][j].value = solution[i][j]
+                                    }
+
+                                    solutionString += solution[i][j].toString()
+                                }
+                            }
+                            solutionString += "\n"
+                        }
+
+                        if (sudokuBoardView.uniqueId == "") {
+                            sudokuBoardView.uniqueId = UniqueIdGenerator.generateId().uniqueId
+                            uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, false)
+                            val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${sudokuBoardView.uniqueId}"
+                            val root = File(boardDirPath)
+                            if (!root.exists()) {
+                                root.mkdirs()
+                            }
+                            CoroutineScope(Dispatchers.IO).launch {
+                                historyDao.insertHistoryEntry(
+                                    HistoryEntity(
+                                        uniqueId = sudokuBoardView.uniqueId,
+                                        dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
+                                        folderPath = boardDirPath,
+                                        recognisedDigits = givenDigits,
+                                        solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString),
+                                        timeTakenToSolve = sudokuBoardView.timeTakenToSolve
+                                    )
+                                )
+                            }
+                        } else {
+                            val solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                            uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, true)
+                            uploadCapturedDigits(sudokuBoardView.uniqueId)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                historyDao.updateSolutions(
+                                    uniqueId = sudokuBoardView.uniqueId,
+                                    solutionsPath = solutionsPath
+                                )
+                            }
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                historyDao.updateRecognisedDigits(
+                                    uniqueId = sudokuBoardView.uniqueId,
+                                    recognisedDigits = givenDigits
+                                )
                             }
                         }
-                        solutionString += "\n"
+
+                        sudokuBoardView.isEditable = false
+                        sudokuBoardView.selectedCell = null
+                        sudokuBoardView.invalidate()
+
+                        requireArguments().clear()
+
+                        dialog.dismiss()
                     }
-
-                    val database = Database.invoke(requireContext())
-                    val historyDao = database.getHistoryDao()
-
-                    if (sudokuBoardView.uniqueId == "") {
-                        sudokuBoardView.uniqueId = UniqueIdGenerator.generateId().uniqueId
-                        uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, false)
-                        val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${sudokuBoardView.uniqueId}"
-                        val root = File(boardDirPath)
-                        if (!root.exists()) {
-                            root.mkdirs()
-                        }
-                        CoroutineScope(Dispatchers.IO).launch {
-                            historyDao.insertHistoryEntry(
-                                HistoryEntity(
-                                    uniqueId = sudokuBoardView.uniqueId,
-                                    dateTime = DateTimeGenerator.generateDateTime(
-                                        DateTimeGenerator.DATE_AND_TIME),
-                                    folderPath = boardDirPath,
-                                    recognisedDigits = givenDigits,
-                                    solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
-                                )
-                            )
-                        }
-                    } else {
-                        val solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
-                        uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, true)
-                        uploadCapturedDigits(sudokuBoardView.uniqueId)
-                        CoroutineScope(Dispatchers.IO).launch {
-                            historyDao.updateSolutions(
-                                uniqueId = sudokuBoardView.uniqueId,
-                                solutionsPath = solutionsPath
-                            )
-                        }
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            historyDao.updateRecognisedDigits(
-                                uniqueId = sudokuBoardView.uniqueId,
-                                recognisedDigits = givenDigits
-                            )
-                        }
-                    }
-
-                    sudokuBoardView.isEditable = false
-                    sudokuBoardView.selectedCell = null
-                    sudokuBoardView.invalidate()
-
-                    requireArguments().clear()
-
-                    dialog.dismiss()
                 }
+
+                sudokuBoardView.timeTakenToSolve = timeTakenToSolve.toInt()
+                Log.d(TAG, "onCreateView: timetaken ${sudokuBoardView.timeTakenToSolve}")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    historyDao.updateTimeTakenToSolve(
+                        uniqueId = sudokuBoardView.uniqueId,
+                        timeTakenToSolve = sudokuBoardView.timeTakenToSolve
+                    )
+                }
+
             } else {
                 val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
                 snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
@@ -265,26 +278,7 @@ class MainFragment : Fragment() {
             sudokuBoardView.invalidate()
 
             val sudokuBoardBitmap = sudokuBoardView.drawToBitmap(Bitmap.Config.ARGB_8888)
-            val cacheDir = File(requireActivity().cacheDir, "sharedBoard")
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs()
-            }
-            val out = FileOutputStream(cacheDir.path + "/shared_board.png")
-            sudokuBoardBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            out.close()
-
-            val imagePath = File(requireActivity().cacheDir, "sharedBoard")
-            val newFile = File(imagePath, "shared_board.png")
-            val contentUri: Uri? = FileProvider.getUriForFile(requireContext(), "com.beebeeoii.snapsolvesudoku.fileprovider", newFile)
-
-            if (contentUri != null) {
-                val shareIntent = Intent()
-                shareIntent.action = Intent.ACTION_SEND
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // temp permission for receiving app to read this file
-                shareIntent.setDataAndType(contentUri, requireActivity().contentResolver.getType(contentUri))
-                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                startActivity(Intent.createChooser(shareIntent, "Share to"))
-            }
+            ShareBoardBitmap.shareBoard(requireActivity(), requireContext(), sudokuBoardBitmap)
         }
 
         input_1_button.setOnClickListener {
@@ -385,7 +379,11 @@ class MainFragment : Fragment() {
 
     private fun uploadBoardWithDigits(uniqueId: String, boardString: String, fromCamera: Boolean) {
         val firestore = Firebase.firestore
-        val board = hashMapOf(uniqueId to boardString, "fromCamera" to fromCamera)
+        val board = hashMapOf(
+            "id" to uniqueId,
+            "boardString" to boardString,
+            "fromCamera" to fromCamera,
+            "dateTime" to DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME))
         firestore.collection("boards")
             .document(uniqueId)
             .set(board)

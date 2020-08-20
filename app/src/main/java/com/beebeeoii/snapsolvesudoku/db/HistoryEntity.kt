@@ -12,5 +12,6 @@ data class HistoryEntity (
     val originalPicturePath: String ?= null,
     val processedPicturePath: String ?= null,
     val recognisedDigits: String ?= null, //"002001000200010006008020...." etc
-    val solutionsPath: String ?= null
+    val solutionsPath: String ?= null,
+    val timeTakenToSolve: Int ?= null //millis
 )

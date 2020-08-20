@@ -120,6 +120,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
     var isEditable: Boolean = true
     var isValid: Boolean = true
     var uniqueId = ""
+    var timeTakenToSolve = 0
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -312,6 +313,7 @@ class SudokuBoard(context: Context, attrs: AttributeSet) : View(context, attrs) 
         isEditable = true
         isValid = true
         uniqueId = ""
+        timeTakenToSolve = 0
     }
 
     override fun toString(): String {

@@ -118,7 +118,8 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
                                             DateTimeGenerator.DATE_AND_TIME
                                         ),
                                         folderPath = boardDirPath,
-                                        originalPicturePath = croppedImagePath
+                                        originalPicturePath = croppedImagePath,
+                                        timeTakenToSolve = 0
                                     )
                                 )
                             }

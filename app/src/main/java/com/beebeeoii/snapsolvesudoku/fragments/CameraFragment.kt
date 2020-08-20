@@ -114,7 +114,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                                 dateTime = DateTimeGenerator.generateDateTime(
                                     DateTimeGenerator.DATE_AND_TIME),
                                 folderPath = boardDirPath,
-                                originalPicturePath = originalPicturePath
+                                originalPicturePath = originalPicturePath,
+                                timeTakenToSolve = 0
                             )
                         )
                     }
