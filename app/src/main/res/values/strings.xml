@@ -23,6 +23,17 @@
     <!-- URLs -->
 
 
+    <!-- Permissions -->
+    <string name="request_storage_permission_title">Storage Permissions</string>
+    <string name="request_storage_permission_message">Please grant storage permission from settings</string>
+    <string name="request_storage_permission_rationale">Storage read/write is needed for sudoku board digit recognition</string>
+    <string name="request_camera_permission_title">Camera Permission</string>
+    <string name="request_camera_permission_message">Please grant camera permission from settings</string>
+    <string name="request_camera_permission_rationale">Camera is needed to take pictures of sudoku boards</string>
+    <string name="permission_rationale_understand_text">I understand</string>
+    <string name="grant_permission_text">Grant</string>
+    <string name="grant_permission_later_text">Later</string>
+
     <!-- Main Fragment -->
     <string name="main_frag_history_button_title">History</string>
     <string name="main_frag_history_button_description">View previously scanned sudoku boards</string>

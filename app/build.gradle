@@ -108,4 +108,6 @@ dependencies {
     //firestore
     implementation 'com.google.firebase:firebase-firestore-ktx:21.5.0'
     implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
+
+    implementation 'com.karumi:dexter:6.2.1'
 }

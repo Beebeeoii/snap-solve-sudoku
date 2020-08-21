@@ -1,9 +1,13 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
+import android.Manifest
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +18,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
-import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
-import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.solver.BoardSolver
+import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.ShareBoardBitmap
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -29,8 +33,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.*
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.io.FileWriter
 import java.io.IOException
 import kotlin.system.measureNanoTime
@@ -55,9 +68,18 @@ private lateinit var input_7_button: MaterialButton
 private lateinit var input_8_button: MaterialButton
 private lateinit var input_9_button: MaterialButton
 
+private val STORAGE_READ_WRITE_PERM = arrayOf(
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    Manifest.permission.READ_EXTERNAL_STORAGE
+)
+
 class MainFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         mainFragmentContainer = view.findViewById(R.id.mainFragmentContainer)
         sudokuBoardView = view.findViewById(R.id.sudokuBoard)
@@ -155,7 +177,11 @@ class MainFragment : Fragment() {
 
                 CoroutineScope(Dispatchers.Main).launch {
                     val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
-                    val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_solving_board, viewGroup, false)
+                    val dialogView = LayoutInflater.from(requireContext()).inflate(
+                        R.layout.dialog_solving_board,
+                        viewGroup,
+                        false
+                    )
 
                     val dialogBuilder = AlertDialog.Builder(requireContext())
                     dialogBuilder.setView(dialogView)
@@ -166,7 +192,11 @@ class MainFragment : Fragment() {
                     val solver = solverDeffered.await()
 
                     if (solver.boardSolutions.size == 0) {
-                        val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
+                        val snackbar = Snackbar.make(
+                            mainFragmentContainer,
+                            "Invalid board",
+                            Snackbar.LENGTH_SHORT
+                        )
                         snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
                         snackbar.anchorView = importButton
                         snackbar.show()
@@ -206,13 +236,19 @@ class MainFragment : Fragment() {
                                     dateTime = DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME),
                                     folderPath = boardDirPath,
                                     recognisedDigits = givenDigits,
-                                    solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString),
+                                    solutionsPath = saveSolutionsFile(
+                                        sudokuBoardView.uniqueId,
+                                        solutionString
+                                    ),
                                     timeTakenToSolve = sudokuBoardView.timeTakenToSolve
                                 )
                             )
                         }
                     } else {
-                        val solutionsPath = saveSolutionsFile(sudokuBoardView.uniqueId, solutionString)
+                        val solutionsPath = saveSolutionsFile(
+                            sudokuBoardView.uniqueId,
+                            solutionString
+                        )
                         uploadBoardWithDigits(sudokuBoardView.uniqueId, givenDigits, true)
                         uploadCapturedDigits(sudokuBoardView.uniqueId)
                         CoroutineScope(Dispatchers.IO).launch {
@@ -239,7 +275,11 @@ class MainFragment : Fragment() {
                     dialog.dismiss()
                 }
             } else {
-                val snackbar = Snackbar.make(mainFragmentContainer, "Invalid board", Snackbar.LENGTH_SHORT)
+                val snackbar = Snackbar.make(
+                    mainFragmentContainer,
+                    "Invalid board",
+                    Snackbar.LENGTH_SHORT
+                )
                 snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
                 snackbar.anchorView = importButton
                 snackbar.show()
@@ -253,10 +293,16 @@ class MainFragment : Fragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     historyDao.getSpecificEntry(sudokuBoardView.uniqueId)
                 }
-                val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(sudokuBoardView.uniqueId)
+                val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(
+                    sudokuBoardView.uniqueId
+                )
                 findNavController().navigate(action)
             } else {
-                val snackbar = Snackbar.make(mainFragmentContainer, "Unable to view details as board is unsolved", Snackbar.LENGTH_SHORT)
+                val snackbar = Snackbar.make(
+                    mainFragmentContainer,
+                    "Unable to view details as board is unsolved",
+                    Snackbar.LENGTH_SHORT
+                )
                 snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
                 snackbar.anchorView =
                     importButton
@@ -330,11 +376,84 @@ class MainFragment : Fragment() {
         }
 
         importButton.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
-            it.findNavController().navigate(action)
-        }
+            Dexter.withContext(requireContext())
+                .withPermissions(*STORAGE_READ_WRITE_PERM)
+                .withListener(object : MultiplePermissionsListener {
+                    override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+                        if (p0 != null) {
+                            if (p0.areAllPermissionsGranted()) {
+                                copyModelData()
 
+                                val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
+                                it.findNavController().navigate(action)
+                            } else {
+                                if (p0.isAnyPermissionPermanentlyDenied) {
+                                    AlertDialog.Builder(requireContext())
+                                        .setTitle(R.string.request_storage_permission_title)
+                                        .setMessage(R.string.request_storage_permission_message)
+                                        .setPositiveButton(R.string.grant_permission_text) { _: DialogInterface, _: Int ->
+                                            val intent = Intent()
+                                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                                            intent.data = uri
+                                            requireActivity().startActivity(intent)
+                                        }.setNegativeButton(R.string.grant_permission_later_text) { dialogInterface: DialogInterface, _: Int ->
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setCancelable(false)
+                                        .create()
+                                        .show()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(p0: MutableList<PermissionRequest>?, p1: PermissionToken?) {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.request_storage_permission_title)
+                            .setMessage(R.string.request_storage_permission_rationale)
+                            .setPositiveButton(R.string.permission_rationale_understand_text) { _: DialogInterface, _: Int ->
+                                p1?.continuePermissionRequest()
+                            }
+                            .setCancelable(false)
+                            .create()
+                            .show()
+                    }
+                })
+                .check()
+        }
         return view
+    }
+
+    private fun copyModelData() {
+        val modelFileName = "070820090621"
+        val modelPath = "${requireActivity().getExternalFilesDir(null).toString()}/model"
+        try {
+            val dir = File(modelPath)
+
+            if (!dir.exists()) {
+                dir.mkdirs()
+            } else {
+                return
+            }
+
+            val pathToDataFile = "${modelPath}/${modelFileName}"
+            if (!File(pathToDataFile).exists()) {
+                val `in` = requireActivity().assets.open(modelFileName)
+                val out = FileOutputStream(pathToDataFile)
+                val buffer = ByteArray(1024)
+                var read = `in`.read(buffer)
+                while (read != -1) {
+                    out.write(buffer, 0, read)
+                    read = `in`.read(buffer)
+                }
+                `in`.close()
+                out.flush()
+                out.close()
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
     }
 
     private fun saveSolutionsFile(uniqueId: String, boardSolution: String) : String? {
@@ -377,7 +496,8 @@ class MainFragment : Fragment() {
             "id" to uniqueId,
             "boardString" to boardString,
             "fromCamera" to fromCamera,
-            "dateTime" to DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME))
+            "dateTime" to DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME)
+        )
         firestore.collection("boards")
             .document(uniqueId)
             .set(board)
