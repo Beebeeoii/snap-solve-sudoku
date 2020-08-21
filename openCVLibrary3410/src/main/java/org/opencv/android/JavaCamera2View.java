@@ -223,46 +223,6 @@ public class JavaCamera2View extends CameraBridgeViewBase {
         }
     }
 
-    private Range<Integer> getRange() {
-        CameraCharacteristics chars = null;
-        CameraManager manager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
-        try {
-            chars = manager.getCameraCharacteristics(mCameraID);
-            Range<Integer>[] ranges = chars.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
-            Range<Integer> result = null;
-            for (Range<Integer> range : ranges) {
-                int upper = range.getUpper();
-                int lower = range.getLower();
-                // 10 - min range upper for my needs
-                Log.e("Upper fps :",""+upper);
-                Log.e("range fps :",""+range);
-                if (upper >= 10000) {
-                    if (result == null || upper < result.getUpper().intValue()) {
-                        Range<Integer> newsrange = new Range<>(range.getLower()/1000,range.getLower()/1000);
-                        result = newsrange;
-                        Log.e("result fps :",""+range);
-
-                    }
-                }
-                if (upper >= 10) {
-                    if (result == null || upper < result.getUpper().intValue()) {
-                        result = range;
-                        Log.e("result fps :",""+range);
-
-                    }
-                }
-            }
-            if (result == null) {
-                result = ranges[0];
-                Log.e("result in range[0] is :",""+result);
-            }
-            return result;
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     @Override
     protected void disconnectCamera() {
         Log.i(LOGTAG, "close camera");
