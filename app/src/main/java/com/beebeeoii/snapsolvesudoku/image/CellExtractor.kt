@@ -6,6 +6,8 @@ import android.util.Log
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
+import java.lang.Integer.max
+import java.lang.Integer.min
 
 private const val TAG = "CellExtractor"
 
@@ -31,6 +33,7 @@ class CellExtractor {
                 Log.d(TAG, "splitBitmap: avgpix:$avgPix")
 
                 indiCell[row][col] = digitExtract(cellBitmap)
+//                indiCell[row][col] = cellBitmap
             }
         }
 
@@ -60,8 +63,10 @@ class CellExtractor {
             Imgproc.contourArea(it)
         }
 
-        val largestContour = contours[0]
+        val largestContour = contours.first()
         val croppingBound = Imgproc.boundingRect(largestContour)
+
+        Log.d(TAG, "digitExtract: No of contours: ${contours.size}")
 
         if (croppingBound.area() < minAreaForDigits) {
             Log.d(TAG, "digitExtract: Rejected Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
@@ -69,19 +74,52 @@ class CellExtractor {
             emptyBitmap.eraseColor(Color.WHITE)
             return emptyBitmap
         } else {
-            val croppedDigitMat = Mat(originalCellMat, croppingBound)
-            val margin = croppedDigitMat.height() / 2
+            if (/*contours.size == 1*/true) {
+                val croppedDigitMat = Mat(originalCellMat, croppingBound)
+                val margin = croppedDigitMat.height() / 2
 
-            Log.d(TAG, "digitExtract: Accepted Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
+                Log.d(TAG, "digitExtract: Accepted Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
 
-            Core.copyMakeBorder(croppedDigitMat, croppedDigitMat, margin, margin, margin, margin, Core.BORDER_CONSTANT, Scalar(0.0, 0.0, 0.0))
+                Core.copyMakeBorder(croppedDigitMat, croppedDigitMat, margin, margin, margin, margin, Core.BORDER_CONSTANT, Scalar(0.0, 0.0, 0.0))
 
-            val croppedDigitBitmap = Bitmap.createBitmap(croppedDigitMat.width(), croppedDigitMat.height(), Bitmap.Config.ARGB_8888)
+                val croppedDigitBitmap = Bitmap.createBitmap(croppedDigitMat.width(), croppedDigitMat.height(), Bitmap.Config.ARGB_8888)
 
-            Core.bitwise_not(croppedDigitMat, croppedDigitMat)
-            Utils.matToBitmap(croppedDigitMat, croppedDigitBitmap)
+                Core.bitwise_not(croppedDigitMat, croppedDigitMat)
+                Utils.matToBitmap(croppedDigitMat, croppedDigitBitmap)
 
-            return croppedDigitBitmap
+                return croppedDigitBitmap
+            } else {
+                val secondLargestContour = contours[1]
+                var secondCroppingBound = Imgproc.boundingRect(secondLargestContour)
+
+                if (secondCroppingBound.area() < minAreaForDigits) {
+                    secondCroppingBound = croppingBound
+                }
+
+                val bottomLeftX = min(croppingBound.x, secondCroppingBound.x)
+                val bottomLeftY = min(croppingBound.y, secondCroppingBound.y)
+                val bottomLeftCorner = Point(bottomLeftX.toDouble(), bottomLeftY.toDouble())
+
+                val topRightX = max(croppingBound.x + croppingBound.width, secondCroppingBound.x + secondCroppingBound.width)
+                val topRightY = max(croppingBound.y + croppingBound.height, secondCroppingBound.y + secondCroppingBound.height)
+                val topRightCorner = Point(topRightX.toDouble(), topRightY.toDouble())
+
+                val digitBound = Rect(bottomLeftCorner, topRightCorner)
+
+                val croppedDigitMat = Mat(originalCellMat, digitBound)
+                val margin = croppedDigitMat.height() / 2
+
+                Log.d(TAG, "digitExtract: Accepted Cell Area: ${croppingBound.area()} Percentage: ${croppingBound.area() / cellArea * 100}")
+
+                Core.copyMakeBorder(croppedDigitMat, croppedDigitMat, margin, margin, margin, margin, Core.BORDER_CONSTANT, Scalar(0.0, 0.0, 0.0))
+
+                val croppedDigitBitmap = Bitmap.createBitmap(croppedDigitMat.width(), croppedDigitMat.height(), Bitmap.Config.ARGB_8888)
+
+                Core.bitwise_not(croppedDigitMat, croppedDigitMat)
+                Utils.matToBitmap(croppedDigitMat, croppedDigitBitmap)
+
+                return croppedDigitBitmap
+            }
         }
     }
 }
