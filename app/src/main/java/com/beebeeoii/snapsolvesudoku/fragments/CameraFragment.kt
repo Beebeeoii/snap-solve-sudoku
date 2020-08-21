@@ -164,8 +164,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     private fun openBackgroundThread() {
         backgroundThread = HandlerThread("cameraBackgroundThread")
         backgroundThread.start()
-        backgroundHandler = Handler(
-            backgroundThread.looper)
+        backgroundHandler = Handler(backgroundThread.looper)
     }
 
     private fun closeBackgroundThread() {
