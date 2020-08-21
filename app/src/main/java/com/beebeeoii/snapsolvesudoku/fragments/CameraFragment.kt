@@ -9,18 +9,21 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.SurfaceView
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
-import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
-import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
-import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
-import com.beebeeoii.snapsolvesudoku.*
+import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
+import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
 import com.beebeeoii.snapsolvesudoku.image.GridExtractor
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -31,9 +34,9 @@ import org.opencv.android.JavaCamera2View
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
+import org.opencv.photo.Photo
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
 
 private const val TAG = "CameraFragment"
 
@@ -53,7 +56,11 @@ private var sudokuBoardMat: Mat? = null
 class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCameraViewListener2 {
 
     @Nullable
-    override fun onCreateView(inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        @Nullable container: ViewGroup?,
+        @Nullable savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_camera, container, false)
 
@@ -87,7 +94,11 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 crossfade()
 
                 Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
-                val originalSudokuBitmap = Bitmap.createBitmap(sudokuBoardMat!!.width(), sudokuBoardMat!!.height(), Bitmap.Config.ARGB_8888)
+                val originalSudokuBitmap = Bitmap.createBitmap(
+                    sudokuBoardMat!!.width(),
+                    sudokuBoardMat!!.height(),
+                    Bitmap.Config.ARGB_8888
+                )
 
                 val digitRecogniser = DigitRecogniser(requireActivity(), sudokuBoardMat!!)
                 val sudokuBoardBitmap = GlobalScope.async {
@@ -112,7 +123,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                             HistoryEntity(
                                 uniqueId = uniqueId,
                                 dateTime = DateTimeGenerator.generateDateTime(
-                                    DateTimeGenerator.DATE_AND_TIME),
+                                    DateTimeGenerator.DATE_AND_TIME
+                                ),
                                 folderPath = boardDirPath,
                                 originalPicturePath = originalPicturePath,
                                 timeTakenToSolve = 0
@@ -121,7 +133,9 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                     }
 
                     digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
-                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(digitRecogniser.sudokuBoard2DIntArray)
+                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(
+                        digitRecogniser.sudokuBoard2DIntArray
+                    )
                     findNavController().navigate(action)
                 }
             }
@@ -194,19 +208,24 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {
         val ogRGBMat = inputFrame!!.rgba()
 
-        val width = ogRGBMat.size().width
-        val height = ogRGBMat.size().height
-
-        val centrePoint = Point( width / 2, height / 2)
+        val centrePoint = Point(ogRGBMat.size().width / 2, ogRGBMat.size().height / 2)
 
         val ogGRAYMat = Mat()
         Imgproc.cvtColor(ogRGBMat, ogGRAYMat, Imgproc.COLOR_BGR2GRAY, 1)
 
-        Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
+        val blurredMat = Mat()
+        Imgproc.GaussianBlur(ogGRAYMat, blurredMat, Size(7.0, 7.0), 0.0)
+//        Log.d(TAG, "onCameraFrame: CENTRE COORD (${centrePoint.x}, ${centrePoint.y})")
 
         val threshMat = Mat()
+
+//        Photo.fastNlMeansDenoising(ogGRAYMat, ogGRAYMat, 5F, 7, 21)
 //        Imgproc.threshold(ogGRAYMat, threshMat, 120.0, 255.0, Imgproc.THRESH_BINARY)
-        Imgproc.adaptiveThreshold(ogGRAYMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
+        Imgproc.adaptiveThreshold(blurredMat, threshMat, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 4.0)
+
+        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, Size(4.0, 4.0))
+        val closed = Mat()
+        Imgproc.morphologyEx(threshMat, closed, Imgproc.MORPH_OPEN, kernel)
 
         val contours : ArrayList<MatOfPoint> = ArrayList(0)
         Imgproc.findContours(threshMat, contours, Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -214,7 +233,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         val ogArea = ogGRAYMat.size().width * ogGRAYMat.size().height
         val minArea = ogArea * 0.04
         val maxArea = ogArea * 0.3
-        Log.d(TAG, "onCameraFrame: $minArea $maxArea ${contours.size}")
+//        Log.d(TAG, "onCameraFrame: $minArea $maxArea ${contours.size}")
 
         val realContours = ArrayList<MatOfPoint>(0)
         for (counter in 1 until contours.size) {
@@ -247,8 +266,8 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
             isXInRange && isYInRange
         }
 
-        Imgproc.drawMarker(ogRGBMat, Point(centrePoint.x, centrePoint.y), Scalar(204.0, 193.0, 90.0),Imgproc.MARKER_CROSS, 20,3)
-        Imgproc.drawContours(ogRGBMat, realContours, indexOfBoard, Scalar(255.0, 0.0, 255.0),3)
+        Imgproc.drawMarker(ogRGBMat, Point(centrePoint.x, centrePoint.y), Scalar(204.0, 193.0, 90.0), Imgproc.MARKER_CROSS, 20, 3)
+        Imgproc.drawContours(ogRGBMat, realContours, indexOfBoard, Scalar(255.0, 0.0, 255.0), 3)
 
         try {
             val boundingRect = Imgproc.boundingRect(realContours[indexOfBoard])
@@ -257,7 +276,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
             e.printStackTrace()
         }
 
-        threshMat.release()
+//        threshMat.release()
 
         return ogRGBMat
     }
