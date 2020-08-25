@@ -7,16 +7,32 @@
 
 Many factors affect the accuracy of detection, especially when it is a digital picture (picture of a computer screen, monitor etc). This is because of the digital noise that stems from interference when the camera is taking a snapshot.
 
-Options to improve accuracy of detection of a **digital picture**:
+### Options to improve accuracy of detection of a **digital picture**
 
   1) Before capturing the picture, adjust as much as possible to reduce noise seen in the camera preview
     - This is usually achieved when the board is as big as possible in the camera preview
   2) Screenshot the board and import via the gallery feature. This removes digital noise interference completely.
 
-Options to improve accuracy of detection of a **normal picture**:
+### Options to improve accuracy of detection of a **normal picture**
 
   1) Stabilise camera and allow it to auto-focus before snapping
   2) Adjust such that sudoku board fills most of the area in the camera preview
+
+## How do I delete history entries
+
+There is a delete icon at the right of the appbar (top bar) in the details page. Alternatively, you may swipe left on the history entry in the history page.
+
+## How often are models updated
+
+Depends on the number of sudoku boards available for the model to be trained effectively. I am looking at once a month. The current models are very accurate in detection already.
+
+## How can I contribute
+
+Please view the contributing section in README.md and CONTRIBUTING.md.
+
+## I love this app. I love to donate
+
+You may leave your donation by navigating to the donation page in the app `Settings -> About -> Donate`. THank you in advance!
 
 ## Difference between V2 and V1
 

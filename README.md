@@ -23,17 +23,32 @@ Snap Solve Sudoku V2 is completely (about 70%) rewritten from V1. Leveraging on 
 - Machine learning model in place for improvement in future digit recognition
 - Share your board with friends with just a click
 
+## How to use
+
+### Using camera
+
+1️⃣ Grant permissions for storage and camera access
+2️⃣ Scan sudoku board with in-app camera
+3️⃣ Ensure pink outline is drawn around the correct sudoku board
+4️⃣ Snap!
+
+### Importing from gallery
+
+1️⃣ Grant permissions for storage and camera access
+2️⃣ Import sudoku board picture from gallery
+3️⃣ Crop the borders of the sudoku board
+4️⃣ Submit!
+
 ## FAQ
 
 Kindly refer to the [FAQ section](FAQ.md) for the questions you may have!
 
+## Contributing
+
+Looking for contributors to work on image processing algorithm, especially for images of monitors/screens. Much difficulties are met in dealing with the digital noise (Moire Patterns) evident in certain smartphone cameras.
+
+Please refer to CONTRIBUTING.md for more details.
+
 ## Upcoming Features
 
 Planned features can be found under the [upcoming features section](UPCOMING_FEATURES.md)!
-
-[1]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/main_screen.jpg
-[2]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/import.jpg
-[3]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/camera.jpg
-[4]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/details.jpg
-[5]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/history.jpg
-[6]: https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/screenshots/settings.jpg
