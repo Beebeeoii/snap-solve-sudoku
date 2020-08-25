@@ -1,4 +1,4 @@
-# 🆕 Snap Solve Sudoku V2 🆕
+# 🆕 Snap Solve Sudoku V2
 
 Snap Solve Sudoku V2 is completely (about 70%) rewritten from V1. Leveraging on Machine Learning using Tensorflow and personalised image processing algorithms with the use of OpenCV, Snap Solve Sudoku aims to be accurate in detecting and recognising sudoku boards and its digits. Regardless of image source, be it from desktop monitors or printed media, the app's accuracy has been overwhelming!
 
