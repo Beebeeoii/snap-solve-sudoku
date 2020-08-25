@@ -28,15 +28,21 @@ Snap Solve Sudoku V2 is completely (about 70%) rewritten from V1. Leveraging on 
 ### Using camera
 
 1️⃣ Grant permissions for storage and camera access
+
 2️⃣ Scan sudoku board with in-app camera
+
 3️⃣ Ensure pink outline is drawn around the correct sudoku board
+
 4️⃣ Snap!
 
 ### Importing from gallery
 
 1️⃣ Grant permissions for storage and camera access
+
 2️⃣ Import sudoku board picture from gallery
+
 3️⃣ Crop the borders of the sudoku board
+
 4️⃣ Submit!
 
 ## FAQ
