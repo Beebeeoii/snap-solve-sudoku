@@ -1,6 +1,11 @@
 # 🆕 Snap Solve Sudoku V2
 
-Snap Solve Sudoku V2 is completely (about 70%) rewritten from V1. Leveraging on Machine Learning using Tensorflow and personalised image processing algorithms with the use of OpenCV, Snap Solve Sudoku aims to be accurate in detecting and recognising sudoku boards and its digits. Regardless of image source, be it from desktop monitors or printed media, the app's accuracy has been overwhelming!
+[![GitHub release](https://img.shields.io/github/release/Beebeeoii/SnapSolveSudoku.svg)](https://github.com/Beebeeoii/SnapSolveSudoku/releases)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/Beebeeoii/SnapSolveSudoku/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/Beebeeoii/SnapSolveSudoku.svg)](https://GitHub.com/Beebeeoii/SnapSolveSudoku/issues/)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Beebeeoii/SnapSolveSudoku/blob/v2/LICENSE)
+
+Snap Solve Sudoku V2 is completely rewritten from V1. Leveraging on Machine Learning using Tensorflow and personalised image processing algorithms with the use of OpenCV, Snap Solve Sudoku aims to be accurate in detecting and recognising sudoku boards and its digits. Regardless of image source, be it from desktop monitors or printed media, the app's accuracy has been overwhelming!
 
 [👉 Try it from Google Play now! 👈](https://play.google.com/store/apps/details?id=com.beebeeoii.snapsolvesudoku)
 
