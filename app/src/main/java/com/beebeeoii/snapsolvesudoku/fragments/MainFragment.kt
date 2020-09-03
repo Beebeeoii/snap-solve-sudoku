@@ -384,7 +384,8 @@ class MainFragment : Fragment() {
                             if (p0.areAllPermissionsGranted()) {
                                 copyModelData()
 
-                                val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
+                                val action =
+                                    MainFragmentDirections.actionMainFragmentToImportPictureFragment()
                                 it.findNavController().navigate(action)
                             } else {
                                 if (p0.isAnyPermissionPermanentlyDenied) {
@@ -393,11 +394,17 @@ class MainFragment : Fragment() {
                                         .setMessage(R.string.request_storage_permission_message)
                                         .setPositiveButton(R.string.grant_permission_text) { _: DialogInterface, _: Int ->
                                             val intent = Intent()
-                                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                            val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                                            intent.action =
+                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                            val uri = Uri.fromParts(
+                                                "package",
+                                                requireActivity().packageName,
+                                                null
+                                            )
                                             intent.data = uri
                                             requireActivity().startActivity(intent)
-                                        }.setNegativeButton(R.string.grant_permission_later_text) { dialogInterface: DialogInterface, _: Int ->
+                                        }
+                                        .setNegativeButton(R.string.grant_permission_later_text) { dialogInterface: DialogInterface, _: Int ->
                                             dialogInterface.dismiss()
                                         }
                                         .setCancelable(false)
@@ -408,7 +415,10 @@ class MainFragment : Fragment() {
                         }
                     }
 
-                    override fun onPermissionRationaleShouldBeShown(p0: MutableList<PermissionRequest>?, p1: PermissionToken?) {
+                    override fun onPermissionRationaleShouldBeShown(
+                        p0: MutableList<PermissionRequest>?,
+                        p1: PermissionToken?
+                    ) {
                         AlertDialog.Builder(requireContext())
                             .setTitle(R.string.request_storage_permission_title)
                             .setMessage(R.string.request_storage_permission_rationale)

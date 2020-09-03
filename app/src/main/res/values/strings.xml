@@ -12,6 +12,7 @@
     <string name="firebase_collection_feature_requests">feature_requests</string>
     <string name="firebase_collection_ENV_VAR">ENV_VAR</string>
     <string name="firebase_collection_ENV_VAR_document_github">GITHUB</string>
+    <string name="firebase_collection_reviews">reviews</string>
     <!-- Firebase -->
 
 
