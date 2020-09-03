@@ -1,5 +1,9 @@
 <changelog>
-    <release versionCode="200" versionName="v2.0" date="11 Aug 20">
+    <release versionCode="35" versionName="v2.0.1" date="3 Sept 20">
+        <info>Performance enhancements</info>
+        <new>Proactive feedback system</new>
+    </release>
+    <release versionCode="34" versionName="v2.0" date="11 Aug 20">
         <info>Initial release</info>
         <new>Refreshed intuitive user experience</new>
     </release>
