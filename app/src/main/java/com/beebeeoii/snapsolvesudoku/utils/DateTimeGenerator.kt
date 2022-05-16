@@ -5,45 +5,39 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 
+private const val DATE_PATTERN = "ddMMyy"
+private const val TIME_PATTERN = "HHmmss"
+private const val DATE_AND_TIME_PATTERN = "ddMMyyHHmmss"
+
+// TODO Documentations
 object DateTimeGenerator {
-    const val DATE = 1
-    const val TIME = 2
-    const val DATE_AND_TIME = 3
+    enum class Mode {
+        DATE,
+        TIME,
+        DATE_AND_TIME;
+    }
 
-    fun generateDateTime(type: Int) : String {
-        val dateTime = LocalDateTime.now()
-
-        return when (type) {
-            DATE -> dateTime.format(DateTimeFormatter.ofPattern("ddMMyy"))
-            TIME -> dateTime.format(DateTimeFormatter.ofPattern("HHmmss"))
-            DATE_AND_TIME -> dateTime.format(DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
-            else -> "000000000000"
+    fun generateDateTimeString(dateTimeObject: LocalDateTime, mode: Mode) : String {
+        return when (mode) {
+            Mode.DATE -> dateTimeObject.format(DateTimeFormatter.ofPattern(DATE_PATTERN))
+            Mode.TIME -> dateTimeObject.format(DateTimeFormatter.ofPattern(TIME_PATTERN))
+            Mode.DATE_AND_TIME -> dateTimeObject.format(DateTimeFormatter.ofPattern(DATE_AND_TIME_PATTERN))
         }
     }
 
-    fun getDayOfWeekFromDateTime(dateTimeString: String) : String {
-        val dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
-        return dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+    fun generateDayOfWeek(dateTimeObject: LocalDateTime) : String {
+        return dateTimeObject.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     }
 
     //eg 01 August 2020
-    fun getFormattedDate(dateTimeString: String) : String {
-        val dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
-        val day = dateTime.dayOfMonth
-        val month = dateTime.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-        val year = dateTime.year
+    fun generateFormattedDateTimeString(dateTimeObject: LocalDateTime) : String {
+        val day = dateTimeObject.dayOfMonth
+        val month = dateTimeObject.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+        val year = dateTimeObject.year
         return "$day $month $year"
     }
 
-    fun getDateTimeObjectFromString(dateTimeString: String) : LocalDateTime {
-        return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
-    }
-
-    fun getDateTimeStringFromObject(dateTimeObject: LocalDateTime?) : String {
-        if (dateTimeObject != null) {
-            return dateTimeObject.format(DateTimeFormatter.ofPattern("ddMMyyHHmmss"))
-        }
-
-        return "000000000000"
+    fun getDateTimeObjectFromDateTimeString(dateTimeString: String) : LocalDateTime {
+        return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(DATE_AND_TIME_PATTERN))
     }
 }
