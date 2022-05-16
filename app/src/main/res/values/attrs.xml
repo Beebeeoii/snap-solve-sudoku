@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SudokuBoardView">
+        <attr name="backgroundColour" format="color" />
+        <attr name="majorGridDividerColour" format="color" />
+        <attr name="minorGridDividerColour" format="color" />
+        <attr name="selectedGridColour" format="color" />
+        <attr name="selectedGridAlpha" format="integer" />
+        <attr name="errorGridColour" format="color" />
+        <attr name="errorGridAlpha" format="integer" />
+        <attr name="sameDigitGridColour" format="color" />
+        <attr name="sameDigitGridAlpha" format="integer" />
+
+        <attr name="hintDigitColour" format="color" />
+        <attr name="hintDigitAlpha" format="integer" />
+        <attr name="inputDigitColour" format="color" />
+        <attr name="inputDigitAlpha" format="integer" />
+    </declare-styleable>
+</resources>
