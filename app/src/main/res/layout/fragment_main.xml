@@ -1,234 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/mainFragmentContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.beebeeoii.snapsolvesudoku.fragments.MainFragment">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainFragmentContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context="com.beebeeoii.snapsolvesudoku.fragments.MainFragment">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/appBar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/colorPrimaryDark"
-            android:background="@color/white"
-            app:menu="@menu/main_fragment_app_bar_menu"
-            style="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard
-        android:id="@+id/sudokuBoard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
-
-    <LinearLayout
-        android:id="@+id/optionsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sudokuBoard"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/clearBoardButton"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_clear_board_24px"
-            app:iconTint="@color/colorPrimaryDark"
-            app:iconGravity="textStart"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:tooltipText="@string/main_frag_clear_board_button_tooltip"
-            android:layout_gravity="center"
+            app:elevation="0dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/appBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:title="@string/app_name"
+                app:titleTextColor="@color/colorPrimaryDark"
+                android:background="@color/white"
+                app:menu="@menu/main_fragment_app_bar_menu"
+                style="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoardView
+            android:id="@+id/sudokuBoard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
+
+        <LinearLayout
+            android:id="@+id/optionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sudokuBoard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.1"
             android:gravity="center"
-            android:layout_weight="1" />
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/clearCellButton"
-            android:layout_width="0dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clearBoardButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_clear_board_24px"
+                app:iconTint="@color/colorPrimaryDark"
+                app:iconGravity="textStart"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/colorPrimaryDark"
+                android:tooltipText="@string/main_frag_clear_board_button_tooltip"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clearCellButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_clear_cell_24px"
+                app:iconTint="@color/colorPrimaryDark"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:iconGravity="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:tooltipText="@string/main_frag_clear_cell_button_tooltip"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/solveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/main_frag_solve_button_text"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:tooltipText="@string/main_frag_solve_button_tooltip"
+                app:strokeColor="@color/colorPrimaryDark"
+                app:strokeWidth="2dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="3" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detailsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_read_more_24px"
+                app:iconTint="@color/colorPrimaryDark"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:tooltipText="@string/main_frag_details_button_tooltip"
+                app:iconGravity="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_share_24px"
+                app:iconTint="@color/colorPrimaryDark"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:tooltipText="Share board"
+                app:iconGravity="textStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuKeyboardView
+            android:id="@+id/sudokuKeyboard"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_clear_cell_24px"
-            app:iconTint="@color/colorPrimaryDark"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:iconGravity="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:tooltipText="@string/main_frag_clear_cell_button_tooltip"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="1" />
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/optionsContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.2"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/solveButton"
-            android:layout_width="0dp"
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/photoImport"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_frag_solve_button_text"
-            android:textStyle="bold"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:tooltipText="@string/main_frag_solve_button_tooltip"
-            app:strokeColor="@color/colorPrimaryDark"
-            app:strokeWidth="2dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="3" />
+            android:text="@string/main_frag_import_button_text"
+            app:icon="@drawable/ic_import_photo_24dp"
+            app:iconTint="@color/white"
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/detailsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_read_more_24px"
-            app:iconTint="@color/colorPrimaryDark"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:tooltipText="@string/main_frag_details_button_tooltip"
-            app:iconGravity="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/shareButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_share_24px"
-            app:iconTint="@color/colorPrimaryDark"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:tooltipText="Share board"
-            app:iconGravity="textStart"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/inputContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/optionsContainer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.2">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_1_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_2_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_3_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_4_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_5"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_5_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_6"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_6_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_7"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_7_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_8"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_8_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/input_9"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/main_frag_input_9_button_text"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/photoImport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_frag_import_button_text"
-        app:icon="@drawable/ic_import_photo_24dp"
-        app:iconTint="@color/white"
-        app:backgroundTint="@color/colorPrimaryDark"
-        android:textColor="@color/white"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
