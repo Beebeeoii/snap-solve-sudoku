@@ -37,6 +37,7 @@ import org.opencv.imgproc.Imgproc
 import org.opencv.photo.Photo
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 private const val TAG = "CameraFragment"
 
@@ -104,40 +105,38 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
-                GlobalScope.launch {
-                    Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
-                    val uniqueId = UniqueIdGenerator.generateId().uniqueId
-                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
-                    val boardDirFile = File(boardDirPath)
-                    if (!boardDirFile.exists()) {
-                        boardDirFile.mkdir()
-                    }
-                    val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
-                    val out = FileOutputStream(originalPicturePath)
-                    originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
-
-                    val database = Database.invoke(requireContext())
-                    val historyDao = database.getHistoryDao()
-                    CoroutineScope(Dispatchers.IO).launch {
-                        historyDao.insertHistoryEntry(
-                            HistoryEntity(
-                                uniqueId = uniqueId,
-                                dateTime = DateTimeGenerator.generateDateTime(
-                                    DateTimeGenerator.DATE_AND_TIME
-                                ),
-                                folderPath = boardDirPath,
-                                originalPicturePath = originalPicturePath,
-                                timeTakenToSolve = 0
-                            )
-                        )
-                    }
-
-                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
-                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(
-                        digitRecogniser.sudokuBoard2DIntArray
-                    )
-                    findNavController().navigate(action)
-                }
+//                GlobalScope.launch {
+//                    Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
+//                    val uniqueId = UniqueIdGenerator.generateId().uniqueId
+//                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
+//                    val boardDirFile = File(boardDirPath)
+//                    if (!boardDirFile.exists()) {
+//                        boardDirFile.mkdir()
+//                    }
+//                    val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
+//                    val out = FileOutputStream(originalPicturePath)
+//                    originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+//
+//                    val database = Database.invoke(requireContext())
+//                    val historyDao = database.getHistoryDao()
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        historyDao.insertHistoryEntry(
+//                            HistoryEntity(
+//                                uniqueId = uniqueId,
+//                                dateTime = DateTimeGenerator.generateDateTimeString(LocalDateTime.now(), DateTimeGenerator.Mode.DATE_AND_TIME),
+//                                folderPath = boardDirPath,
+//                                originalPicturePath = originalPicturePath,
+//                                timeTakenToSolve = 0
+//                            )
+//                        )
+//                    }
+//
+//                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
+//                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(
+//                        digitRecogniser.sudokuBoard2DIntArray
+//                    )
+//                    findNavController().navigate(action)
+//                }
             }
         }
         return view

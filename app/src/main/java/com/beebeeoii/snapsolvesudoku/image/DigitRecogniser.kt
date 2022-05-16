@@ -66,7 +66,7 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
         val output = Array(1) { FloatArray(10) }
 
-        val uniqueId = UniqueIdGenerator.uniqueId
+        val uniqueId = UniqueIdGenerator.generateId()
         val boardDirPath = "${activity.getExternalFilesDir(null).toString()}/${uniqueId}"
         val processedPicturePath = "${boardDirPath}/${uniqueId}_processed.png"
         val boardDirFile = File(boardDirPath)
@@ -108,8 +108,8 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
 
                 val result = output[0]
 
-                val maxConfidence = result.max()
-                val prediction = maxConfidence?.let { it1 -> result.indexOf(it1) }
+                val maxConfidence = result.maxOrNull()
+                val prediction = maxConfidence?.let { it1 -> result.indexOfFirst { it == it1 } }
                 val isCellEmpty = avgPix > 250
 
                 if (prediction != null && !isCellEmpty) {

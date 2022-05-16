@@ -8,7 +8,6 @@ import androidx.room.Query
 
 @Dao
 interface HistoryDAO {
-
     @Insert
     suspend fun insertHistoryEntry(historyEntity: HistoryEntity)
 

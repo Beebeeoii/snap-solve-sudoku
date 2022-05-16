@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-
 @Database(entities = [HistoryEntity::class], version = 2)
 
 abstract class Database : RoomDatabase() {

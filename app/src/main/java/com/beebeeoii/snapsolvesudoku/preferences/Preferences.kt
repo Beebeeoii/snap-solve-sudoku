@@ -32,7 +32,7 @@ class Preferences : PreferenceFragmentCompat() {
             val dateTimeObjects = mutableListOf<LocalDateTime>()
             val modelFileDir = File("${requireActivity().getExternalFilesDir(null).toString()}/model")
             val modelFileName = modelFileDir.list()[0]
-            val modelDateTimeCreated = DateTimeGenerator.getDateTimeObjectFromString(modelFileName)
+            val modelDateTimeCreated = DateTimeGenerator.getDateTimeObjectFromDateTimeString(modelFileName)
 
             var modelHasUpdate: Boolean
 
@@ -44,10 +44,10 @@ class Preferences : PreferenceFragmentCompat() {
             storageReference.child("models").listAll()
                 .addOnSuccessListener { listResult ->
                     listResult.items.forEach { item ->
-                        dateTimeObjects.add(DateTimeGenerator.getDateTimeObjectFromString(item.name))
+                        dateTimeObjects.add(DateTimeGenerator.getDateTimeObjectFromDateTimeString(item.name))
                     }
 
-                    modelHasUpdate = dateTimeObjects.max()?.isAfter(modelDateTimeCreated)!!
+                    modelHasUpdate = dateTimeObjects.maxOrNull()?.isAfter(modelDateTimeCreated)!!
 
                     val progressBar = dialogView.findViewById<ProgressBar>(R.id.updateModelLoading)
                     val statusText = dialogView.findViewById<MaterialTextView>(R.id.updateModelStatus)
@@ -65,7 +65,8 @@ class Preferences : PreferenceFragmentCompat() {
                             progressBar.visibility = View.VISIBLE
                             statusText.visibility = View.INVISIBLE
 
-                            val updatedModelName = DateTimeGenerator.getDateTimeStringFromObject(dateTimeObjects.max())
+                            val updatedModelName = dateTimeObjects.maxOrNull()
+                                ?.let { it1 -> DateTimeGenerator.generateDateTimeString(it1, DateTimeGenerator.Mode.DATE_AND_TIME) }
                             val updatedModelReference = storageReference
                                 .child("models/${updatedModelName}")
                             val localFile = File("${requireActivity().getExternalFilesDir(null).toString()}/model/$updatedModelName")

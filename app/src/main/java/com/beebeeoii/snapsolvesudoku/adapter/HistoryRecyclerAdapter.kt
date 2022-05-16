@@ -11,7 +11,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
-import com.beebeeoii.snapsolvesudoku.fragments.HistoryFragmentDirections
+//import com.beebeeoii.snapsolvesudoku.fragments.HistoryFragmentDirections
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.google.android.material.textview.MaterialTextView
 
@@ -44,9 +44,9 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
         }
         holder.picture.visibility = View.VISIBLE
 
-        val dateTime = historyData[position].dateTime
-        val dayOfWeek = DateTimeGenerator.getDayOfWeekFromDateTime(dateTime)
-        val formattedDate = DateTimeGenerator.getFormattedDate(dateTime)
+        val dateTime = DateTimeGenerator.getDateTimeObjectFromDateTimeString(historyData[position].dateTime)
+        val dayOfWeek = DateTimeGenerator.generateDayOfWeek(dateTime)
+        val formattedDate = DateTimeGenerator.generateFormattedDateTimeString(dateTime)
         holder.dayTextView.text = dayOfWeek
         holder.dateTextView.text = formattedDate
     }
@@ -62,10 +62,10 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
         }
 
         override fun onClick(v: View?) {
-            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(uniqueIdTextView.text.toString())
-            findNavController(activity,
-                R.id.historyRecyclerView
-            ).navigate(action)
+//            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(uniqueIdTextView.text.toString())
+//            findNavController(activity,
+//                R.id.historyRecyclerView
+//            ).navigate(action)
         }
     }
 }

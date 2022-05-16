@@ -11,85 +11,85 @@
         android:name="com.beebeeoii.snapsolvesudoku.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_importPictureFragment"
-            app:destination="@id/importPictureFragment" />
-        <argument android:name="board2DIntArray"
-            app:argType="com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray" />
-        <action
-            android:id="@+id/action_mainFragment_to_historyFragment"
-            app:destination="@id/historyFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_importPictureFragment"-->
+<!--            app:destination="@id/importPictureFragment" />-->
+<!--        <argument android:name="board2DIntArray"-->
+<!--            app:argType="com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_historyFragment"-->
+<!--            app:destination="@id/historyFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_detailsFragment"-->
+<!--            app:destination="@id/detailsFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_settingsFragment"-->
+<!--            app:destination="@id/settingsFragment" />-->
     </fragment>
-    <dialog
-        android:id="@+id/importPictureFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"
-        android:label="ImportPictureFragment" >
-        <action
-            android:id="@+id/action_importPictureFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment"
-            app:popUpTo="@id/mainFragment" />
-        <action
-            android:id="@+id/action_importPictureFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </dialog>
-    <dialog
-        android:id="@+id/cameraFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.CameraFragment"
-        android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" >
-        <action
-            android:id="@+id/action_cameraFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </dialog>
-    <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.HistoryFragment"
-        android:label="fragment_history"
-        tools:layout="@layout/fragment_history" >
-        <action
-            android:id="@+id/action_historyFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailsFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.DetailsFragment"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details" >
-        <argument
-            android:name="uniqueId"
-            app:argType="string"
-            android:defaultValue='""' />
-        <action
-            android:id="@+id/action_detailsFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
-        <action
-            android:id="@+id/action_settingsFragment_to_aboutFragment"
-            app:destination="@id/aboutFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/aboutFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"
-        android:label="fragment_about"
-        tools:layout="@layout/fragment_about" >
-        <action
-            android:id="@+id/action_aboutFragment_to_donateFragment"
-            app:destination="@id/donateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/donateFragment"
-        android:name="com.beebeeoii.snapsolvesudoku.fragments.DonateFragment"
-        android:label="fragment_donate"
-        tools:layout="@layout/fragment_donate" />
+<!--    <dialog-->
+<!--        android:id="@+id/importPictureFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"-->
+<!--        android:label="ImportPictureFragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_importPictureFragment_to_cameraFragment"-->
+<!--            app:destination="@id/cameraFragment"-->
+<!--            app:popUpTo="@id/mainFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_importPictureFragment_to_mainFragment"-->
+<!--            app:destination="@id/mainFragment" />-->
+<!--    </dialog>-->
+<!--    <dialog-->
+<!--        android:id="@+id/cameraFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.CameraFragment"-->
+<!--        android:label="fragment_camera"-->
+<!--        tools:layout="@layout/fragment_camera" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_cameraFragment_to_mainFragment"-->
+<!--            app:destination="@id/mainFragment" />-->
+<!--    </dialog>-->
+<!--    <fragment-->
+<!--        android:id="@+id/historyFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.HistoryFragment"-->
+<!--        android:label="fragment_history"-->
+<!--        tools:layout="@layout/fragment_history" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_historyFragment_to_detailsFragment"-->
+<!--            app:destination="@id/detailsFragment" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/detailsFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.DetailsFragment"-->
+<!--        android:label="fragment_details"-->
+<!--        tools:layout="@layout/fragment_details" >-->
+<!--        <argument-->
+<!--            android:name="uniqueId"-->
+<!--            app:argType="string"-->
+<!--            android:defaultValue='""' />-->
+<!--        <action-->
+<!--            android:id="@+id/action_detailsFragment_to_mainFragment"-->
+<!--            app:destination="@id/mainFragment" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/settingsFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.SettingsFragment"-->
+<!--        android:label="fragment_settings"-->
+<!--        tools:layout="@layout/fragment_settings" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_settingsFragment_to_aboutFragment"-->
+<!--            app:destination="@id/aboutFragment" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/aboutFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"-->
+<!--        android:label="fragment_about"-->
+<!--        tools:layout="@layout/fragment_about" >-->
+<!--        <action-->
+<!--            android:id="@+id/action_aboutFragment_to_donateFragment"-->
+<!--            app:destination="@id/donateFragment" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/donateFragment"-->
+<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.DonateFragment"-->
+<!--        android:label="fragment_donate"-->
+<!--        tools:layout="@layout/fragment_donate" />-->
 </navigation>
