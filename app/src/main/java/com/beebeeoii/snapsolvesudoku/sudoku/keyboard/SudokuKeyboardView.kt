@@ -1,7 +1,8 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.keyboard
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
@@ -48,7 +49,7 @@ class SudokuKeyboardView(
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
         gravity = Gravity.CENTER
 
-        val buttonStyle: Int = R.style.Widget_MaterialComponents_Button_TextButton
+        val buttonStyle: Int = R.style.Widget_Material3_Button_TextButton
         val buttonTextColour: Int = ContextCompat.getColor(context, R.color.colorPrimaryDark)
         val buttonLayoutParams: ViewGroup.LayoutParams = LayoutParams(0,
             LayoutParams.WRAP_CONTENT, 1.0f)
@@ -70,6 +71,8 @@ class SudokuKeyboardView(
             val text = "$inputDigit"
 
             button.text = text
+            button.textSize = 14f
+            button.typeface = Typeface.DEFAULT_BOLD
             button.setTextColor(buttonTextColour)
             button.layoutParams = buttonLayoutParams
             button.setBackgroundColor(Color.TRANSPARENT)
