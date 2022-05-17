@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.exceptions
 
 /**
  * CoordinateOutOfBoundsException is raised when the canvas coordinate cannot be translated to a

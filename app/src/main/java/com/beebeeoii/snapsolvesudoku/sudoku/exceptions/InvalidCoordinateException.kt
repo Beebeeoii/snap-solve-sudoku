@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.exceptions
 
 /**
  * InvalidCoordinateException is raised when the coordinate provided is not between 0 and 8

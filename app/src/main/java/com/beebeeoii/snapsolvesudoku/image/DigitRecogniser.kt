@@ -4,7 +4,7 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
 import com.beebeeoii.snapsolvesudoku.db.Database
-import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray
+import com.beebeeoii.snapsolvesudoku.sudoku.SudokuBoard2DIntArray
 import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

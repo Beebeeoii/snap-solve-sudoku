@@ -1,8 +1,8 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.exceptions
 
 /**
  * NoValueException is raised when there is an attempt to retrieve a value from an empty cell.
- * See [SudokuCell.EmptySudokuCell].
+ * See [com.beSudokuCell.EmptySudokuCell].
  *
  * @property message Message to be printed when exception is thrown.
  *

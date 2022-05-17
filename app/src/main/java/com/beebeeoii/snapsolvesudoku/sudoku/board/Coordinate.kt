@@ -1,4 +1,6 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.board
+
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidCoordinateException
 
 /**
  * Coordinate abstracts the position of a cell in a 9x9 sudoku board.

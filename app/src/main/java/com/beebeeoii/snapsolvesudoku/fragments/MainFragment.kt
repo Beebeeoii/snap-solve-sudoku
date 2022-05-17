@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
-import com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuKeyboardView
+import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
 
 /**
  * MainFragment is the hub of the app.

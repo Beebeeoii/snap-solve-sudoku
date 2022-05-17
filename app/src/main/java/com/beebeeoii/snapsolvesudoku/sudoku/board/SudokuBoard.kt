@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.board
 
 import android.util.Log
 import java.util.Optional
@@ -208,7 +208,8 @@ class SudokuBoard {
         }
 
         this.sudokuCells[coordinate.row()][coordinate.col()] = SudokuCell.of(
-            value, isGiven, coordinate)
+            value, isGiven, coordinate
+        )
     }
 
     /**

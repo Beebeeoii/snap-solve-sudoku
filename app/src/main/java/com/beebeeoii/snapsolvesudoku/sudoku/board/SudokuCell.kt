@@ -1,4 +1,6 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.board
+
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.NoValueException
 
 /**
  * SudokuCell represents a cell in a 9x9 sudoku board.
@@ -176,12 +178,12 @@ open class SudokuCell private constructor(
     }
 
     /**
-     * Retrieves a string representation of the sudoku board.
+     * Retrieves a string representation of the sudoku cell.
      *
-     * @return A string representation of the sudoku board.
+     * @return A string representation of the sudoku cell.
      */
     @Override
     override fun toString(): String {
-        return "${this.coordinate}: ${this.value}"
+        return "${this.value}"
     }
 }

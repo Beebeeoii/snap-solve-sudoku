@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku
 
 import java.io.Serializable
 

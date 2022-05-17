@@ -1,4 +1,4 @@
-package com.beebeeoii.snapsolvesudoku.sudokuboard
+package com.beebeeoii.snapsolvesudoku.sudoku.board
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.CoordinateOutOfBoundsException
 
 private const val TAG = "SudokuBoardView"
 
