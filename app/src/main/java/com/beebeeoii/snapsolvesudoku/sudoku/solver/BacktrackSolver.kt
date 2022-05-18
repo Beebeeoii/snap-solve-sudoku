@@ -1,11 +1,20 @@
 package com.beebeeoii.snapsolvesudoku.sudoku.solver
 
-import android.util.Log
 import com.beebeeoii.snapsolvesudoku.sudoku.board.Coordinate
 import com.beebeeoii.snapsolvesudoku.sudoku.board.SudokuBoard
 
 private const val TAG = "BacktrackSolver"
 
+/**
+ * BacktrackSolver is solver that uses backtracking to solve the sudoku puzzle.
+ *
+ * @param maxSolutions The maximum number of solutions the solver should find.
+ *
+ * @property sudokuBoard The SudokuBoard to be solved.
+ * @property quad Helper 2D IntArray
+ * @property rr Helper 2D IntArray
+ * @property cr Helper 2D IntArray
+ */
 class BacktrackSolver(
     private val sudokuBoard: SudokuBoard,
     maxSolutions: Int
@@ -14,6 +23,9 @@ class BacktrackSolver(
     private val rr : Array<IntArray> = Array(9){IntArray(10)}
     private val cr : Array<IntArray> = Array(9){ IntArray(10) }
 
+    /**
+     * Solves the sudoku board.
+     */
     @Override
     override fun solve() {
         fun quad(x : Int, y : Int) : Int {
