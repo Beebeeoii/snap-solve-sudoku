@@ -11,6 +11,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.CoordinateOutOfBoundsException
+import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
+import kotlin.math.max
 
 private const val TAG = "SudokuBoardView"
 
@@ -53,25 +55,59 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.SudokuBoardView, 0, 0).apply {
             try {
-                backgroundColour = getColor(R.styleable.SudokuBoardView_backgroundColour, Color.WHITE)
-                majorGridDividerColour = getColor(R.styleable.SudokuBoardView_majorGridDividerColour, Color.BLACK)
-                minorGridDividerColour = getColor(R.styleable.SudokuBoardView_minorGridDividerColour, Color.BLACK)
+                backgroundColour = getColor(
+                    R.styleable.SudokuBoardView_backgroundColour,
+                    Color.WHITE
+                )
+                majorGridDividerColour = getColor(
+                    R.styleable.SudokuBoardView_majorGridDividerColour,
+                    Color.BLACK
+                )
+                minorGridDividerColour = getColor(
+                    R.styleable.SudokuBoardView_minorGridDividerColour,
+                    Color.BLACK
+                )
 
-                selectedGridColour = getColor(R.styleable.SudokuBoardView_selectedGridColour, Color.LTGRAY)
-                selectedGridAlpha = getInteger(R.styleable.SudokuBoardView_selectedGridAlpha, 80)
-                errorGridColour = getColor(R.styleable.SudokuBoardView_selectedGridColour, Color.RED)
-                errorGridAlpha = getInteger(R.styleable.SudokuBoardView_selectedGridAlpha, 50)
-                sameDigitGridColour = getColor(R.styleable.SudokuBoardView_sameDigitGridColour,
+                selectedGridColour = getColor(
+                    R.styleable.SudokuBoardView_selectedGridColour,
+                    Color.LTGRAY
+                )
+                selectedGridAlpha = getInteger(
+                    R.styleable.SudokuBoardView_selectedGridAlpha,
+                    80
+                )
+                errorGridColour = getColor(
+                    R.styleable.SudokuBoardView_selectedGridColour,
+                    Color.RED
+                )
+                errorGridAlpha = getInteger(
+                    R.styleable.SudokuBoardView_selectedGridAlpha,
+                    50
+                )
+                sameDigitGridColour = getColor(
+                    R.styleable.SudokuBoardView_sameDigitGridColour,
                     Color.rgb(82,26,74)
                 )
-                sameDigitGridAlpha = getInteger(R.styleable.SudokuBoardView_sameDigitGridAlpha, 50)
+                sameDigitGridAlpha = getInteger(
+                    R.styleable.SudokuBoardView_sameDigitGridAlpha,
+                    50
+                )
 
                 hintDigitColour = getColor(R.styleable.SudokuBoardView_hintDigitColour,
-                    Color.rgb(82, 26, 74)
+                    Color.argb(100,82, 26, 74)
                 )
-                hintDigitAlpha = getInteger(R.styleable.SudokuBoardView_hintDigitAlpha, 100)
-                inputDigitColour = getColor(R.styleable.SudokuBoardView_inputDigitColour, Color.DKGRAY)
-                inputDigitAlpha = getInteger(R.styleable.SudokuBoardView_inputDigitAlpha, 80)
+                hintDigitAlpha = getInteger(
+                    R.styleable.SudokuBoardView_hintDigitAlpha,
+                    255
+                )
+                inputDigitColour = getColor(
+                    R.styleable.SudokuBoardView_inputDigitColour,
+                    Color.DKGRAY
+                )
+                inputDigitAlpha = getInteger(
+                    R.styleable.SudokuBoardView_inputDigitAlpha,
+                    100
+                )
             } finally {
                 recycle()
             }
@@ -106,10 +142,12 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
 
         hintDigitPaint = Paint(ANTI_ALIAS_FLAG).apply {
             color = hintDigitColour
+            alpha = hintDigitAlpha
         }
 
         inputDigitPaint = Paint(ANTI_ALIAS_FLAG).apply {
             color = inputDigitColour
+            alpha = inputDigitAlpha
         }
 
         this.sudokuBoard = SudokuBoard()
@@ -242,7 +280,8 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
                 }
 
                 try {
-                    if (!this.sudokuBoard.getSelectedCell().isEmpty() && cell.valueEquals(this.sudokuBoard.getSelectedCell()) && cell.isValid()) {
+                    if (!this.sudokuBoard.getSelectedCell().isEmpty() &&
+                        cell.valueEquals(this.sudokuBoard.getSelectedCell()) && cell.isValid()) {
                         canvas?.drawRect(
                             cell.getPosition().calculateXLeftOffset(cellWidth),
                             cell.getPosition().calculateYTopOffset(cellHeight),
@@ -316,7 +355,11 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
 
     fun setCell(value: Int) {
         try {
-            this.sudokuBoard.setCell(this.sudokuBoard.getSelectedCellCoordinate(), value)
+            this.sudokuBoard.setCell(
+                this.sudokuBoard.getSelectedCellCoordinate(),
+                value,
+                true
+            )
             this.invalidate()
         } catch (err: NoSuchElementException) {
             //
@@ -331,6 +374,15 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
         } catch (err: NoSuchElementException) {
             //
         }
+    }
+
+    fun solve(solverType: Solver.Type, maxSolutions: Int) {
+        val solutions = this.sudokuBoard.solve(solverType, maxSolutions)
+        if (solutions.isNotEmpty()) {
+            this.sudokuBoard = solutions[0]
+        }
+        this.sudokuBoard.freeze()
+        this.invalidate()
     }
 
     fun reset() {
