@@ -20,6 +20,7 @@ import com.google.android.material.button.MaterialButton
  *
  * @constructor Initialises the keyboard with buttons to clear a cell, solve the board and clear the
  *              board.
+ * @property mSudokuOptionsListener Listener for the respective options buttons.
  *
  * @author Jia Wei Lee
  */
@@ -27,6 +28,31 @@ class SudokuOptionsView(
     context: Context,
     attrs: AttributeSet
 ) : LinearLayout(context, attrs) {
+    /**
+     * Options available in this options view.
+     */
+    enum class Options {
+        CLEAR_CELL, SOLVE, CLEAR_BOARD
+    }
+
+    private var mSudokuOptionsListener: ISudokuOptionsListener? = null
+
+    /**
+     * Functional interface for this options listener.
+     */
+    @FunctionalInterface
+    interface ISudokuOptionsListener {
+        fun onOptionClick(option: Options)
+    }
+
+    /**
+     * Sets the options listener.
+     *
+     * @param mSudokuOptionsListener The keyboard listener.
+     */
+    fun setOnSudokuOptionsListener(mSudokuOptionsListener: ISudokuOptionsListener) {
+        this.mSudokuOptionsListener = mSudokuOptionsListener
+    }
 
     init {
         orientation = HORIZONTAL
@@ -42,6 +68,18 @@ class SudokuOptionsView(
             attrs, outlinedButtonStyle)
         val clearBoardButton = MaterialButton(ContextThemeWrapper(context, textButtonStyle),
             attrs, textButtonStyle)
+
+        clearCellButton.setOnClickListener {
+            mSudokuOptionsListener?.onOptionClick(Options.CLEAR_CELL)
+        }
+
+        solveBoardButton.setOnClickListener {
+            mSudokuOptionsListener?.onOptionClick(Options.SOLVE)
+        }
+
+        clearBoardButton.setOnClickListener {
+            mSudokuOptionsListener?.onOptionClick(Options.CLEAR_BOARD)
+        }
 
         addView(styleButton(clearCellButton, R.drawable.ic_clear_cell_24px))
         addView(styleButton(solveBoardButton, -1, "Solve", 2f))

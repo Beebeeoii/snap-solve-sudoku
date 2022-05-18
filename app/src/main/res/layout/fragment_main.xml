@@ -40,7 +40,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
 
         <com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
-            android:id="@+id/optionsKeyboard"
+            android:id="@+id/sudokuOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -60,7 +60,7 @@
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/optionsKeyboard"
+            app:layout_constraintTop_toBottomOf="@id/sudokuOptions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.2"/>
 

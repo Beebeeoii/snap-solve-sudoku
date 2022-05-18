@@ -224,7 +224,7 @@ class SudokuBoard {
     /**
      * Resets the cell at the given coordinate.
      *
-     * @param coordinate The coordinate of the cell to be resetted.
+     * @param coordinate The coordinate of the cell to reset.
      */
     fun clearCell(coordinate: Coordinate) {
         this.sudokuCells[coordinate.row()][coordinate.col()] = SudokuCell.empty(coordinate)
@@ -256,7 +256,7 @@ class SudokuBoard {
     fun reset() {
         for (x in 0..8) {
             for (y in 0..8) {
-                sudokuCells[x][y].reset()
+                sudokuCells[x][y] = sudokuCells[x][y].reset()
             }
         }
         isEditable = true
@@ -270,7 +270,7 @@ class SudokuBoard {
      */
     fun validateBoard() {
         fun updateBoardErrors(errorCell1: SudokuCell, errorCell2: SudokuCell) {
-            Log.d(TAG, "Invalid cells: $errorCell2 $errorCell1")
+            Log.v(TAG, "Invalid cells: $errorCell2 $errorCell1")
 
             this.invalidate()
             this.sudokuCells[errorCell1.getPosition().row()][errorCell1.getPosition().col()] =

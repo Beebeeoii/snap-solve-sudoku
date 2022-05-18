@@ -327,6 +327,7 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
     fun clearCell() {
         try {
             this.sudokuBoard.clearCell(this.sudokuBoard.getSelectedCellCoordinate())
+            this.invalidate()
         } catch (err: NoSuchElementException) {
             //
         }
@@ -334,6 +335,7 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
 
     fun reset() {
         this.sudokuBoard.reset()
+        this.invalidate()
     }
 
     override fun invalidate() {

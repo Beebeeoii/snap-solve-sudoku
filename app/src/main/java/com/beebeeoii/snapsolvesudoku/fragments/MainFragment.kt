@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
+import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
 
 /**
  * MainFragment is the hub of the app.
@@ -24,10 +25,33 @@ class MainFragment : Fragment() {
         val binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.sudokuKeyboard.setOnSudokuKeyboardListener(object :
             SudokuKeyboardView.ISudokuKeyboardListener {
-            override fun onInput(input: Int) {
-                binding.sudokuBoard.setCell(input)
+                @Override
+                override fun onInput(input: Int) {
+                    binding.sudokuBoard.setCell(input)
+                }
             }
-        })
+        )
+
+        binding.sudokuOptions.setOnSudokuOptionsListener(object :
+            SudokuOptionsView.ISudokuOptionsListener {
+                @Override
+                override fun onOptionClick(option: SudokuOptionsView.Options) {
+                    when (option) {
+                        SudokuOptionsView.Options.CLEAR_CELL -> {
+                            binding.sudokuBoard.clearCell()
+                        }
+
+                        SudokuOptionsView.Options.SOLVE -> {
+                            TODO("TEST")
+                        }
+
+                        SudokuOptionsView.Options.CLEAR_BOARD -> {
+                            binding.sudokuBoard.reset()
+                        }
+                    }
+                }
+            }
+        )
 
         return binding.root
     }
