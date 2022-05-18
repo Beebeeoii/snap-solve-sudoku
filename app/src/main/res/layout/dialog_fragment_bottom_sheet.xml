@@ -8,7 +8,7 @@
     android:layout_marginBottom="8dp"
     android:background="@color/white">
 
-    <com.google.android.material.textview.MaterialTextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:text="@string/dialog_import_picture_title"
@@ -19,7 +19,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"/>
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/openCamera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,12 +27,12 @@
         android:textAllCaps="false"
         android:textColor="@color/colorPrimaryDark"
         android:gravity="start|center_vertical"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.Material3.Button.TextButton"
         app:iconTint="@color/colorPrimaryDark"
         app:icon="@drawable/ic_open_camera_24dp"
         app:iconPadding="16dp"/>
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/openGallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:textAllCaps="false"
         android:textColor="@color/colorPrimaryDark"
         android:gravity="start|center_vertical"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.Material3.Button.TextButton"
         app:iconTint="@color/colorPrimaryDark"
         app:icon="@drawable/ic_open_gallery_24dp"
         app:iconPadding="16dp"/>
