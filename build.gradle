@@ -9,7 +9,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        def nav_version = '2.4.1'
+        def nav_version = '2.4.2'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
         def latestAboutLibsRelease = "8.3.0"
