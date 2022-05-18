@@ -39,11 +39,13 @@ import org.opencv.imgproc.Imgproc
 import java.io.File
 import java.io.FileOutputStream
 
-//private const val TAG = "ImportPictureFragment"
+private const val TAG = "ImportPictureFragment"
 
 class ImportPictureFragment : BottomSheetDialogFragment() {
 
     private val RETRIEVE_PICTURE_CODE = 1
+
+
 
     @Nullable
     override fun onCreateView(

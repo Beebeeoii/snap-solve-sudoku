@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
@@ -53,6 +54,11 @@ class MainFragment : Fragment() {
                 }
             }
         )
+
+        binding.photoImport.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
+            it.findNavController().navigate(action)
+        }
 
         return binding.root
     }

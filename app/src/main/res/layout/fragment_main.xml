@@ -77,6 +77,5 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -25,8 +25,15 @@
 <!--        <action-->
 <!--            android:id="@+id/action_mainFragment_to_settingsFragment"-->
 <!--            app:destination="@id/settingsFragment" />-->
+        <action
+            android:id="@+id/action_mainFragment_to_importPictureFragment"
+            app:destination="@id/importPictureFragment" />
     </fragment>
-<!--    <dialog-->
+    <dialog
+        android:id="@+id/importPictureFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"
+        android:label="ImportPictureFragment" />
+    <!--    <dialog-->
 <!--        android:id="@+id/importPictureFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"-->
 <!--        android:label="ImportPictureFragment" >-->
