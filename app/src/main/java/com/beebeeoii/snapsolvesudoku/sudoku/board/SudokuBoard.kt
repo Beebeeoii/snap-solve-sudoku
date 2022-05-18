@@ -1,6 +1,8 @@
 package com.beebeeoii.snapsolvesudoku.sudoku.board
 
 import android.util.Log
+import com.beebeeoii.snapsolvesudoku.sudoku.solver.BacktrackSolver
+import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
 import java.util.Optional
 
 private const val TAG = "SudokuBoard"
@@ -130,6 +132,20 @@ class SudokuBoard {
      */
     fun isEditable(): Boolean {
         return this.isEditable
+    }
+
+    /**
+     * Freezes the sudoku board, making it uneditable.
+     */
+    fun freeze() {
+        this.isEditable = false
+    }
+
+    /**
+     * Unfreezes the sudoku board, making it editable.
+     */
+    fun unfreeze() {
+        this.isEditable = true
     }
 
     /**
@@ -363,6 +379,38 @@ class SudokuBoard {
                 }
             }
         }
+    }
+
+    /**
+     * Solves the sudoku board.
+     *
+     * @return An array of solved sudoku boards.
+     */
+    fun solve(solverType: Solver.Type, maxSolutions: Int): Array<SudokuBoard> {
+        val solver: Solver
+        when (solverType) {
+            Solver.Type.BACKTRACK -> {
+                solver = BacktrackSolver(this, maxSolutions)
+            }
+        }
+        solver.solve()
+        return solver.getSolutions()
+    }
+
+    /**
+     * Clones the sudoku board.
+     *
+     * @return A cloned sudoku board.
+     */
+    fun clone(): SudokuBoard {
+        val clonedBoard = SudokuBoard()
+        for (x in 0..8) {
+            for (y in 0..8) {
+                val currentCell = this.getCell(x, y)
+                clonedBoard.setCell(Coordinate(x, y), currentCell.value(), currentCell.isGiven())
+            }
+        }
+        return clonedBoard
     }
 
     /**

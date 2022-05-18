@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
+import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
 
 /**
  * MainFragment is the hub of the app.
@@ -42,7 +43,7 @@ class MainFragment : Fragment() {
                         }
 
                         SudokuOptionsView.Options.SOLVE -> {
-                            TODO("TEST")
+                            binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 1)
                         }
 
                         SudokuOptionsView.Options.CLEAR_BOARD -> {
