@@ -1,22 +1,21 @@
-package com.beebeeoii.snapsolvesudoku.solver
+package com.beebeeoii.snapsolvesudoku.sudoku.solver
 
-class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
+import android.util.Log
+import com.beebeeoii.snapsolvesudoku.sudoku.board.Coordinate
+import com.beebeeoii.snapsolvesudoku.sudoku.board.SudokuBoard
 
-    private var board: Array<IntArray> = Array(9){IntArray(9)}
-    private var maxSol: Int = 0
+private const val TAG = "BacktrackSolver"
+
+class BacktrackSolver(
+    private val sudokuBoard: SudokuBoard,
+    maxSolutions: Int
+) : Solver(maxSolutions) {
     private val quad : Array<IntArray> = Array(9){IntArray(10)}
     private val rr : Array<IntArray> = Array(9){IntArray(10)}
     private val cr : Array<IntArray> = Array(9){ IntArray(10) }
-    private val EMPTY : Int = 0
 
-    var boardSolutions : ArrayList<Array<IntArray>> = ArrayList(0)
-
-    init {
-        this.board = board
-        this.maxSol = maxSol
-    }
-
-    fun solveBoard() {
+    @Override
+    override fun solve() {
         fun quad(x : Int, y : Int) : Int {
             return 3 * (x/3) + y/3
         }
@@ -30,12 +29,12 @@ class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
             var xMutable = x
             var yMutable = y
 
-            if (boardSolutions.size == maxSol) {
+            if (super.hasReachedMaximumRequiredSolutions()) {
                 return
             }
 
             if (xMutable == 8 && yMutable == 9) {
-                updateSolutions()
+                super.updateSolutions(this.sudokuBoard.clone())
                 return
             }
 
@@ -44,7 +43,7 @@ class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
                 xMutable ++
             }
 
-            if (board[xMutable][yMutable] != EMPTY) {
+            if (!this.sudokuBoard.getCell(xMutable, yMutable).isEmpty()) {
                 solve(xMutable, yMutable + 1)
                 return
             }
@@ -57,9 +56,9 @@ class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
                     rr[xMutable][i] = 1
                     cr[yMutable][i] = 1
 
-                    board[xMutable][yMutable] = i
+                    this.sudokuBoard.setCell(Coordinate(xMutable, yMutable), i)
                     solve(xMutable, yMutable+1)
-                    board[xMutable][yMutable] = 0
+                    this.sudokuBoard.clearCell(Coordinate(xMutable, yMutable))
 
                     rr[xMutable][i] = 0
                     cr[yMutable][i] = 0
@@ -70,26 +69,16 @@ class BoardSolver(board : Array<IntArray>, maxSol : Int = 1) {
 
         for (i in 0..8) {
             for (j in 0..8) {
-                if (board[i][j] != EMPTY) {
+                if (!this.sudokuBoard.getCell(i, j).isEmpty()) {
                     val q = quad(i, j)
-                    val v = board[i][j]
+                    val v = sudokuBoard.getCell(i, j).value()
                     rr[i][v] = 1
                     cr[j][v] = 1
-                    quad[q][board[i][j]] = 1
+                    quad[q][sudokuBoard.getCell(i, j).value()] = 1
                 }
             }
         }
 
         solve(0, 0)
-    }
-
-    private fun updateSolutions() {
-        val solutionBoard = Array(9){IntArray(9)}
-        for (i in 0..8) {
-            for (j in 0..8) {
-                solutionBoard[i][j] = board[i][j]
-            }
-        }
-        boardSolutions.add(solutionBoard)
     }
 }
