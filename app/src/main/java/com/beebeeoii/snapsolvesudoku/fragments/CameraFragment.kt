@@ -2,6 +2,7 @@ package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -9,87 +10,58 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.SurfaceView
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.view.*
 import androidx.annotation.Nullable
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.fragment.findNavController
-import com.beebeeoii.snapsolvesudoku.R
-import com.beebeeoii.snapsolvesudoku.db.Database
-import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
+import androidx.window.layout.WindowMetricsCalculator
+import com.beebeeoii.snapsolvesudoku.databinding.FragmentCameraBinding
 import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
 import com.beebeeoii.snapsolvesudoku.image.GridExtractor
-import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.*
 import org.opencv.android.CameraBridgeViewBase
-import org.opencv.android.JavaCamera2View
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
-import org.opencv.photo.Photo
 import java.io.File
 import java.io.FileOutputStream
-import java.time.LocalDateTime
 
 private const val TAG = "CameraFragment"
-
-private lateinit var cameraView : JavaCamera2View
 
 private lateinit var backgroundThread : HandlerThread
 private lateinit var backgroundHandler : Handler
 
-private lateinit var constraintLayout: ConstraintLayout
-private lateinit var guideTextView: MaterialTextView
-private lateinit var loadingProgressBar: ProgressBar
-
-private lateinit var captureButton: ExtendedFloatingActionButton
-
 private var sudokuBoardMat: Mat? = null
 
 class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCameraViewListener2 {
+    private lateinit var binding: FragmentCameraBinding
 
     @Nullable
     override fun onCreateView(
         inflater: LayoutInflater,
         @Nullable container: ViewGroup?,
         @Nullable savedInstanceState: Bundle?
-    ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_camera, container, false)
-
-        cameraView = view.findViewById(R.id.cameraView)
-        constraintLayout = view.findViewById(R.id.cameraFragmentContainer)
-        captureButton = view.findViewById(R.id.captureButton)
-        guideTextView = view.findViewById(R.id.guideTextView)
-        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
+    ): View {
+        binding = FragmentCameraBinding.inflate(inflater, container, false)
 
         sudokuBoardMat = null
 
-        val displayMetrics = DisplayMetrics()
-        val windowManager = requireActivity().windowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(requireActivity())
+        val currentBounds = windowMetrics.bounds // E.g. [0 0 1350 1800]
+        val width = currentBounds.width()
+        val height = currentBounds.height()
 
-        val width = displayMetrics.widthPixels
-        val height = displayMetrics.heightPixels
+        binding.cameraView.visibility = SurfaceView.VISIBLE
+        binding.cameraView.setCvCameraViewListener(this)
+        binding.cameraView.setMaxFrameSize(width, height)
 
-        cameraView.visibility = SurfaceView.VISIBLE
-        cameraView.setCvCameraViewListener(this)
-        cameraView.setMaxFrameSize(height, width)
-
-        captureButton.setOnClickListener {
+        binding.cameraView.setOnClickListener {
             if (sudokuBoardMat == null) {
-                guideTextView.text = "No board detected"
-                guideTextView.invalidate()
+                binding.guideTextView.text = "No board detected"
+                binding.guideTextView.invalidate()
             } else {
-                cameraView.disableView()
+                binding.cameraView.disableView()
                 dialog?.setCancelable(false)
 
                 crossfade()
@@ -105,18 +77,18 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
-//                GlobalScope.launch {
-//                    Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
-//                    val uniqueId = UniqueIdGenerator.generateId().uniqueId
-//                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
-//                    val boardDirFile = File(boardDirPath)
-//                    if (!boardDirFile.exists()) {
-//                        boardDirFile.mkdir()
-//                    }
-//                    val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
-//                    val out = FileOutputStream(originalPicturePath)
-//                    originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
-//
+                GlobalScope.launch {
+                    Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
+                    val uniqueId = UniqueIdGenerator.generateId()
+                    val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
+                    val boardDirFile = File(boardDirPath)
+                    if (!boardDirFile.exists()) {
+                        boardDirFile.mkdir()
+                    }
+                    val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
+                    val out = FileOutputStream(originalPicturePath)
+                    originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+
 //                    val database = Database.invoke(requireContext())
 //                    val historyDao = database.getHistoryDao()
 //                    CoroutineScope(Dispatchers.IO).launch {
@@ -130,21 +102,21 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 //                            )
 //                        )
 //                    }
-//
-//                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
+
+                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
 //                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(
 //                        digitRecogniser.sudokuBoard2DIntArray
 //                    )
 //                    findNavController().navigate(action)
-//                }
+                }
             }
         }
-        return view
+        return binding.root
     }
 
     private fun crossfade() {
         val shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
-        loadingProgressBar.apply {
+        binding.loadingProgressBar.apply {
             alpha = 0f
             visibility = View.VISIBLE
 
@@ -154,13 +126,13 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 .setListener(null)
         }
 
-        captureButton.animate()
+        binding.captureButton.animate()
             .alpha(0f)
             .setDuration(shortAnimationDuration.toLong())
             .setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    captureButton.visibility = View.GONE
-                    guideTextView.visibility = View.GONE
+                    binding.captureButton.visibility = View.GONE
+                    binding.guideTextView.visibility = View.GONE
                 }
             })
     }
@@ -169,8 +141,9 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         super.onViewCreated(view, savedInstanceState)
 
         dialog?.setOnShowListener {
-            val d = it as BottomSheetDialog
-            d.behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels
+            val bottomSheetDialog = it as BottomSheetDialog
+            bottomSheetDialog.behavior.peekHeight = Resources.getSystem()
+                .displayMetrics.heightPixels
         }
     }
 
@@ -187,12 +160,13 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     override fun onResume() {
         super.onResume()
         openBackgroundThread()
-        cameraView.enableView()
+        binding.cameraView.setCameraPermissionGranted()
+        binding.cameraView.enableView()
     }
 
     override fun onStop() {
         super.onStop()
-        cameraView.disableView()
+        binding.cameraView.disableView()
         closeBackgroundThread()
     }
 
@@ -201,7 +175,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
     }
 
     override fun onCameraViewStopped() {
-        cameraView.disableView()
+        binding.cameraView.disableView()
     }
 
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat {

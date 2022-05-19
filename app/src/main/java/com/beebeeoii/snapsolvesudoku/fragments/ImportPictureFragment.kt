@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.databinding.DialogFragmentBottomSheetBinding
+import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
@@ -45,67 +47,18 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
 
     private val RETRIEVE_PICTURE_CODE = 1
 
-
-
     @Nullable
     override fun onCreateView(
         inflater: LayoutInflater,
         @Nullable container: ViewGroup?,
         @Nullable savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.dialog_fragment_bottom_sheet, container, false)
+        val binding = DialogFragmentBottomSheetBinding.inflate(inflater, container, false)
 
-//        val openCameraButton: MaterialButton = view.findViewById(R.id.openCamera)
-//        val openGalleryButton: MaterialButton = view.findViewById(R.id.openGallery)
-//
-//        openCameraButton.setOnClickListener {
-//
-//            Dexter.withContext(requireContext())
-//                .withPermission(Manifest.permission.CAMERA)
-//                .withListener(object : PermissionListener {
-//                        override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-//                            val action = ImportPictureFragmentDirections.actionImportPictureFragmentToCameraFragment()
-//                            findNavController().navigate(action)
-//                        }
-//
-//                        override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-//                            if (p0 != null) {
-//                                if (p0.isPermanentlyDenied) {
-//                                    AlertDialog.Builder(requireContext())
-//                                        .setTitle(R.string.request_camera_permission_title)
-//                                        .setMessage(R.string.request_camera_permission_message)
-//                                        .setPositiveButton(R.string.grant_permission_text) { _: DialogInterface, _: Int ->
-//                                            val intent = Intent()
-//                                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                                            val uri = Uri.fromParts("package", requireActivity().packageName, null)
-//                                            intent.data = uri
-//                                            requireActivity().startActivity(intent)
-//                                        }
-//                                        .setNegativeButton(R.string.grant_permission_later_text) { dialogInterface: DialogInterface, _: Int ->
-//                                            dialogInterface.dismiss()
-//                                        }
-//                                        .setCancelable(false)
-//                                        .create()
-//                                        .show()
-//                                }
-//                            }
-//                        }
-//
-//                        override fun onPermissionRationaleShouldBeShown(p0: PermissionRequest?, p1: PermissionToken?) {
-//                            AlertDialog.Builder(requireContext())
-//                                .setTitle(R.string.request_camera_permission_title)
-//                                .setMessage(R.string.request_camera_permission_rationale)
-//                                .setPositiveButton(R.string.permission_rationale_understand_text) { _: DialogInterface, _: Int ->
-//                                    p1?.continuePermissionRequest()
-//                                }
-//                                .setCancelable(false)
-//                                .create()
-//                                .show()
-//                        }
-//                    }
-//                )
-//                .check()
-//        }
+        binding.openCamera.setOnClickListener {
+            val action = ImportPictureFragmentDirections.actionImportPictureFragmentToCameraFragment()
+            findNavController().navigate(action)
+        }
 //
 //        openGalleryButton.setOnClickListener {
 //            val retrieveImagesIntent = Intent()
@@ -119,7 +72,7 @@ class ImportPictureFragment : BottomSheetDialogFragment() {
 //            )
 //        }
 
-        return view
+        return binding.root
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

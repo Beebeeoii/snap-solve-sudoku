@@ -29,7 +29,11 @@
     <dialog
         android:id="@+id/importPictureFragment"
         android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"
-        android:label="ImportPictureFragment" />
+        android:label="ImportPictureFragment" >
+        <action
+            android:id="@+id/action_importPictureFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </dialog>
     <!--    <dialog-->
 <!--        android:id="@+id/importPictureFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.ImportPictureFragment"-->
@@ -83,7 +87,12 @@
             app:popUpTo="@id/settingsFragment"
             app:popUpToInclusive="true" />
     </fragment>
-<!--    <fragment-->
+    <dialog
+        android:id="@+id/cameraFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
+    <!--    <fragment-->
 <!--        android:id="@+id/aboutFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"-->
 <!--        android:label="fragment_about"-->
