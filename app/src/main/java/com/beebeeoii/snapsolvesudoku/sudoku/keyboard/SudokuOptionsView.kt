@@ -117,6 +117,8 @@ class SudokuOptionsView(
             button.textSize = 16f
         }
 
+        // This is crucial else every button will have the same id causing app to crash.
+        button.id = generateViewId()
         button.setBackgroundColor(buttonBackground)
         button.layoutParams = buttonLayoutParams
         button.rippleColor = buttonRippleColour

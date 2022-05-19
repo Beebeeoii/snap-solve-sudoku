@@ -70,6 +70,8 @@ class SudokuKeyboardView(
             val inputDigit = index + 1
             val text = "$inputDigit"
 
+            // This is crucial else every button will have the same id causing app to crash.
+            button.id = generateViewId()
             button.text = text
             button.textSize = 14f
             button.typeface = Typeface.DEFAULT_BOLD
