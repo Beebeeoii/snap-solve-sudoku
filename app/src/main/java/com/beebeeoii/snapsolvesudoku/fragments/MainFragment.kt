@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
@@ -58,6 +60,20 @@ class MainFragment : Fragment() {
         binding.photoImport.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToImportPictureFragment()
             it.findNavController().navigate(action)
+        }
+
+        binding.appBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.history -> {
+                    true
+                }
+                R.id.settings -> {
+                    val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                    findNavController().navigate(action)
+                    true
+                }
+                else -> false
+            }
         }
 
         return binding.root

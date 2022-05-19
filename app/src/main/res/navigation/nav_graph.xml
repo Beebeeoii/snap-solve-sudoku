@@ -11,9 +11,6 @@
         android:name="com.beebeeoii.snapsolvesudoku.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
-<!--        <action-->
-<!--            android:id="@+id/action_mainFragment_to_importPictureFragment"-->
-<!--            app:destination="@id/importPictureFragment" />-->
 <!--        <argument android:name="board2DIntArray"-->
 <!--            app:argType="com.beebeeoii.snapsolvesudoku.sudokuboard.SudokuBoard2DIntArray" />-->
 <!--        <action-->
@@ -22,12 +19,12 @@
 <!--        <action-->
 <!--            android:id="@+id/action_mainFragment_to_detailsFragment"-->
 <!--            app:destination="@id/detailsFragment" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_mainFragment_to_settingsFragment"-->
-<!--            app:destination="@id/settingsFragment" />-->
         <action
             android:id="@+id/action_mainFragment_to_importPictureFragment"
             app:destination="@id/importPictureFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <dialog
         android:id="@+id/importPictureFragment"
@@ -76,15 +73,16 @@
 <!--            android:id="@+id/action_detailsFragment_to_mainFragment"-->
 <!--            app:destination="@id/mainFragment" />-->
 <!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/settingsFragment"-->
-<!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.SettingsFragment"-->
-<!--        android:label="fragment_settings"-->
-<!--        tools:layout="@layout/fragment_settings" >-->
-<!--        <action-->
-<!--            android:id="@+id/action_settingsFragment_to_aboutFragment"-->
-<!--            app:destination="@id/aboutFragment" />-->
-<!--    </fragment>-->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_pop"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/aboutFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"-->
