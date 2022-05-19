@@ -23,12 +23,12 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentSettingsBinding.inflate(inflater, container, false)
-//        requireActivity()
-//            .supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.settingsFragmentContainer, Preferences())
-//            .addToBackStack(null)
-//            .commit()
+        requireActivity()
+            .supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.settingsFragmentContainer, Preferences())
+            .addToBackStack(null)
+            .commit()
 
         binding.appBar.setNavigationOnClickListener {
             val action = SettingsFragmentDirections.actionSettingsFragmentPop()

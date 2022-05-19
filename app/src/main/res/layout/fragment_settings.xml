@@ -21,8 +21,7 @@
             app:title="@string/settings_frag_title"
             app:titleTextColor="@color/colorPrimaryDark"
             android:background="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back_24dp"
-            app:menu="@menu/settings_fragment_app_bar_menu" />
+            app:navigationIcon="@drawable/ic_arrow_back_24dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

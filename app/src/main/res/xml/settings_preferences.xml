@@ -9,24 +9,36 @@
             app:title="@string/pref_cat_1_max_sols_title"
             app:key="maximumNoSolutions"
             app:min="1"
-            android:max="50"
+            android:max="10"
             app:seekBarIncrement="1"
             app:defaultValue="1"
             app:showSeekBarValue="true"
             app:updatesContinuously="true"
             app:icon="@drawable/ic_max_no_solutions_preference_24dp"/>
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:title="@string/pref_cat_2_title">
-
         <Preference
             app:key="modelUpdate"
             app:title="@string/pref_cat_2_check_for_update_title"
             app:summary="@string/pref_cat_2_check_for_update_subtitle"
             app:icon="@drawable/ic_update_model_preference_black_24dp" />
-
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:title="About">
+
+        <Preference
+            app:key="rate"
+            app:title="Rate"
+            app:summary="Leave a rating on Google Playstore"/>
+
+        <Preference
+            app:key="feedback"
+            app:title="Send Feedback"
+            app:summary="Report issues or feature requests"/>
+
+        <Preference
+            app:key="donate"
+            app:title="Donate"
+            app:summary="If you would like to support me"/>
+    </PreferenceCategory>
 </PreferenceScreen>
