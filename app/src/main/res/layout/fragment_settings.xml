@@ -22,8 +22,7 @@
             app:titleTextColor="@color/colorPrimaryDark"
             android:background="@color/white"
             app:navigationIcon="@drawable/ic_arrow_back_24dp"
-            app:menu="@menu/settings_fragment_app_bar_menu"
-            style="@style/ThemeOverlay.MaterialComponents.Toolbar.Primary" />
+            app:menu="@menu/settings_fragment_app_bar_menu" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
