@@ -1,0 +1,1 @@
+D:\AndroidStudioProjects\snap-solve-sudoku\opencv455\build\intermediates\cxx\Debug\3c6d4216\obj\x86_64

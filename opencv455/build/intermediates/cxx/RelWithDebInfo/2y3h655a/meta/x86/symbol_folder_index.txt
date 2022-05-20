@@ -1,0 +1,1 @@
+D:\AndroidStudioProjects\snap-solve-sudoku\opencv455\build\intermediates\cxx\RelWithDebInfo\2y3h655a\obj\x86
