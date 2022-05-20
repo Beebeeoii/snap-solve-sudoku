@@ -2,17 +2,14 @@ package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import androidx.annotation.Nullable
-import androidx.window.layout.WindowMetricsCalculator
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentCameraBinding
 import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
 import com.beebeeoii.snapsolvesudoku.image.GridExtractor
@@ -47,15 +44,6 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
         sudokuBoardMat = null
 
-        val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(requireActivity())
-        val currentBounds = windowMetrics.bounds // E.g. [0 0 1350 1800]
-        val width = currentBounds.width()
-        val height = currentBounds.height()
-
-        binding.cameraView.visibility = SurfaceView.VISIBLE
-        binding.cameraView.setCvCameraViewListener(this)
-        binding.cameraView.setMaxFrameSize(width, height)
-
         binding.cameraView.setOnClickListener {
             if (sudokuBoardMat == null) {
                 binding.guideTextView.text = "No board detected"
@@ -64,7 +52,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 binding.cameraView.disableView()
                 dialog?.setCancelable(false)
 
-                crossfade()
+                crossFade()
 
                 Core.rotate(sudokuBoardMat, sudokuBoardMat, Core.ROTATE_90_CLOCKWISE)
                 val originalSudokuBitmap = Bitmap.createBitmap(
@@ -114,7 +102,7 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
         return binding.root
     }
 
-    private fun crossfade() {
+    private fun crossFade() {
         val shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         binding.loadingProgressBar.apply {
             alpha = 0f
