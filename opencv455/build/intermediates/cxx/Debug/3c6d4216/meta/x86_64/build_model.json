@@ -125,7 +125,7 @@
         "rootBuildGradleFolder": "D:\\AndroidStudioProjects\\snap-solve-sudoku",
         "sdkFolder": "D:\\android_studio_sdk",
         "isBuildOnlyTargetAbiEnabled": true,
-        "ideBuildTargetAbi": "x86_64,arm64-v8a",
+        "ideBuildTargetAbi": "x86_64,x86",
         "isCmakeBuildCohabitationEnabled": false,
         "isPrefabEnabled": false
       },
