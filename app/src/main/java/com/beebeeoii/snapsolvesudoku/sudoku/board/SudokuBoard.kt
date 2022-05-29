@@ -1,6 +1,8 @@
 package com.beebeeoii.snapsolvesudoku.sudoku.board
 
 import android.util.Log
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidBoardException
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.UnsolvableBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.solver.BacktrackSolver
 import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
 import java.util.Optional
@@ -385,8 +387,14 @@ class SudokuBoard {
      * Solves the sudoku board.
      *
      * @return An array of solved sudoku boards.
+     *
+     * @throws InvalidBoardException Error is thrown when the board provided is already invalid.
+     * @throws UnsolvableBoardException Error is thrown when there are no solutions found.
      */
     fun solve(solverType: Solver.Type, maxSolutions: Int): Array<SudokuBoard> {
+        if (!this.isValid) {
+            throw InvalidBoardException("Board is invalid and cannot be solved.")
+        }
         val solver: Solver
         when (solverType) {
             Solver.Type.BACKTRACK -> {
@@ -394,6 +402,10 @@ class SudokuBoard {
             }
         }
         solver.solve()
+
+        if (solver.getSolutions().isEmpty()) {
+            throw UnsolvableBoardException("Board is unsolvable.")
+        }
         return solver.getSolutions()
     }
 

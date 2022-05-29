@@ -1,6 +1,7 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidBoardException
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.UnsolvableBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuOptionsView
 import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
+
+private const val TAG = "MainFragment"
 
 /**
  * MainFragment is the hub of the app.
@@ -46,7 +51,15 @@ class MainFragment : Fragment() {
                         }
 
                         SudokuOptionsView.Options.SOLVE -> {
-                            binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 1)
+                            try {
+                                binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 1)
+                            } catch (err: InvalidBoardException) {
+                                //TODO Use snackbar notif
+                                Log.d(TAG, err.toString())
+                            } catch (err: UnsolvableBoardException) {
+                                //TODO Use snackbar notif
+                                Log.d(TAG, err.toString())
+                            }
                         }
 
                         SudokuOptionsView.Options.CLEAR_BOARD -> {
@@ -65,6 +78,8 @@ class MainFragment : Fragment() {
         binding.appBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.history -> {
+                    val action = MainFragmentDirections.actionMainFragmentToHistoryFragment()
+                    findNavController().navigate(action)
                     true
                 }
                 R.id.settings -> {

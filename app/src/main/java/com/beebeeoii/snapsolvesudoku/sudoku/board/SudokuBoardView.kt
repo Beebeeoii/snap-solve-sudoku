@@ -11,6 +11,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.CoordinateOutOfBoundsException
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidBoardException
+import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.UnsolvableBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
 import kotlin.math.max
 
@@ -377,12 +379,18 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
     }
 
     fun solve(solverType: Solver.Type, maxSolutions: Int) {
-        val solutions = this.sudokuBoard.solve(solverType, maxSolutions)
-        if (solutions.isNotEmpty()) {
-            this.sudokuBoard = solutions[0]
+        try {
+            val solutions = this.sudokuBoard.solve(solverType, maxSolutions)
+            if (solutions.isNotEmpty()) {
+                this.sudokuBoard = solutions[0]
+            }
+            this.sudokuBoard.freeze()
+            this.invalidate()
+        } catch (err: InvalidBoardException) {
+            throw err
+        } catch (err: UnsolvableBoardException) {
+            throw err
         }
-        this.sudokuBoard.freeze()
-        this.invalidate()
     }
 
     fun reset() {
