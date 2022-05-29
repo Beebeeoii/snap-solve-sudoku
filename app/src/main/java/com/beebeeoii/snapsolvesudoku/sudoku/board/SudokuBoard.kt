@@ -469,4 +469,32 @@ class SudokuBoard {
         }
         return boardString
     }
+
+    /**
+     * Retrieves a string representation of the sudoku board, with a choice of whether just the
+     * given digits or all the digits. If onlyGivenDigits is false, it will be the same as
+     * this.toString().
+     *
+     * @param onlyGivenDigits Whether string should just have the given digits.
+     *
+     * @return A string representation of the sudoku board.
+     */
+    fun toString(onlyGivenDigits: Boolean): String {
+        if (!onlyGivenDigits) {
+            return this.toString()
+        }
+
+        var boardString = ""
+        for (x in 0..8) {
+            for (y in 0..8) {
+                val cell: SudokuCell = this.sudokuCells[x][y]
+                boardString += if (cell.isGiven()) {
+                    cell.toString()
+                } else {
+                    "0"
+                }
+            }
+        }
+        return boardString
+    }
 }

@@ -402,4 +402,8 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
         this.sudokuBoard.validateBoard()
         super.invalidate()
     }
+
+    fun toString(onlyGivenDigits: Boolean): String {
+        return this.sudokuBoard.toString(onlyGivenDigits)
+    }
 }
