@@ -99,7 +99,20 @@
         android:id="@+id/historyFragment"
         android:name="com.beebeeoii.snapsolvesudoku.fragments.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="uniqueId"
+            app:argType="string" />
+    </fragment>
     <!--    <fragment-->
 <!--        android:id="@+id/aboutFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"-->

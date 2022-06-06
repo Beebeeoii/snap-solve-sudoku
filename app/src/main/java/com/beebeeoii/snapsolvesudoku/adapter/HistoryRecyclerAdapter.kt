@@ -11,6 +11,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
+import com.beebeeoii.snapsolvesudoku.fragments.HistoryFragmentDirections
 //import com.beebeeoii.snapsolvesudoku.fragments.HistoryFragmentDirections
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.google.android.material.textview.MaterialTextView
@@ -68,10 +69,10 @@ class HistoryRecyclerAdapter(
         }
 
         override fun onClick(v: View?) {
-//            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(uniqueIdTextView.text.toString())
-//            findNavController(activity,
-//                R.id.historyRecyclerView
-//            ).navigate(action)
+            val action = HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(
+                uniqueIdTextView.text.toString()
+            )
+            findNavController(activity, R.id.historyRecyclerView).navigate(action)
         }
     }
 }
