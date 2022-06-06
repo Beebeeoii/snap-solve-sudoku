@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +39,7 @@ class HistoryFragment : Fragment(){
 
         val database = Database.invoke(requireContext())
         val historyDao = database.getHistoryDao()
-        historyDao.getAllHistoryEntry().observe(viewLifecycleOwner, Observer {
+        historyDao.getAllHistoryEntry().observe(viewLifecycleOwner) {
 
             historyEntityList = it.filter { historyEntity ->
                 historyEntity.solutionsPath != null
@@ -51,8 +50,9 @@ class HistoryFragment : Fragment(){
             }
 
             historyEntityList = historyEntityList.asReversed() //latest on top
-            binding.historyRecyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
-        })
+            binding.historyRecyclerView.adapter =
+                HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
+        }
 
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

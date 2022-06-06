@@ -63,6 +63,7 @@ class MainFragment : Fragment() {
 
                         SudokuOptionsView.Options.SOLVE -> {
                             try {
+                                // TODO remove hardcoding of maxSolutions
                                 val timeTakenToSolve = (measureNanoTime {
                                     binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 1)
                                 } / 1000000F).toInt()
@@ -73,6 +74,7 @@ class MainFragment : Fragment() {
                                 val boardId = UniqueIdGenerator.generateId()
                                 val folderPath = "${requireActivity().getExternalFilesDir(null)
                                     .toString()}/${boardId}"
+                                // TODO remove hardcoding of fileName
                                 val solutionsPath = FileSaver.saveSolutionsFile(
                                     folderPath,
                                     "${boardId}_solutions.txt",
