@@ -53,6 +53,7 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
     private var cellWidth: Float = 0.0F
 
     private var sudokuBoard: SudokuBoard
+    private lateinit var solutions: Array<SudokuBoard>
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.SudokuBoardView, 0, 0).apply {
@@ -386,11 +387,16 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
             }
             this.sudokuBoard.freeze()
             this.invalidate()
+            this.solutions = solutions
         } catch (err: InvalidBoardException) {
             throw err
         } catch (err: UnsolvableBoardException) {
             throw err
         }
+    }
+
+    fun getSolutions(): Array<SudokuBoard> {
+        return this.solutions
     }
 
     fun reset() {
