@@ -17,14 +17,17 @@ import com.google.android.material.textview.MaterialTextView
 
 private const val TAG = "HistoryRecyclerAdapter"
 
-class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
-                             private val context: Context,
-                             private val activity: Activity) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryEntryHolder>() {
-
+class HistoryRecyclerAdapter(
+    private val data: List<HistoryEntity>,
+    private val context: Context,
+    private val activity: Activity
+) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryEntryHolder>() {
     private val historyData = data
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryEntryHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.history_recycler_view_item_view, parent,false)
+        val inflatedView = LayoutInflater.from(context).inflate(
+            R.layout.history_recycler_view_item_view, parent,false
+        )
 
         return HistoryEntryHolder(inflatedView, activity)
     }
@@ -51,7 +54,10 @@ class HistoryRecyclerAdapter(private val data: List<HistoryEntity>,
         holder.dateTextView.text = formattedDate
     }
 
-    class HistoryEntryHolder(view: View, private val activity: Activity) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class HistoryEntryHolder(
+        view: View,
+        private val activity: Activity
+    ) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val uniqueIdTextView: MaterialTextView = view.findViewById(R.id.history_unique_id)
         val picture: AppCompatImageView = view.findViewById(R.id.history_item_image)
         val dayTextView: MaterialTextView = view.findViewById(R.id.history_item_day)

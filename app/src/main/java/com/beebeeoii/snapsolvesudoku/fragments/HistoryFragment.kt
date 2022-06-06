@@ -11,8 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.adapter.HistoryRecyclerAdapter
+import com.beebeeoii.snapsolvesudoku.databinding.FragmentHistoryBinding
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.utils.FileDeletor
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,22 +31,12 @@ import kotlin.math.absoluteValue
 
 private const val TAG = "HistoryFragment"
 
-private lateinit var appBar: MaterialToolbar
-private lateinit var recyclerView: RecyclerView
-private lateinit var constraintLayout: ConstraintLayout
-private lateinit var noHistoryEntryImageView: AppCompatImageView
-
 class HistoryFragment : Fragment(){
 
     private lateinit var historyEntityList: List<HistoryEntity>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_history, container, false)
-
-        appBar = rootView.findViewById(R.id.appBar)
-        constraintLayout = rootView.findViewById(R.id.historyConstraintLayout)
-        recyclerView = rootView.findViewById(R.id.historyRecyclerView)
-        noHistoryEntryImageView = rootView.findViewById(R.id.historyNoHistoryIcon)
+        val binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         val database = Database.invoke(requireContext())
         val historyDao = database.getHistoryDao()
@@ -59,14 +47,14 @@ class HistoryFragment : Fragment(){
             }
 
             if (historyEntityList.isEmpty()) {
-                noHistoryEntryImageView.visibility = View.VISIBLE
+                binding.historyNoHistoryIcon.visibility = View.VISIBLE
             }
 
             historyEntityList = historyEntityList.asReversed() //latest on top
-            recyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
+            binding.historyRecyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
         })
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val itemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -116,13 +104,13 @@ class HistoryFragment : Fragment(){
 
                     FileDeletor.deleteFileOrDirectory(File(historyEntity.folderPath))
 
-                    recyclerView.adapter?.notifyItemRemoved(itemAdapterPosition)
+                    binding.historyRecyclerView.adapter?.notifyItemRemoved(itemAdapterPosition)
 
                     Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
                 }
 
                 dialogBuilder.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
-                    recyclerView.adapter?.notifyItemChanged(itemAdapterPosition)
+                    binding.historyRecyclerView.adapter?.notifyItemChanged(itemAdapterPosition)
                 }
 
                 val dialog = dialogBuilder.create()
@@ -131,17 +119,17 @@ class HistoryFragment : Fragment(){
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.historyRecyclerView)
 
-        appBar.setNavigationOnClickListener {
+        binding.appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
 
-        appBar.setOnMenuItemClickListener {
+        binding.appBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.sort -> {
                     historyEntityList = historyEntityList.asReversed()
-                    recyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
+                    binding.historyRecyclerView.adapter = HistoryRecyclerAdapter(historyEntityList, requireContext(), requireActivity())
                     Log.d(TAG, "onCreateView: SORTED")
                     true
                 }
@@ -149,6 +137,6 @@ class HistoryFragment : Fragment(){
             }
         }
 
-        return rootView
+        return binding.root
     }
 }
