@@ -1,238 +1,164 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
+import android.content.DialogInterface
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.databinding.FragmentDetailsBinding
+import com.beebeeoii.snapsolvesudoku.db.Database
+import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
+import com.beebeeoii.snapsolvesudoku.utils.FileDeletor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
 
-//private lateinit var constraintLayout: ConstraintLayout
-//private lateinit var appBar: MaterialToolbar
-//
-//private lateinit var boardPicture: AppCompatImageView
-//private lateinit var dayTextView: MaterialTextView
-//private lateinit var dateTextView: MaterialTextView
-//
-//private lateinit var detailsSelection: ChipGroup
-//private lateinit var boardDetailChip: Chip
-//private lateinit var statisticsDetailChip: Chip
-//private lateinit var moreDetailsDetailChip: Chip
-//
-//private lateinit var sudokuBoardDetailContainer: ConstraintLayout
-//private lateinit var detailsSudokuBoardView: SudokuBoard
-//private lateinit var previousBoard: MaterialButton
-//private lateinit var solutionCounterTextView: MaterialTextView
-//private lateinit var nextBoard: MaterialButton
-//
-//private lateinit var statisticsDetailContainer: ConstraintLayout
-//private lateinit var statisticsNoHintsTextView: MaterialTextView
-//private lateinit var statisticsNoSolutionsTextView: MaterialTextView
-//private lateinit var statisticsTimeTakenToSolveTextView: MaterialTextView
-//
-//private lateinit var moreDetailsContainer: ScrollView
-//private lateinit var uniqueIdContainer: LinearLayout
-//private lateinit var uniqueIdTextView: MaterialTextView
-//private lateinit var folderPathContainer: LinearLayout
-//private lateinit var folderPathTextView: MaterialTextView
-//private lateinit var originalPicturePathContainer: LinearLayout
-//private lateinit var originalPicturePathTextView: MaterialTextView
-//private lateinit var processedPicturePathContainer: LinearLayout
-//private lateinit var processedPicturePathTextView: MaterialTextView
-//private lateinit var solutionsPathContainer: LinearLayout
-//private lateinit var solutionsPathTextView: MaterialTextView
-//
-//private const val TAG = "DetailsFragment"
+private const val TAG = "DetailsFragment"
 
 class DetailsFragment : Fragment() {
 
-//    private val solution2DIntArrayList = mutableListOf<Array<IntArray>>()
-//    private var solutionCounter = 0
-//    private val givenDigitsIndices = mutableListOf<IntArray>()
-//    private lateinit var uniqueId: String
-//    private lateinit var historyEntity: HistoryEntity
-//
-//    private var pictureShowingOriginal = true
+    private val solution2DIntArrayList = mutableListOf<Array<IntArray>>()
+    private var solutionCounter = 0
+    private val givenDigitsIndices = mutableListOf<IntArray>()
+    private lateinit var uniqueId: String
+    private lateinit var historyEntity: HistoryEntity
+
+    private var pictureShowingOriginal = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_details, container, false)
+        val binding = FragmentDetailsBinding.inflate(inflater, container, false)
 
-//        constraintLayout = rootView.findViewById(R.id.detailsConstraintLayout)
-//        appBar = rootView.findViewById(R.id.appBar)
-//        boardPicture = rootView.findViewById(R.id.detailsPicture)
-//        dayTextView = rootView.findViewById(R.id.detailsDay)
-//        dateTextView = rootView.findViewById(R.id.detailsDate)
-//
-//        detailsSelection = rootView.findViewById(R.id.detailsChooserChipGroup)
-//        boardDetailChip = rootView.findViewById(R.id.boardDetailChip)
-//        statisticsDetailChip = rootView.findViewById(R.id.statisticsDetailChip)
-//        moreDetailsDetailChip = rootView.findViewById(R.id.moreDetailsDetailChip)
-//
-//        sudokuBoardDetailContainer = rootView.findViewById(R.id.detailsSudokuBoardContainer)
-//        detailsSudokuBoardView = rootView.findViewById(R.id.detailsSudokuBoard)
-//        previousBoard = rootView.findViewById(R.id.detailsPreviousBoard)
-//        solutionCounterTextView = rootView.findViewById(R.id.detailsBoardTracker)
-//        nextBoard = rootView.findViewById(R.id.detailsNextBoard)
-//
-//        statisticsDetailContainer = rootView.findViewById(R.id.detailsStatisticsContainer)
-//        statisticsNoHintsTextView = rootView.findViewById(R.id.statisticsNoHints)
-//        statisticsNoSolutionsTextView = rootView.findViewById(R.id.statisticsNoSolutions)
-//        statisticsTimeTakenToSolveTextView = rootView.findViewById(R.id.statisticsTimeTakenToSolve)
-//
-//        moreDetailsContainer = rootView.findViewById(R.id.detailsMoreDetailsContainer)
-//        uniqueIdContainer = rootView.findViewById(R.id.details_more_details_unique_id_container)
-//        uniqueIdTextView = rootView.findViewById(R.id.details_more_details_unique_id)
-//        folderPathContainer = rootView.findViewById(R.id.details_more_details_folder_path_container)
-//        folderPathTextView = rootView.findViewById(R.id.details_more_details_folder_path)
-//        originalPicturePathContainer = rootView.findViewById(R.id.details_more_details_original_picture_container)
-//        originalPicturePathTextView = rootView.findViewById(R.id.details_more_details_original_picture)
-//        processedPicturePathContainer = rootView.findViewById(R.id.details_more_details_processed_picture_container)
-//        processedPicturePathTextView = rootView.findViewById(R.id.details_more_details_processed_picture)
-//        solutionsPathContainer = rootView.findViewById(R.id.details_more_details_solutions_container)
-//        solutionsPathTextView = rootView.findViewById(R.id.details_more_details_solutions)
+        if (arguments != null && !requireArguments().isEmpty) {
+            uniqueId = DetailsFragmentArgs.fromBundle(requireArguments()).uniqueId
 
-//        if (arguments != null && !requireArguments().isEmpty) {
-//            uniqueId = DetailsFragmentArgs.fromBundle(requireArguments()).uniqueId
-//
-//            detailsSudokuBoardView.uniqueId = uniqueId
-//
-//            val database = Database.invoke(requireContext())
-//            val historyDao = database.getHistoryDao()
-//
-//            historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner, Observer {
-//                historyEntity = it[0]
-//                if (it[0].originalPicturePath != null) {
-//                    boardPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
-//                }
-//                boardPicture.visibility = View.VISIBLE
-//
-//                val dateTime = it[0].dateTime
-//                val dayOfWeek = DateTimeGenerator.getDayOfWeekFromDateTime(dateTime)
-//                val formattedDate = DateTimeGenerator.getFormattedDate(dateTime)
-//                dateTextView.text = formattedDate
-//                dayTextView.text = dayOfWeek
-//
-//                val recognisedDigitsString = it[0].recognisedDigits
-//                if (recognisedDigitsString != null) {
-//                    for (i in recognisedDigitsString.indices) {
-//                        if (Character.getNumericValue(recognisedDigitsString[i]) != 0) {
-//                            givenDigitsIndices.add(intArrayOf(i/9, i%9))
-//                        }
-//                    }
-//                }
-//
-//                val solutionTextFile = File(it[0].solutionsPath)
-//                val inputStream = solutionTextFile.inputStream()
-//                val solutionStringList = mutableListOf<String>()
-//                inputStream.bufferedReader().forEachLine {solutionString ->
-//                    solutionStringList.add(solutionString)
-//                }
-//
-//                solutionStringList.forEach { solutionString ->
-//                    val board2DIntArray: Array<IntArray> = Array(9){IntArray(9){0}}
-//                    for (i in solutionString.indices) {
-//                        val digit = Character.getNumericValue(solutionString[i])
-//                        board2DIntArray[i / 9][i % 9] = digit
-//
-//                        if (detailsSudokuBoardView.isEditable) {
-//                            detailsSudokuBoardView.cells[i / 9][i % 9].value = digit
-//
-//                            givenDigitsIndices.stream().forEach {t ->
-//                                if (t!!.contentEquals(intArrayOf(i/9, i%9))) {
-//                                    detailsSudokuBoardView.cells[i / 9][i % 9].isGiven = true
-//                                }
-//                            }
-//                        }
-//                    }
+            val database = Database.invoke(requireContext())
+            val historyDao = database.getHistoryDao()
+
+            historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner) {
+                historyEntity = it[0]
+                if (it[0].originalPicturePath != null) {
+                    binding.detailsPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
+                }
+                binding.detailsPicture.visibility = View.VISIBLE
+
+                val dateTimeString = it[0].dateTime
+                val dateTimeObject = DateTimeGenerator.getDateTimeObjectFromDateTimeString(
+                    dateTimeString
+                )
+                val dayOfWeek = DateTimeGenerator.generateDayOfWeek(dateTimeObject)
+                val formattedDate = DateTimeGenerator.generateFormattedDateTimeString(
+                    dateTimeObject
+                )
+                binding.detailsDate.text = formattedDate
+                binding.detailsDay.text = dayOfWeek
+
+                val recognisedDigitsString = it[0].recognisedDigits
+
+                val solutionTextFile = it[0].solutionsPath?.let { it1 -> File(it1) }
+                val inputStream = solutionTextFile?.inputStream()
+                val solutionStringList = mutableListOf<String>()
+                inputStream?.bufferedReader()?.forEachLine { solutionString ->
+                    solutionStringList.add(solutionString)
+                }
+
+                solutionStringList.forEach { solutionString ->
+                    binding.detailsSudokuBoard.setBoard(
+                        solutionString,
+                        recognisedDigitsString
+                    )
 //                    solution2DIntArrayList.add(board2DIntArray)
-//
-//                    detailsSudokuBoardView.isEditable = false
-//                    detailsSudokuBoardView.invalidate()
-//                }
+                }
 //                solutionCounterTextView.text = "${solutionCounter + 1}/${solution2DIntArrayList.size}"
-//
+
 //                updatePreviousNextButtonsClickable()
-//
-//                //update statistics
+
+                //update statistics
 //                statisticsNoHintsTextView.text = givenDigitsIndices.size.toString()
 //                statisticsNoSolutionsTextView.text = solution2DIntArrayList.size.toString()
-//                statisticsTimeTakenToSolveTextView.text = historyEntity.timeTakenToSolve.toString()
-//
-//                //update more details
+//                statisticsTimeTakenToSolveTextView.text = historyEntity.timeTakenTove.toString()
+
+                //update more details
 //                uniqueIdTextView.text = historyEntity.uniqueId
 //                folderPathTextView.text = historyEntity.folderPath
 //                originalPicturePathTextView.text = historyEntity.originalPicturePath
 //                processedPicturePathTextView.text = historyEntity.processedPicturePath
 //                solutionsPathTextView.text = historyEntity.solutionsPath
-//            })
-//        }
-//
-//        appBar.setNavigationOnClickListener {
-//            requireActivity().onBackPressed()
-//        }
-//
-//        appBar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-////                R.id.saveToHistory -> {
-////                    val database = Database.invoke(requireContext())
-////                    val historyDao = database.getHistoryDao()
-////                    CoroutineScope(Dispatchers.IO).launch {
-////                        if (historyDao.doesEntryExist(uniqueId)) {
-////                            val snackbar = Snackbar.make(constraintLayout, "Already saved to history!", Snackbar.LENGTH_SHORT)
-////                            snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-////                            snackbar.show()
-////                        }
-////                    }
-////                    true
-////                }
-//
-//                R.id.deleteHistory -> {
-//                    val dialogBuilder = AlertDialog.Builder(requireContext())
-//                    dialogBuilder.setTitle("Delete history")
-//                    dialogBuilder.setMessage("This action cannot be undone.")
-//                    dialogBuilder.setPositiveButton("Delete") { _: DialogInterface, _: Int ->
-//                        val database = Database.invoke(requireContext())
-//                        val historyDao = database.getHistoryDao()
-//
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            historyDao.deleteHistoryEntry(historyEntity)
+            }
+        }
+
+        binding.appBar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        binding.appBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+//                R.id.saveToHistory -> {
+//                    val database = Database.invoke(requireContext())
+//                    val historyDao = database.getHistoryDao()
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        if (historyDao.doesEntryExist(uniqueId)) {
+//                            val snackbar = Snackbar.make(constraintLayout, "Already saved to history!", Snackbar.LENGTH_SHORT)
+//                            snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+//                            snackbar.show()
 //                        }
-//
-//                        FileDeletor.deleteFileOrDirectory(File(historyEntity.folderPath))
-//
-//
-//                        requireActivity().onBackPressed()
-//
-//                        Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
 //                    }
-//
-//                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
-//                        dialogInterface.dismiss()
-//                    }
-//
-//                    val dialog = dialogBuilder.create()
-//                    dialog.show()
 //                    true
 //                }
-//
-//                R.id.editHistory -> {
+
+                R.id.deleteHistory -> {
+                    val dialogBuilder = AlertDialog.Builder(requireContext())
+                    dialogBuilder.setTitle("Delete history")
+                    dialogBuilder.setMessage("This action cannot be undone.")
+                    dialogBuilder.setPositiveButton("Delete") { _: DialogInterface, _: Int ->
+                        val database = Database.invoke(requireContext())
+                        val historyDao = database.getHistoryDao()
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            historyDao.deleteHistoryEntry(historyEntity)
+                        }
+
+                        FileDeletor.deleteFileOrDirectory(File(historyEntity.folderPath))
+
+
+                        requireActivity().onBackPressed()
+
+                        Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
+                    }
+
+                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
+                        dialogInterface.dismiss()
+                    }
+
+                    val dialog = dialogBuilder.create()
+                    dialog.show()
+                    true
+                }
+
+                R.id.editHistory -> {
 //                    val sudokuBoard2DIntArray = SudokuBoard2DIntArray()
 //                    sudokuBoard2DIntArray.uniqueId = detailsSudokuBoardView.uniqueId
 //                    sudokuBoard2DIntArray.board2DIntArray = detailsSudokuBoardView.givenTo2DIntArray()
 //
 //                    val action = DetailsFragmentDirections.actionDetailsFragmentToMainFragment(sudokuBoard2DIntArray)
 //                    findNavController().navigate(action)
-//                    true
-//                }
-//
-//                R.id.shareHistory -> {
+                    true
+                }
+
+                R.id.shareHistory -> {
 //                    val sudokuBoardBitmap = detailsSudokuBoardView.drawToBitmap(Bitmap.Config.ARGB_8888)
 //                    ShareBoardBitmap.shareBoard(requireActivity(), requireContext(), sudokuBoardBitmap)
-//                    true
-//                }
-//
-//                R.id.reportInaccuracy -> {
-//                    val dialogBuilder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    true
+                }
+
+                R.id.reportInaccuracy -> {
+//                    val dialogBuilder = AlertDialog.Builder(requireContext())
 //                    val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
 //                    val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_report_inaccuracy, viewGroup, false)
 //                    dialogBuilder.setView(dialogView)
@@ -273,13 +199,13 @@ class DetailsFragment : Fragment() {
 //                        loadingBar.visibility = View.VISIBLE
 //                        dialog.setCancelable(false)
 //                    }
-//                    true
-//                }
-//
-//                else -> false
-//            }
-//        }
-//
+                    true
+                }
+
+                else -> false
+            }
+        }
+
 //        boardPicture.setOnClickListener {
 //            if (pictureShowingOriginal) {
 //                if (historyEntity.processedPicturePath != null) {
@@ -344,48 +270,8 @@ class DetailsFragment : Fragment() {
 //                }
 //            }
 //        }
-//
-//        uniqueIdContainer.setOnClickListener {
-//            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            val clip = ClipData.newPlainText("uniqueID", uniqueIdTextView.text)
-//            clipboard.setPrimaryClip(clip)
-//
-//            Toast.makeText(requireContext(), "Unique ID copied to clipboard!", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        folderPathContainer.setOnClickListener {
-//            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            val clip = ClipData.newPlainText("uniqueID", folderPathTextView.text)
-//            clipboard.setPrimaryClip(clip)
-//
-//            Toast.makeText(requireContext(), "Folder path copied to clipboard!", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        originalPicturePathContainer.setOnClickListener {
-//            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            val clip = ClipData.newPlainText("uniqueID", originalPicturePathTextView.text)
-//            clipboard.setPrimaryClip(clip)
-//
-//            Toast.makeText(requireContext(), "Original picture path copied to clipboard!", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        processedPicturePathContainer.setOnClickListener {
-//            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            val clip = ClipData.newPlainText("uniqueID", processedPicturePathTextView.text)
-//            clipboard.setPrimaryClip(clip)
-//
-//            Toast.makeText(requireContext(), "Processed picture path copied to clipboard!", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        solutionsPathContainer.setOnClickListener {
-//            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            val clip = ClipData.newPlainText("uniqueID", solutionsPathTextView.text)
-//            clipboard.setPrimaryClip(clip)
-//
-//            Toast.makeText(requireContext(), "Solutions path copied to clipboard!", Toast.LENGTH_SHORT).show()
-//        }
 
-        return rootView
+        return binding.root
     }
 
 //    private fun updatePreviousNextButtonsClickable() {

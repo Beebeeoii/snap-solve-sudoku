@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.beebeeoii.snapsolvesudoku.R
@@ -367,7 +368,28 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
         } catch (err: NoSuchElementException) {
             //
         }
+    }
 
+    fun setBoard(sudokuBoard: SudokuBoard) {
+        this.sudokuBoard = sudokuBoard
+        this.sudokuBoard.freeze()
+        this.invalidate()
+    }
+
+    fun setBoard(sudokuBoardString: String, givenDigitsString: String?) {
+        for (i in 0..8) {
+            for (j in 0..8) {
+                this.sudokuBoard.setCell(
+                    Coordinate(i, j),
+                    sudokuBoardString[i * 9 + j].digitToInt(),
+                    (givenDigitsString != null) &&
+                            (givenDigitsString[i * 9 + j].digitToInt() != 0)
+                )
+            }
+        }
+
+        this.sudokuBoard.freeze()
+        this.invalidate()
     }
 
     fun clearCell() {
