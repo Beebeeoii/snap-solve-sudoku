@@ -10,6 +10,7 @@
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/layout/fragment_history.xml" value="0.5541666666666667" />
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/layout/fragment_main.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/layout/fragment_settings.xml" value="0.2695035460992908" />
+        <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/layout/history_recycler_view_item_view.xml" value="0.5541666666666667" />
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/menu/main_fragment_app_bar_menu.xml" value="0.5456410256410257" />
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/menu/settings_fragment_app_bar_menu.xml" value="0.4197916666666667" />
         <entry key="..\:/AndroidStudioProjects/snap-solve-sudoku/app/src/main/res/xml/settings_preferences.xml" value="0.2695035460992908" />
