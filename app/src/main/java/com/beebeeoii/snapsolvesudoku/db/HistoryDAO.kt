@@ -7,31 +7,31 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface HistoryDAO {
+abstract class HistoryDAO {
     @Insert
-    suspend fun insertHistoryEntry(historyEntity: HistoryEntity)
+    abstract fun insertHistoryEntry(historyEntity: HistoryEntity)
 
     @Delete
-    suspend fun deleteHistoryEntry(historyEntity: HistoryEntity)
+    abstract fun deleteHistoryEntry(historyEntity: HistoryEntity)
 
     @Query("SELECT * FROM HistoryEntry")
-    fun getAllHistoryEntry(): LiveData<List<HistoryEntity>>
+    abstract fun getAllHistoryEntry(): LiveData<List<HistoryEntity>>
 
     @Query("SELECT * FROM HistoryEntry WHERE uniqueId=:uniqueId")
-    fun getSpecificEntry(uniqueId: String): LiveData<List<HistoryEntity>>
+    abstract fun getSpecificEntry(uniqueId: String): LiveData<List<HistoryEntity>>
 
     @Query("UPDATE HistoryEntry SET processedPicturePath=:processedPicturePath WHERE uniqueId=:uniqueId")
-    fun updateProcessedPicturePath(uniqueId: String, processedPicturePath: String?)
+    abstract fun updateProcessedPicturePath(uniqueId: String, processedPicturePath: String?)
 
     @Query("UPDATE HistoryEntry SET solutionsPath=:solutionsPath WHERE uniqueId=:uniqueId")
-    fun updateSolutions(uniqueId: String, solutionsPath: String?)
+    abstract fun updateSolutions(uniqueId: String, solutionsPath: String?)
 
     @Query("UPDATE HistoryEntry SET recognisedDigits=:recognisedDigits WHERE uniqueId=:uniqueId")
-    fun updateRecognisedDigits(uniqueId: String, recognisedDigits: String?)
+    abstract fun updateRecognisedDigits(uniqueId: String, recognisedDigits: String?)
 
     @Query("UPDATE HistoryEntry SET timeTakenToSolve=:timeTakenToSolve WHERE uniqueId=:uniqueId")
-    fun updateTimeTakenToSolve(uniqueId: String, timeTakenToSolve: Int?)
+    abstract fun updateTimeTakenToSolve(uniqueId: String, timeTakenToSolve: Int?)
 
     @Query("SELECT EXISTS(SELECT * FROM HistoryEntry WHERE uniqueId=:uniqueId)")
-    fun doesEntryExist(uniqueId: String): Boolean
+    abstract fun doesEntryExist(uniqueId: String): Boolean
 }
