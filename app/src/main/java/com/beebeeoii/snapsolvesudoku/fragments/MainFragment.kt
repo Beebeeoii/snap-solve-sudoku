@@ -65,7 +65,7 @@ class MainFragment : Fragment() {
                             try {
                                 // TODO remove hardcoding of maxSolutions
                                 val timeTakenToSolve = (measureNanoTime {
-                                    binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 1)
+                                    binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 5)
                                 } / 1000000F).toInt()
 
                                 val database = Database.invoke(requireContext())

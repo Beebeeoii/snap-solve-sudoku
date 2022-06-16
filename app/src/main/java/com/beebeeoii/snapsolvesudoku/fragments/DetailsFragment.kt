@@ -3,6 +3,7 @@ package com.beebeeoii.snapsolvesudoku.fragments
 import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,65 +33,69 @@ class DetailsFragment : Fragment() {
 
     private var pictureShowingOriginal = true
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentDetailsBinding.inflate(inflater, container, false)
 
-        if (arguments != null && !requireArguments().isEmpty) {
-            uniqueId = DetailsFragmentArgs.fromBundle(requireArguments()).uniqueId
+        if (arguments == null || requireArguments().isEmpty) {
+            return binding.root
+        }
 
-            val database = Database.invoke(requireContext())
-            val historyDao = database.getHistoryDao()
+        uniqueId = DetailsFragmentArgs.fromBundle(requireArguments()).uniqueId
 
-            historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner) {
-                historyEntity = it[0]
-                if (it[0].originalPicturePath != null) {
-                    binding.detailsPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
-                }
-                binding.detailsPicture.visibility = View.VISIBLE
+        val database = Database.invoke(requireContext())
+        val historyDao = database.getHistoryDao()
 
-                val dateTimeString = it[0].dateTime
-                val dateTimeObject = DateTimeGenerator.getDateTimeObjectFromDateTimeString(
-                    dateTimeString
-                )
-                val dayOfWeek = DateTimeGenerator.generateDayOfWeek(dateTimeObject)
-                val formattedDate = DateTimeGenerator.generateFormattedDateTimeString(
-                    dateTimeObject
-                )
-                binding.detailsDate.text = formattedDate
-                binding.detailsDay.text = dayOfWeek
+        var boardSolutionCounter = 0
+        val solutionStringList = mutableListOf<String>()
+        var recognisedDigitsString: String? = null
 
-                val recognisedDigitsString = it[0].recognisedDigits
+        historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner) {
+            historyEntity = it[0]
+            if (it[0].originalPicturePath != null) {
+                binding.detailsPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
+            }
+            binding.detailsPicture.visibility = View.VISIBLE
 
-                val solutionTextFile = it[0].solutionsPath?.let { it1 -> File(it1) }
-                val inputStream = solutionTextFile?.inputStream()
-                val solutionStringList = mutableListOf<String>()
-                inputStream?.bufferedReader()?.forEachLine { solutionString ->
-                    solutionStringList.add(solutionString)
-                }
+            val dateTimeString = it[0].dateTime
+            val dateTimeObject = DateTimeGenerator.getDateTimeObjectFromDateTimeString(
+                dateTimeString
+            )
+            val dayOfWeek = DateTimeGenerator.generateDayOfWeek(dateTimeObject)
+            val formattedDate = DateTimeGenerator.generateFormattedDateTimeString(
+                dateTimeObject
+            )
+            binding.detailsDate.text = formattedDate
+            binding.detailsDay.text = dayOfWeek
 
-                solutionStringList.forEach { solutionString ->
-                    binding.detailsSudokuBoard.setBoard(
-                        solutionString,
-                        recognisedDigitsString
-                    )
-//                    solution2DIntArrayList.add(board2DIntArray)
-                }
-//                solutionCounterTextView.text = "${solutionCounter + 1}/${solution2DIntArrayList.size}"
+            recognisedDigitsString = it[0].recognisedDigits
+
+            val solutionTextFile = it[0].solutionsPath?.let { it1 -> File(it1) }
+            val inputStream = solutionTextFile?.inputStream()
+            inputStream?.bufferedReader()?.forEachLine { solutionString ->
+                solutionStringList.add(solutionString)
+            }
+
+            binding.detailsSudokuBoard.setBoard(
+                solutionStringList[boardSolutionCounter],
+                recognisedDigitsString
+            )
+
+            binding.detailsBoardTracker.text =
+                "${boardSolutionCounter + 1}/${solutionStringList.size}"
 
 //                updatePreviousNextButtonsClickable()
 
-                //update statistics
+            //update statistics
 //                statisticsNoHintsTextView.text = givenDigitsIndices.size.toString()
 //                statisticsNoSolutionsTextView.text = solution2DIntArrayList.size.toString()
 //                statisticsTimeTakenToSolveTextView.text = historyEntity.timeTakenTove.toString()
 
-                //update more details
+            //update more details
 //                uniqueIdTextView.text = historyEntity.uniqueId
 //                folderPathTextView.text = historyEntity.folderPath
 //                originalPicturePathTextView.text = historyEntity.originalPicturePath
 //                processedPicturePathTextView.text = historyEntity.processedPicturePath
 //                solutionsPathTextView.text = historyEntity.solutionsPath
-            }
         }
 
         binding.appBar.setNavigationOnClickListener {
@@ -220,31 +225,35 @@ class DetailsFragment : Fragment() {
 //            }
 //        }
 //
-//        previousBoard.setOnClickListener {
-//            solutionCounter -= 1
-//            for (i in 0..8) {
-//                for (j in 0..8) {
-//                    detailsSudokuBoardView.cells[i][j].value = solution2DIntArrayList[solutionCounter][i][j]
-//                }
-//            }
-//            detailsSudokuBoardView.invalidate()
-//            solutionCounterTextView.text = "${solutionCounter + 1}/${solution2DIntArrayList.size}"
-//
+        binding.detailsPreviousBoard.setOnClickListener {
+            boardSolutionCounter -= 1
+            Log.d(TAG, solutionStringList[boardSolutionCounter])
+
+            binding.detailsSudokuBoard.setBoard(
+                solutionStringList[boardSolutionCounter],
+                recognisedDigitsString
+            )
+
+            binding.detailsBoardTracker.text =
+                "${boardSolutionCounter + 1}/${solutionStringList.size}"
+
+//            updateOnBoardSolutionsNavigate()
+        }
+
+        binding.detailsNextBoard.setOnClickListener {
+            boardSolutionCounter += 1
+            Log.d(TAG, solutionStringList[boardSolutionCounter])
+
+            binding.detailsSudokuBoard.setBoard(
+                solutionStringList[boardSolutionCounter],
+                recognisedDigitsString
+            )
+
+            binding.detailsBoardTracker.text =
+                "${boardSolutionCounter + 1}/${solutionStringList.size}"
+
 //            updatePreviousNextButtonsClickable()
-//        }
-//
-//        nextBoard.setOnClickListener {
-//            solutionCounter += 1
-//            for (i in 0..8) {
-//                for (j in 0..8) {
-//                    detailsSudokuBoardView.cells[i][j].value = solution2DIntArrayList[solutionCounter][i][j]
-//                }
-//            }
-//            detailsSudokuBoardView.invalidate()
-//            solutionCounterTextView.text = "${solutionCounter + 1}/${solution2DIntArrayList.size}"
-//
-//            updatePreviousNextButtonsClickable()
-//        }
+        }
 //
 //        detailsSelection.setOnCheckedChangeListener { _, checkedId ->
 //            when (checkedId) {
@@ -274,7 +283,7 @@ class DetailsFragment : Fragment() {
         return binding.root
     }
 
-//    private fun updatePreviousNextButtonsClickable() {
+//    private fun updateOnBoardSolutionsNavigate() {
 //        previousBoard.visibility = View.VISIBLE
 //        nextBoard.visibility = View.VISIBLE
 //

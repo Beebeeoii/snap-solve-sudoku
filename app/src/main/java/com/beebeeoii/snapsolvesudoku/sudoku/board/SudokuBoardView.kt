@@ -371,12 +371,14 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
     }
 
     fun setBoard(sudokuBoard: SudokuBoard) {
+        this.sudokuBoard.unfreeze()
         this.sudokuBoard = sudokuBoard
         this.sudokuBoard.freeze()
         this.invalidate()
     }
 
     fun setBoard(sudokuBoardString: String, givenDigitsString: String?) {
+        this.sudokuBoard.unfreeze()
         for (i in 0..8) {
             for (j in 0..8) {
                 this.sudokuBoard.setCell(

@@ -2,26 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item-->
-<!--        android:id="@+id/saveToHistory"-->
-<!--        android:icon="@drawable/ic_save_24px"-->
-<!--        android:title="Save"-->
-<!--        android:contentDescription="Save to history"-->
-<!--        app:showAsAction="never" />-->
-
     <item
-        android:id="@+id/deleteHistory"
-        android:icon="@drawable/ic_delete_forever_24px"
-        android:title="Delete"
-        android:contentDescription="Delete history"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/viewInformation"
+        android:icon="@drawable/ic_details_24px"
+        android:title="More Information"
+        android:contentDescription="Information"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/editHistory"
         android:icon="@drawable/ic_create_24px"
         android:title="Edit"
         android:contentDescription="Edit history"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/shareHistory"
@@ -37,4 +30,10 @@
         android:contentDescription="Report Inaccuracy"
         app:showAsAction="collapseActionView" />
 
+    <item
+        android:id="@+id/deleteHistory"
+        android:icon="@drawable/ic_delete_forever_24px"
+        android:title="Delete"
+        android:contentDescription="Delete history"
+        app:showAsAction="collapseActionView" />
 </menu>
