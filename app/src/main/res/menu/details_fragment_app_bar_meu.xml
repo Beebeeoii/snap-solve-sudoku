@@ -24,13 +24,6 @@
         app:showAsAction="collapseActionView" />
 
     <item
-        android:id="@+id/reportInaccuracy"
-        android:icon="@drawable/ic_report_problem_24px"
-        android:title="Report Inaccuracy"
-        android:contentDescription="Report Inaccuracy"
-        app:showAsAction="collapseActionView" />
-
-    <item
         android:id="@+id/deleteHistory"
         android:icon="@drawable/ic_delete_forever_24px"
         android:title="Delete"

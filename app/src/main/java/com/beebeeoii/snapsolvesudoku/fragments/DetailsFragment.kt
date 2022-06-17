@@ -1,6 +1,7 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.content.DialogInterface
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.drawToBitmap
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentDetailsBinding
@@ -16,6 +19,9 @@ import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.FileDeletor
+import com.beebeeoii.snapsolvesudoku.utils.ShareBoardBitmap
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,10 +55,26 @@ class DetailsFragment : Fragment() {
         val solutionStringList = mutableListOf<String>()
         var recognisedDigitsString: String? = null
 
+        fun updateOnBoardSolutionsNavigate() {
+            binding.detailsPreviousBoard.visibility = View.VISIBLE
+            binding.detailsNextBoard.visibility = View.VISIBLE
+
+            if (boardSolutionCounter == 0 && binding.detailsPreviousBoard.isVisible) {
+                binding.detailsPreviousBoard.visibility = View.INVISIBLE
+            }
+
+            if (boardSolutionCounter == solutionStringList.size - 1 &&
+                binding.detailsNextBoard.isVisible) {
+                binding.detailsNextBoard.visibility = View.INVISIBLE
+            }
+        }
+
         historyDao.getSpecificEntry(uniqueId).observe(viewLifecycleOwner) {
             historyEntity = it[0]
             if (it[0].originalPicturePath != null) {
-                binding.detailsPicture.setImageBitmap(BitmapFactory.decodeFile(it[0].originalPicturePath))
+                binding.detailsPicture.setImageBitmap(
+                    BitmapFactory.decodeFile(it[0].originalPicturePath)
+                )
             }
             binding.detailsPicture.visibility = View.VISIBLE
 
@@ -83,7 +105,7 @@ class DetailsFragment : Fragment() {
             binding.detailsBoardTracker.text =
                 "${boardSolutionCounter + 1}/${solutionStringList.size}"
 
-//                updatePreviousNextButtonsClickable()
+            updateOnBoardSolutionsNavigate()
 
             //update statistics
 //                statisticsNoHintsTextView.text = givenDigitsIndices.size.toString()
@@ -104,19 +126,6 @@ class DetailsFragment : Fragment() {
 
         binding.appBar.setOnMenuItemClickListener {
             when (it.itemId) {
-//                R.id.saveToHistory -> {
-//                    val database = Database.invoke(requireContext())
-//                    val historyDao = database.getHistoryDao()
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        if (historyDao.doesEntryExist(uniqueId)) {
-//                            val snackbar = Snackbar.make(constraintLayout, "Already saved to history!", Snackbar.LENGTH_SHORT)
-//                            snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-//                            snackbar.show()
-//                        }
-//                    }
-//                    true
-//                }
-
                 R.id.deleteHistory -> {
                     val dialogBuilder = AlertDialog.Builder(requireContext())
                     dialogBuilder.setTitle("Delete history")
@@ -128,21 +137,22 @@ class DetailsFragment : Fragment() {
                         CoroutineScope(Dispatchers.IO).launch {
                             historyDao.deleteHistoryEntry(historyEntity)
                         }
-
                         FileDeletor.deleteFileOrDirectory(File(historyEntity.folderPath))
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
 
-
-                        requireActivity().onBackPressed()
-
-                        Toast.makeText(requireContext(), "History deleted successfully!", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            requireView(),
+                            "History deleted successfully!",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
 
-                    dialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
-                        dialogInterface.dismiss()
+                    dialogBuilder.setNegativeButton("Cancel") {
+                        dialogInterface: DialogInterface,
+                        _: Int -> dialogInterface.dismiss()
                     }
 
-                    val dialog = dialogBuilder.create()
-                    dialog.show()
+                    dialogBuilder.create().show()
                     true
                 }
 
@@ -157,56 +167,15 @@ class DetailsFragment : Fragment() {
                 }
 
                 R.id.shareHistory -> {
-//                    val sudokuBoardBitmap = detailsSudokuBoardView.drawToBitmap(Bitmap.Config.ARGB_8888)
-//                    ShareBoardBitmap.shareBoard(requireActivity(), requireContext(), sudokuBoardBitmap)
+                    val sudokuBoardBitmap = binding.detailsSudokuBoard
+                        .drawToBitmap(Bitmap.Config.ARGB_8888)
+                    ShareBoardBitmap.shareBoard(
+                        requireActivity(),
+                        requireContext(),
+                        sudokuBoardBitmap
+                    )
                     true
                 }
-
-                R.id.reportInaccuracy -> {
-//                    val dialogBuilder = AlertDialog.Builder(requireContext())
-//                    val viewGroup = requireActivity().findViewById<ViewGroup>(android.R.id.content)
-//                    val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_report_inaccuracy, viewGroup, false)
-//                    dialogBuilder.setView(dialogView)
-//                    val dialog = dialogBuilder.create()
-//                    dialog.show()
-//
-//                    val loadingBar = dialogView.findViewById<ProgressBar>(R.id.report_inaccuracy_dialog_loading_bar)
-//                    val commentsInput = dialogView.findViewById<TextInputEditText>(R.id.report_inaccuracy_dialog_input)
-//                    val submitReport = dialogView.findViewById<MaterialButton>(R.id.report_inaccuracy_dialog_submit_button)
-//                    submitReport.setOnClickListener {
-//                        val firestore = Firebase.firestore
-//                        val comments = hashMapOf(
-//                            "id" to detailsSudokuBoardView.uniqueId,
-//                            "comments" to commentsInput.text.toString(),
-//                            "dateTime" to DateTimeGenerator.generateDateTime(DateTimeGenerator.DATE_AND_TIME))
-//                        firestore.collection(getString(R.string.firebase_collection_report_inaccuracy))
-//                            .add(comments)
-//                            .addOnSuccessListener { documentReference ->
-//                                val snackbar = Snackbar.make(constraintLayout, "Report ID: ${documentReference.id}", Snackbar.LENGTH_LONG)
-//                                snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-//                                snackbar.setAction("Copy ID") {
-//                                    val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//                                    clipboard.setPrimaryClip(ClipData.newPlainText("Report ID", documentReference.id))
-//                                }
-//                                snackbar.show()
-//                            }
-//                            .addOnFailureListener { exception ->
-//                                exception.printStackTrace()
-//                                val snackbar = Snackbar.make(constraintLayout, "Error encountered while sending report. Please try again.", Snackbar.LENGTH_SHORT)
-//                                snackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
-//                                snackbar.show()
-//                            }.addOnCompleteListener {
-//                                dialog.dismiss()
-//                            }
-//
-//                        commentsInput.visibility = View.INVISIBLE
-//                        submitReport.visibility = View.INVISIBLE
-//                        loadingBar.visibility = View.VISIBLE
-//                        dialog.setCancelable(false)
-//                    }
-                    true
-                }
-
                 else -> false
             }
         }
@@ -237,7 +206,7 @@ class DetailsFragment : Fragment() {
             binding.detailsBoardTracker.text =
                 "${boardSolutionCounter + 1}/${solutionStringList.size}"
 
-//            updateOnBoardSolutionsNavigate()
+            updateOnBoardSolutionsNavigate()
         }
 
         binding.detailsNextBoard.setOnClickListener {
@@ -252,47 +221,9 @@ class DetailsFragment : Fragment() {
             binding.detailsBoardTracker.text =
                 "${boardSolutionCounter + 1}/${solutionStringList.size}"
 
-//            updatePreviousNextButtonsClickable()
+            updateOnBoardSolutionsNavigate()
         }
-//
-//        detailsSelection.setOnCheckedChangeListener { _, checkedId ->
-//            when (checkedId) {
-//                R.id.boardDetailChip -> {
-//                    statisticsDetailContainer.visibility = View.GONE
-//                    moreDetailsContainer.visibility = View.GONE
-//
-//                    sudokuBoardDetailContainer.visibility = View.VISIBLE
-//                }
-//
-//                R.id.statisticsDetailChip -> {
-//                    sudokuBoardDetailContainer.visibility = View.GONE
-//                    moreDetailsContainer.visibility = View.GONE
-//
-//                    statisticsDetailContainer.visibility = View.VISIBLE
-//                }
-//
-//                R.id.moreDetailsDetailChip -> {
-//                    sudokuBoardDetailContainer.visibility = View.GONE
-//                    statisticsDetailContainer.visibility = View.GONE
-//
-//                    moreDetailsContainer.visibility = View.VISIBLE
-//                }
-//            }
-//        }
 
         return binding.root
     }
-
-//    private fun updateOnBoardSolutionsNavigate() {
-//        previousBoard.visibility = View.VISIBLE
-//        nextBoard.visibility = View.VISIBLE
-//
-//        if (solutionCounter == 0 && previousBoard.visibility == View.VISIBLE) {
-//            previousBoard.visibility = View.INVISIBLE
-//        }
-//
-//        if (solutionCounter == solution2DIntArrayList.size - 1 && nextBoard.visibility == View.VISIBLE) {
-//            nextBoard.visibility = View.INVISIBLE
-//        }
-//    }
 }
