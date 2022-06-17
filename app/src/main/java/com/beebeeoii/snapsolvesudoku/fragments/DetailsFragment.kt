@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
@@ -20,7 +19,6 @@ import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.FileDeletor
 import com.beebeeoii.snapsolvesudoku.utils.ShareBoardBitmap
-import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,16 +28,14 @@ import java.io.File
 private const val TAG = "DetailsFragment"
 
 class DetailsFragment : Fragment() {
-
-    private val solution2DIntArrayList = mutableListOf<Array<IntArray>>()
-    private var solutionCounter = 0
-    private val givenDigitsIndices = mutableListOf<IntArray>()
     private lateinit var uniqueId: String
     private lateinit var historyEntity: HistoryEntity
 
-    private var pictureShowingOriginal = true
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val binding = FragmentDetailsBinding.inflate(inflater, container, false)
 
         if (arguments == null || requireArguments().isEmpty) {
@@ -86,8 +82,14 @@ class DetailsFragment : Fragment() {
             val formattedDate = DateTimeGenerator.generateFormattedDateTimeString(
                 dateTimeObject
             )
+            val timeTakenToSolve = it[0].timeTakenToSolve
+
             binding.detailsDate.text = formattedDate
             binding.detailsDay.text = dayOfWeek
+
+            if (timeTakenToSolve != null) {
+                binding.detailsTimeToSolve.text = "Solve time: $timeTakenToSolve ms"
+            }
 
             recognisedDigitsString = it[0].recognisedDigits
 
@@ -106,22 +108,10 @@ class DetailsFragment : Fragment() {
                 "${boardSolutionCounter + 1}/${solutionStringList.size}"
 
             updateOnBoardSolutionsNavigate()
-
-            //update statistics
-//                statisticsNoHintsTextView.text = givenDigitsIndices.size.toString()
-//                statisticsNoSolutionsTextView.text = solution2DIntArrayList.size.toString()
-//                statisticsTimeTakenToSolveTextView.text = historyEntity.timeTakenTove.toString()
-
-            //update more details
-//                uniqueIdTextView.text = historyEntity.uniqueId
-//                folderPathTextView.text = historyEntity.folderPath
-//                originalPicturePathTextView.text = historyEntity.originalPicturePath
-//                processedPicturePathTextView.text = historyEntity.processedPicturePath
-//                solutionsPathTextView.text = historyEntity.solutionsPath
         }
 
         binding.appBar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.appBar.setOnMenuItemClickListener {
@@ -131,9 +121,6 @@ class DetailsFragment : Fragment() {
                     dialogBuilder.setTitle("Delete history")
                     dialogBuilder.setMessage("This action cannot be undone.")
                     dialogBuilder.setPositiveButton("Delete") { _: DialogInterface, _: Int ->
-                        val database = Database.invoke(requireContext())
-                        val historyDao = database.getHistoryDao()
-
                         CoroutineScope(Dispatchers.IO).launch {
                             historyDao.deleteHistoryEntry(historyEntity)
                         }
@@ -180,20 +167,6 @@ class DetailsFragment : Fragment() {
             }
         }
 
-//        boardPicture.setOnClickListener {
-//            if (pictureShowingOriginal) {
-//                if (historyEntity.processedPicturePath != null) {
-//                    boardPicture.setImageBitmap(BitmapFactory.decodeFile(historyEntity.processedPicturePath))
-//                    pictureShowingOriginal = !pictureShowingOriginal
-//                }
-//            } else {
-//                if (historyEntity.originalPicturePath != null) {
-//                    boardPicture.setImageBitmap(BitmapFactory.decodeFile(historyEntity.originalPicturePath))
-//                    pictureShowingOriginal = !pictureShowingOriginal
-//                }
-//            }
-//        }
-//
         binding.detailsPreviousBoard.setOnClickListener {
             boardSolutionCounter -= 1
             Log.d(TAG, solutionStringList[boardSolutionCounter])

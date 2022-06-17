@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/viewInformation"
-        android:icon="@drawable/ic_details_24px"
-        android:title="More Information"
-        android:contentDescription="Information"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/editHistory"
         android:icon="@drawable/ic_create_24px"
         android:title="Edit"
