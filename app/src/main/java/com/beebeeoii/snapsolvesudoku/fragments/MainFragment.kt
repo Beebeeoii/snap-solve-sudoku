@@ -22,6 +22,7 @@ import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
 import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.FileSaver
 import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,7 +66,6 @@ class MainFragment : Fragment() {
 
                         SudokuOptionsView.Options.SOLVE -> {
                             try {
-                                // TODO remove hardcoding of maxSolutions
                                 val timeTakenToSolve = (measureNanoTime {
                                     binding.sudokuBoard.solve(
                                         Solver.Type.BACKTRACK,
@@ -106,14 +106,23 @@ class MainFragment : Fragment() {
                                     )
                                 }
                             } catch (err: InvalidBoardException) {
-                                //TODO Use snackbar notif
-                                Log.d(TAG, err.toString())
+                                Snackbar.make(
+                                    requireView(),
+                                    "Sudoku board is invalid",
+                                    Snackbar.LENGTH_SHORT
+                                ).setAnchorView(binding.photoImport).show()
                             } catch (err: UnsolvableBoardException) {
-                                //TODO Use snackbar notif
-                                Log.d(TAG, err.toString())
+                                Snackbar.make(
+                                    requireView(),
+                                    "Sudoku board is unsolvable",
+                                    Snackbar.LENGTH_SHORT
+                                ).setAnchorView(binding.photoImport).show()
                             } catch (err: IOException) {
-                                //TODO Use snackbar notif
-                                Log.d(TAG, err.toString())
+                                Snackbar.make(
+                                    requireView(),
+                                    "Unable to save sudoku board to history",
+                                    Snackbar.LENGTH_SHORT
+                                ).setAnchorView(binding.photoImport).show()
                             }
                         }
 
