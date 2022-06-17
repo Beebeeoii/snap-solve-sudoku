@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_mainFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
+        <argument
+            android:name="sudokuBoardId"
+            app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/importPictureFragment"
@@ -112,6 +115,9 @@
         <argument
             android:name="uniqueId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <!--    <fragment-->
 <!--        android:id="@+id/aboutFragment"-->

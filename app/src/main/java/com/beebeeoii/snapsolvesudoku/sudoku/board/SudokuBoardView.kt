@@ -370,10 +370,14 @@ class SudokuBoardView(context: Context, attrs: AttributeSet) : View(context, att
         }
     }
 
-    fun setBoard(sudokuBoard: SudokuBoard) {
+    fun setBoard(sudokuBoard: SudokuBoard, freeze: Boolean) {
         this.sudokuBoard.unfreeze()
         this.sudokuBoard = sudokuBoard
-        this.sudokuBoard.freeze()
+
+        if (freeze) {
+            this.sudokuBoard.freeze()
+        }
+
         this.invalidate()
     }
 

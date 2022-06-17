@@ -34,4 +34,7 @@ abstract class HistoryDAO {
 
     @Query("SELECT EXISTS(SELECT * FROM HistoryEntry WHERE uniqueId=:uniqueId)")
     abstract fun doesEntryExist(uniqueId: String): Boolean
+
+    @Query("SELECT recognisedDigits FROM HistoryEntry WHERE uniqueId=:uniqueId")
+    abstract fun getRecognisedDigits(uniqueId: String): String
 }

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentDetailsBinding
 import com.beebeeoii.snapsolvesudoku.db.Database
@@ -116,6 +117,24 @@ class DetailsFragment : Fragment() {
 
         binding.appBar.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.editHistory -> {
+                    val action = DetailsFragmentDirections
+                        .actionDetailsFragmentToMainFragment(this.uniqueId)
+                    findNavController().navigate(action)
+                    true
+                }
+
+                R.id.shareHistory -> {
+                    val sudokuBoardBitmap = binding.detailsSudokuBoard
+                        .drawToBitmap(Bitmap.Config.ARGB_8888)
+                    ShareBoardBitmap.shareBoard(
+                        requireActivity(),
+                        requireContext(),
+                        sudokuBoardBitmap
+                    )
+                    true
+                }
+
                 R.id.deleteHistory -> {
                     val dialogBuilder = AlertDialog.Builder(requireContext())
                     dialogBuilder.setTitle("Delete history")
@@ -135,34 +154,14 @@ class DetailsFragment : Fragment() {
                     }
 
                     dialogBuilder.setNegativeButton("Cancel") {
-                        dialogInterface: DialogInterface,
-                        _: Int -> dialogInterface.dismiss()
+                            dialogInterface: DialogInterface,
+                            _: Int -> dialogInterface.dismiss()
                     }
 
                     dialogBuilder.create().show()
                     true
                 }
 
-                R.id.editHistory -> {
-//                    val sudokuBoard2DIntArray = SudokuBoard2DIntArray()
-//                    sudokuBoard2DIntArray.uniqueId = detailsSudokuBoardView.uniqueId
-//                    sudokuBoard2DIntArray.board2DIntArray = detailsSudokuBoardView.givenTo2DIntArray()
-//
-//                    val action = DetailsFragmentDirections.actionDetailsFragmentToMainFragment(sudokuBoard2DIntArray)
-//                    findNavController().navigate(action)
-                    true
-                }
-
-                R.id.shareHistory -> {
-                    val sudokuBoardBitmap = binding.detailsSudokuBoard
-                        .drawToBitmap(Bitmap.Config.ARGB_8888)
-                    ShareBoardBitmap.shareBoard(
-                        requireActivity(),
-                        requireContext(),
-                        sudokuBoardBitmap
-                    )
-                    true
-                }
                 else -> false
             }
         }

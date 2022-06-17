@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -12,6 +14,8 @@ import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
+import com.beebeeoii.snapsolvesudoku.sudoku.board.Coordinate
+import com.beebeeoii.snapsolvesudoku.sudoku.board.SudokuBoard
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.UnsolvableBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.keyboard.SudokuKeyboardView
@@ -44,6 +48,36 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentMainBinding.inflate(inflater, container, false)
+        val database = Database.invoke(requireContext())
+        val historyDao = database.getHistoryDao()
+        var hasParsedSudokuBoard = false
+        var boardId = ""
+
+        if (arguments != null && !requireArguments().isEmpty) {
+            boardId = MainFragmentArgs.fromBundle(requireArguments()).sudokuBoardId
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val recognisedDigits = historyDao.getRecognisedDigits(boardId)
+                val parsedBoard = SudokuBoard()
+
+                for (i in 0..8) {
+                    for (j in 0..8) {
+                        val recognisedDigit = recognisedDigits[(i * 9) + j]
+                        if (recognisedDigit != '0') {
+                            parsedBoard.setCell(
+                                Coordinate(i, j),
+                                recognisedDigit.digitToInt(),
+                                true
+                            )
+                        }
+                    }
+                }
+
+                binding.sudokuBoard.setBoard(parsedBoard, false)
+                hasParsedSudokuBoard = true
+            }
+        }
+
         binding.sudokuKeyboard.setOnSudokuKeyboardListener(object :
             SudokuKeyboardView.ISudokuKeyboardListener {
                 @Override
@@ -73,10 +107,10 @@ class MainFragment : Fragment() {
                                     )
                                 } / 1000000F).toInt()
 
-                                val database = Database.invoke(requireContext())
-                                val historyDao = database.getHistoryDao()
+                                if (boardId == "") {
+                                    boardId = UniqueIdGenerator.generateId()
+                                }
 
-                                val boardId = UniqueIdGenerator.generateId()
                                 val folderPath = "${requireActivity().getExternalFilesDir(null)
                                     .toString()}/${boardId}"
                                 // TODO remove hardcoding of fileName
@@ -85,7 +119,17 @@ class MainFragment : Fragment() {
                                     "${boardId}_solutions.txt",
                                     binding.sudokuBoard.getSolutions().joinToString("\n")
                                 )
+
                                 CoroutineScope(Dispatchers.IO).launch {
+                                    if (hasParsedSudokuBoard) {
+                                        historyDao.updateRecognisedDigits(
+                                            boardId,
+                                            binding.sudokuBoard.toString(true)
+                                        )
+                                        historyDao.updateTimeTakenToSolve(boardId, timeTakenToSolve)
+                                        return@launch
+                                    }
+
                                     historyDao.insertHistoryEntry(
                                         HistoryEntity(
                                             uniqueId = boardId,
