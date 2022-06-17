@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -127,6 +125,7 @@ class MainFragment : Fragment() {
                                             binding.sudokuBoard.toString(true)
                                         )
                                         historyDao.updateTimeTakenToSolve(boardId, timeTakenToSolve)
+                                        arguments?.clear()
                                         return@launch
                                     }
 
