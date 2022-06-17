@@ -1,5 +1,6 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.beebeeoii.snapsolvesudoku.R
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentMainBinding
 import com.beebeeoii.snapsolvesudoku.db.Database
@@ -65,7 +67,12 @@ class MainFragment : Fragment() {
                             try {
                                 // TODO remove hardcoding of maxSolutions
                                 val timeTakenToSolve = (measureNanoTime {
-                                    binding.sudokuBoard.solve(Solver.Type.BACKTRACK, 5)
+                                    binding.sudokuBoard.solve(
+                                        Solver.Type.BACKTRACK,
+                                        PreferenceManager
+                                            .getDefaultSharedPreferences(requireContext())
+                                            .getInt("maximumNoSolutions", 1)
+                                    )
                                 } / 1000000F).toInt()
 
                                 val database = Database.invoke(requireContext())
