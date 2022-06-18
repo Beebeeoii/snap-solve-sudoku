@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.beebeeoii.snapsolvesudoku.R
@@ -15,7 +14,6 @@ import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.CoordinateOutOfBoundsExce
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.InvalidBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.exceptions.UnsolvableBoardException
 import com.beebeeoii.snapsolvesudoku.sudoku.solver.Solver
-import kotlin.math.max
 
 private const val TAG = "SudokuBoardView"
 
