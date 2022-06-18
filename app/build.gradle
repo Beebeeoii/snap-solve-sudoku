@@ -93,18 +93,7 @@ dependencies {
     def preference_version="1.2.0"
     implementation "androidx.preference:preference-ktx:$preference_version"
 
-    implementation 'com.heinrichreimersoftware:android-issue-reporter:1.4'
-
-    implementation 'com.thefinestartist:finestwebview:1.2.7'
-
-    def latestAboutLibsRelease = "8.3.0"
-    implementation "com.mikepenz:aboutlibraries-core:$latestAboutLibsRelease"
-    implementation "com.mikepenz:aboutlibraries:$latestAboutLibsRelease"
-
-    def changelogVersion = "1.1.7"
-    implementation "com.github.MFlisar:changelog:$changelogVersion"
-
-    implementation 'com.anjlab.android.iab.v3:library:1.1.0'
+    implementation 'com.anjlab.android.iab.v3:library:2.0.3'
 
     //firestore
     implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'

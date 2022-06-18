@@ -31,11 +31,6 @@
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/FinestWebViewTheme.Light" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.beebeeoii.snapsolvesudoku.fileprovider"

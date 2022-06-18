@@ -1,7 +1,5 @@
 <resources>
-
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-
         <item name="android:colorBackground">@color/white</item>
         <item name="colorPrimary">@color/colorPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,18 +9,5 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
         <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
-        <item name="aboutLibrariesStyle">@style/CustomOSSStyle</item>
     </style>
-
-    <style name="CustomOSSStyle" parent="">
-        <item name="aboutLibrariesCardBackground">@color/white</item>
-        <item name="aboutLibrariesDescriptionTitle">?android:textColorPrimary</item>
-        <item name="aboutLibrariesDescriptionText">?android:textColorSecondary</item>
-        <item name="aboutLibrariesDescriptionDivider">@color/opensource_divider</item>
-        <item name="aboutLibrariesOpenSourceTitle">?android:textColorPrimary</item>
-        <item name="aboutLibrariesOpenSourceText">?android:textColorSecondary</item>
-        <item name="aboutLibrariesSpecialButtonText">?android:textColorPrimary</item>
-        <item name="aboutLibrariesOpenSourceDivider">@color/opensource_divider</item>
-    </style>
-
 </resources>

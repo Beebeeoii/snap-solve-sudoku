@@ -21,10 +21,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.heinrichreimersoftware.androidissuereporter.IssueReporterLauncher
-import com.michaelflisar.changelog.ChangelogBuilder
-import com.mikepenz.aboutlibraries.LibsBuilder
-import com.thefinestartist.finestwebview.FinestWebView
 import java.time.LocalDateTime
 
 //private lateinit var constraintLayout: ConstraintLayout
