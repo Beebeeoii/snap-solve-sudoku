@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back_24dp"
-            app:menu="@menu/history_fragment_app_bar_menu"
             app:title="History"
             app:titleTextColor="@color/colorPrimaryDark"
             android:background="@color/white"
