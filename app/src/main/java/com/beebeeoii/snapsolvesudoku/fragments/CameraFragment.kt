@@ -10,9 +10,13 @@ import android.os.HandlerThread
 import android.util.Log
 import android.view.*
 import androidx.annotation.Nullable
+import androidx.navigation.fragment.findNavController
 import com.beebeeoii.snapsolvesudoku.databinding.FragmentCameraBinding
+import com.beebeeoii.snapsolvesudoku.db.Database
+import com.beebeeoii.snapsolvesudoku.db.HistoryEntity
 import com.beebeeoii.snapsolvesudoku.image.DigitRecogniser
 import com.beebeeoii.snapsolvesudoku.image.GridExtractor
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,6 +27,7 @@ import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 private const val TAG = "CameraFragment"
 
@@ -44,7 +49,10 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
 
         sudokuBoardMat = null
 
-        binding.cameraView.setOnClickListener {
+        binding.cameraView.visibility = SurfaceView.VISIBLE
+        binding.cameraView.setCvCameraViewListener(this)
+
+        binding.captureButton.setOnClickListener {
             if (sudokuBoardMat == null) {
                 binding.guideTextView.text = "No board detected"
                 binding.guideTextView.invalidate()
@@ -65,37 +73,49 @@ class CameraFragment : BottomSheetDialogFragment(), CameraBridgeViewBase.CvCamer
                 val sudokuBoardBitmap = GlobalScope.async {
                     digitRecogniser.processBoard(true)
                 }
-                GlobalScope.launch {
+                val uniqueId = UniqueIdGenerator.generateId()
+
+                val processFrame = GlobalScope.launch {
                     Utils.matToBitmap(sudokuBoardMat!!, originalSudokuBitmap)
-                    val uniqueId = UniqueIdGenerator.generateId()
+
                     val boardDirPath = "${requireActivity().getExternalFilesDir(null).toString()}/${uniqueId}"
                     val boardDirFile = File(boardDirPath)
                     if (!boardDirFile.exists()) {
                         boardDirFile.mkdir()
                     }
                     val originalPicturePath = "${boardDirPath}/${uniqueId}_original.png"
+                    val processedPicturePath = "${boardDirPath}/${uniqueId}_processed.png"
                     val out = FileOutputStream(originalPicturePath)
+                    val processedOut = FileOutputStream(processedPicturePath)
                     originalSudokuBitmap.compress(Bitmap.CompressFormat.PNG, 50, out)
+                    sudokuBoardBitmap.await().compress(Bitmap.CompressFormat.PNG, 50, processedOut)
 
-//                    val database = Database.invoke(requireContext())
-//                    val historyDao = database.getHistoryDao()
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        historyDao.insertHistoryEntry(
-//                            HistoryEntity(
-//                                uniqueId = uniqueId,
-//                                dateTime = DateTimeGenerator.generateDateTimeString(LocalDateTime.now(), DateTimeGenerator.Mode.DATE_AND_TIME),
-//                                folderPath = boardDirPath,
-//                                originalPicturePath = originalPicturePath,
-//                                timeTakenToSolve = 0
-//                            )
-//                        )
-//                    }
+                    val database = Database.invoke(requireContext())
+                    val historyDao = database.getHistoryDao()
 
-                    digitRecogniser.recogniseDigits(sudokuBoardBitmap.await())
-//                    val action = CameraFragmentDirections.actionCameraFragmentToMainFragment(
-//                        digitRecogniser.sudokuBoard2DIntArray
-//                    )
-//                    findNavController().navigate(action)
+                    historyDao.insertHistoryEntry(
+                        HistoryEntity(
+                            uniqueId = uniqueId,
+                            dateTime = DateTimeGenerator.generateDateTimeString(
+                                LocalDateTime.now(),
+                                DateTimeGenerator.Mode.DATE_AND_TIME
+                            ),
+                            recognisedDigits = digitRecogniser
+                                .recogniseDigits(sudokuBoardBitmap.await()),
+                            solutionsPath = null,
+                            timeTakenToSolve = null,
+                            folderPath = boardDirPath,
+                            originalPicturePath = originalPicturePath,
+                            processedPicturePath = null
+                        )
+                    )
+                }
+
+                runBlocking {
+                    processFrame.join()
+                    val action = CameraFragmentDirections
+                        .actionCameraFragmentToMainFragment(uniqueId)
+                    findNavController().navigate(action)
                 }
             }
         }

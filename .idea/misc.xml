@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.18079381096535485" />
+        <entry key="app/src/main/res/layout/fragment_camera.xml" value="0.39809782608695654" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.39809782608695654" />
         <entry key="app/src/main/res/layout/fragment_history.xml" value="0.2989583333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.39809782608695654" />

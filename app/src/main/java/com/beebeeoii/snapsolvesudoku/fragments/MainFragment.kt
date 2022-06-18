@@ -1,6 +1,7 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,7 @@ class MainFragment : Fragment() {
 
         if (arguments != null && !requireArguments().isEmpty) {
             boardId = MainFragmentArgs.fromBundle(requireArguments()).sudokuBoardId
+            Log.d(TAG, boardId)
 
             CoroutineScope(Dispatchers.IO).launch {
                 val recognisedDigits = historyDao.getRecognisedDigits(boardId)
@@ -124,6 +126,7 @@ class MainFragment : Fragment() {
                                             boardId,
                                             binding.sudokuBoard.toString(true)
                                         )
+                                        historyDao.updateSolutions(boardId, solutionsPath)
                                         historyDao.updateTimeTakenToSolve(boardId, timeTakenToSolve)
                                         arguments?.clear()
                                         return@launch

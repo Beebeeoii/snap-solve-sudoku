@@ -3,6 +3,7 @@ package com.beebeeoii.snapsolvesudoku.image
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import com.beebeeoii.snapsolvesudoku.db.Database
 import com.beebeeoii.snapsolvesudoku.sudoku.SudokuBoard2DIntArray
 import com.beebeeoii.snapsolvesudoku.utils.UniqueIdGenerator
@@ -21,12 +22,14 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
+private const val TAG = "DigitRecogniser"
+
 class DigitRecogniser(private var activity: Activity, board: Mat) {
 
     private var sudokuBoardMat: Mat = board
     lateinit var sudokuBoard2DIntArray: SudokuBoard2DIntArray
 
-    fun processBoard(fromCamera: Boolean) : Bitmap {
+    fun processBoard(fromCamera: Boolean): Bitmap {
         val processedBoardBitmap = Bitmap.createBitmap(sudokuBoardMat.width(), sudokuBoardMat.height(), Bitmap.Config.ARGB_8888)
 
         val gridExtractor = GridExtractor()
@@ -50,11 +53,9 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
         return processedBoardBitmap
     }
 
-    fun recogniseDigits(boardBitmap: Bitmap) {
-        sudokuBoard2DIntArray = SudokuBoard2DIntArray()
-
+    fun recogniseDigits(boardBitmap: Bitmap): String {
         val modelFileDir = File("${activity.getExternalFilesDir(null).toString()}/model")
-        val modelFileName = modelFileDir.list()[0]
+        val modelFileName = modelFileDir.list()?.get(0)
 
         val tflite = Interpreter(
             File(
@@ -63,27 +64,7 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
         )
         val tImage = TensorImage(DataType.FLOAT32)
         val tempMat = Mat()
-
         val output = Array(1) { FloatArray(10) }
-
-        val uniqueId = UniqueIdGenerator.generateId()
-        val boardDirPath = "${activity.getExternalFilesDir(null).toString()}/${uniqueId}"
-        val processedPicturePath = "${boardDirPath}/${uniqueId}_processed.png"
-        val boardDirFile = File(boardDirPath)
-        if (!boardDirFile.exists()) {
-            boardDirFile.mkdir()
-        }
-        val outputStream = FileOutputStream(processedPicturePath)
-        boardBitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
-        val database = Database.invoke(activity.applicationContext)
-        val historyDao = database.getHistoryDao()
-        CoroutineScope(Dispatchers.IO).launch {
-            historyDao.updateProcessedPicturePath(
-                uniqueId = uniqueId,
-                processedPicturePath = processedPicturePath)
-        }
-
-        sudokuBoard2DIntArray.uniqueId = uniqueId
 
         val cells = CellExtractor().splitBitmap(boardBitmap, 9, 9)
         var recognisedDigits = ""
@@ -93,42 +74,28 @@ class DigitRecogniser(private var activity: Activity, board: Mat) {
                 Utils.bitmapToMat(cell, tempMat)
 
                 val avgPix = Core.mean(tempMat).`val`[0]
-                val byteBuffer = ByteBuffer.allocateDirect(4 * 28 * 28 * 1)
-
                 val resizedPic = Bitmap.createScaledBitmap(cell, 28, 28, true)
-                resizedPic.copyPixelsToBuffer(byteBuffer)
-
-                val individialProcessedCellPicturePath = "${boardDirPath}/${i}${j}.png"
-                val out = FileOutputStream(individialProcessedCellPicturePath)
-                resizedPic.compress(Bitmap.CompressFormat.PNG, 50, out)
 
                 tImage.load(resizedPic)
-
                 tflite.run(convertBitmapToByteBuffer(resizedPic), output)
 
                 val result = output[0]
-
                 val maxConfidence = result.maxOrNull()
                 val prediction = maxConfidence?.let { it1 -> result.indexOfFirst { it == it1 } }
                 val isCellEmpty = avgPix > 250
 
                 if (prediction != null && !isCellEmpty) {
-                    sudokuBoard2DIntArray.board2DIntArray[i][j] = prediction
                     recognisedDigits += prediction
                 } else {
                     recognisedDigits += "0"
                 }
 
-                println("Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
+                Log.d(TAG,"Prediction: $prediction, Confidence: ${maxConfidence}, Cell: $i $j, isEmpty: ${isCellEmpty}, PixVal: $avgPix")
             }
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            historyDao.updateRecognisedDigits(
-                uniqueId = uniqueId,
-                recognisedDigits = recognisedDigits)
         }
 
         tflite.close()
+        return recognisedDigits
     }
 
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer? {
