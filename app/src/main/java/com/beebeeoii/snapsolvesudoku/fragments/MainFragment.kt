@@ -54,7 +54,6 @@ class MainFragment : Fragment() {
 
         if (arguments != null && !requireArguments().isEmpty) {
             boardId = MainFragmentArgs.fromBundle(requireArguments()).sudokuBoardId
-            Log.d(TAG, boardId)
 
             CoroutineScope(Dispatchers.IO).launch {
                 val recognisedDigits = historyDao.getRecognisedDigits(boardId)
