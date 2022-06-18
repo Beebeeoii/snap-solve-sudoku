@@ -92,6 +92,9 @@
             android:id="@+id/action_settingsFragment_pop"
             app:popUpTo="@id/settingsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_donateFragment"
+            app:destination="@id/donateFragment" />
     </fragment>
     <dialog
         android:id="@+id/cameraFragment"
@@ -123,6 +126,11 @@
             android:id="@+id/action_detailsFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/donateFragment"
+        android:name="com.beebeeoii.snapsolvesudoku.fragments.DonateFragment"
+        android:label="fragment_donate"
+        tools:layout="@layout/fragment_donate" />
     <!--    <fragment-->
 <!--        android:id="@+id/aboutFragment"-->
 <!--        android:name="com.beebeeoii.snapsolvesudoku.fragments.AboutFragment"-->

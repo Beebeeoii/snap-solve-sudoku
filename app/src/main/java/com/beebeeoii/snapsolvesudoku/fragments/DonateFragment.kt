@@ -1,80 +1,67 @@
 package com.beebeeoii.snapsolvesudoku.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.anjlab.android.iab.v3.BillingProcessor
-import com.anjlab.android.iab.v3.TransactionDetails
-import com.beebeeoii.snapsolvesudoku.R
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.card.MaterialCardView
+import com.anjlab.android.iab.v3.PurchaseInfo
+import com.beebeeoii.snapsolvesudoku.databinding.FragmentDonateBinding
+import com.google.android.material.snackbar.Snackbar
 
-
-private lateinit var appBar: MaterialToolbar
-private lateinit var donateCoffee: MaterialCardView
-private lateinit var donateCake: MaterialCardView
-private lateinit var donatePizza: MaterialCardView
-private lateinit var donateWine: MaterialCardView
 private lateinit var billingProcessor: BillingProcessor
 
 class DonateFragment : Fragment(), BillingProcessor.IBillingHandler {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentDonateBinding.inflate(inflater, container, false)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_donate, container, false)
-
-        appBar = rootView.findViewById(R.id.appBar)
-        donateCoffee = rootView.findViewById(R.id.donateCoffee)
-        donateCake = rootView.findViewById(R.id.donateCake)
-        donatePizza = rootView.findViewById(R.id.donatePizza)
-        donateWine = rootView.findViewById(R.id.donateWine)
-
-        billingProcessor = BillingProcessor(requireContext(), "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiXZHiSjbFSJreSuzZsIUmWhvyTdudAADa6b2eHz6C9Miu9pvkhkJod2fi4dGlt64yN2Vgo6XOJi/1gQm5E4T4vRmL9Wk7gJEGY3leHYZ65YFXPitE97lp0VcDvlPQuZl//H9dQi0cXoosZ6xprfvqcr7vLphpVtG31FTbYWjVm2pkXuEIZdpSoBOXVdTD70eY5ZTBtoUawfu53Gr0CXhmUK/wwLTdaxYkYN83/oGij6b2HIJGzvq7CXgc3GdulouQ+YXX/D3PZhxd6XzSr4CkcGgT6HM8hHKaaASJTDsGpJ4ZUTkqqYs0OGQ6CtJKnH0FFymBvoCSNyiHKWNdlm8EwIDAQAB", this)
+        // TODO Move license key to string constants
+        billingProcessor = BillingProcessor.newBillingProcessor(requireContext(), "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiXZHiSjbFSJreSuzZsIUmWhvyTdudAADa6b2eHz6C9Miu9pvkhkJod2fi4dGlt64yN2Vgo6XOJi/1gQm5E4T4vRmL9Wk7gJEGY3leHYZ65YFXPitE97lp0VcDvlPQuZl//H9dQi0cXoosZ6xprfvqcr7vLphpVtG31FTbYWjVm2pkXuEIZdpSoBOXVdTD70eY5ZTBtoUawfu53Gr0CXhmUK/wwLTdaxYkYN83/oGij6b2HIJGzvq7CXgc3GdulouQ+YXX/D3PZhxd6XzSr4CkcGgT6HM8hHKaaASJTDsGpJ4ZUTkqqYs0OGQ6CtJKnH0FFymBvoCSNyiHKWNdlm8EwIDAQAB", this)
         billingProcessor.initialize()
 
-        appBar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+        binding.appBar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        donateCoffee.setOnClickListener {
-            billingProcessor.purchase(requireActivity(), "coffee", "devTest")
-            billingProcessor.consumePurchase("coffee")
+        binding.donateCoffee.setOnClickListener {
+            if (checkBillingAvailability()) {
+                billingProcessor.purchase(requireActivity(), "coffee")
+            }
         }
 
-        donateCake.setOnClickListener {
-            billingProcessor.purchase(requireActivity(), "cake", "devTest")
-            billingProcessor.consumePurchase("cake")
+        binding.donateCake.setOnClickListener {
+            if (checkBillingAvailability()) {
+                billingProcessor.purchase(requireActivity(), "cake")
+            }
         }
 
-        donatePizza.setOnClickListener {
-            billingProcessor.purchase(requireActivity(), "pizza", "devTest")
-            billingProcessor.consumePurchase("pizza")
+        binding.donatePizza.setOnClickListener {
+            if (checkBillingAvailability()) {
+                billingProcessor.purchase(requireActivity(), "pizza")
+            }
         }
 
-        donateWine.setOnClickListener {
-            billingProcessor.purchase(requireActivity(), "wine", "devTest")
-            billingProcessor.consumePurchase("wine")
+        binding.donateWine.setOnClickListener {
+            if (checkBillingAvailability()) {
+                billingProcessor.purchase(requireActivity(), "wine")
+            }
         }
 
-        return rootView
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+        return binding.root
     }
 
     override fun onBillingInitialized() {
-
     }
 
     override fun onPurchaseHistoryRestored() {
     }
 
-    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+    override fun onProductPurchased(productId: String, details: PurchaseInfo?) {
     }
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
@@ -83,5 +70,19 @@ class DonateFragment : Fragment(), BillingProcessor.IBillingHandler {
     override fun onDestroy() {
         billingProcessor.release()
         super.onDestroy()
+    }
+
+    private fun checkBillingAvailability(): Boolean {
+        if (!billingProcessor.isConnected) {
+            Snackbar.make(
+                requireView(),
+                "Google Play Market services is unavailable. Please try again later.",
+                Snackbar.LENGTH_SHORT
+            ).show()
+
+            return false
+        }
+
+        return true
     }
 }

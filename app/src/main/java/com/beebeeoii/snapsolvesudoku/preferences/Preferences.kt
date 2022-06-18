@@ -1,5 +1,8 @@
 package com.beebeeoii.snapsolvesudoku.preferences
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +10,12 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.beebeeoii.snapsolvesudoku.R
+import com.beebeeoii.snapsolvesudoku.fragments.SettingsFragmentDirections
+import com.beebeeoii.snapsolvesudoku.utils.DateTimeGenerator
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.ktx.Firebase
@@ -26,9 +31,11 @@ class Preferences : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
 
         val updateModelButton: Preference? = findPreference("modelUpdate")
+        val rateButton: Preference? = findPreference("rate")
+        val feedbackButton: Preference? = findPreference("feedback")
+        val donateButton: Preference? = findPreference("donate")
 
         updateModelButton?.setOnPreferenceClickListener {
-
             val dateTimeObjects = mutableListOf<LocalDateTime>()
             val modelFileDir = File("${requireActivity().getExternalFilesDir(null).toString()}/model")
             val modelFileName = modelFileDir.list()[0]
@@ -101,6 +108,41 @@ class Preferences : PreferenceFragmentCompat() {
 
             true
         }
+
+        rateButton?.setOnPreferenceClickListener {
+            val packageName = requireActivity().packageName
+            val rateIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=$packageName")
+            )
+            rateIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            try {
+                startActivity(rateIntent)
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=$packageName")
+                ))
+            }
+
+            true
+        }
+
+        feedbackButton?.setOnPreferenceClickListener {
+            // TODO remove hardcode string
+            val url = "https://github.com/Beebeeoii/snap-solve-sudoku/issues"
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(browserIntent)
+            true
+        }
+
+        donateButton?.setOnPreferenceClickListener {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToDonateFragment()
+            findNavController().navigate(action)
+            true
+        }
     }
 
     private var closeDialog: View.OnClickListener = View.OnClickListener {
@@ -108,6 +150,7 @@ class Preferences : PreferenceFragmentCompat() {
     }
 
     private fun deleteOutdatedModelFile(outdatedModelFileName: String) : Boolean {
-        return File("${requireActivity().getExternalFilesDir(null).toString()}/model/$outdatedModelFileName").delete()
+        val dir = requireActivity().getExternalFilesDir(null).toString()
+        return File("$dir/model/$outdatedModelFileName").delete()
     }
 }

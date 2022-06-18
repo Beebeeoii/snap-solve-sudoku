@@ -34,7 +34,7 @@
         <Preference
             app:key="feedback"
             app:title="Send Feedback"
-            app:summary="Report issues or feature requests"/>
+            app:summary="Report issues or feature requests via Github"/>
 
         <Preference
             app:key="donate"
